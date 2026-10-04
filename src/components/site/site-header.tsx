@@ -7,8 +7,9 @@ import { DesktopNav, MobileNav, type NavLink } from "./site-nav";
 import { UserMenu } from "./user-menu";
 
 const GUEST_LINKS: NavLink[] = [
-  { href: "/explore", label: "Find a flat" },
-  { href: "/#owners", label: "For owners" },
+  { href: "/explore", label: "Browse flats" },
+  { href: "/saved", label: "Saved" },
+  { href: "/register?type=owner", label: "List property" },
 ];
 
 const RENTER_LINKS: NavLink[] = [
@@ -33,10 +34,10 @@ export async function SiteHeader() {
           ) : (
             <>
               <Button asChild variant="ghost" className="hidden sm:inline-flex">
-                <Link href="/login">Sign in</Link>
+                <Link href="/login">Log in</Link>
               </Button>
               <Button asChild className="hidden sm:inline-flex">
-                <Link href="/register">Get started</Link>
+                <Link href="/register">Sign up</Link>
               </Button>
             </>
           )}
