@@ -35,11 +35,11 @@ export function AuthShell({ children, points = DEFAULT_POINTS, panelTitle }: { c
       </div>
 
       <aside className="relative hidden p-3 lg:block">
-        <div className="relative h-full overflow-hidden rounded-[1.75rem]">
+        <div className="relative h-full overflow-hidden rounded-2xl">
           <Image src={hero} alt="" fill priority placeholder="blur" sizes="55vw" className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.22_0.12_292)] via-[oklch(0.3_0.15_292/0.75)] to-[oklch(0.4_0.18_292/0.25)]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10" />
           <div className="relative flex h-full flex-col justify-end p-10 text-white xl:p-14">
-            <h2 className="max-w-md text-4xl leading-tight font-bold xl:text-5xl">{panelTitle ?? "Your next home is a few taps away."}</h2>
+            <h2 className="max-w-md text-3xl leading-tight font-bold xl:text-4xl">{panelTitle ?? "Your next home is a few taps away."}</h2>
             <ul className="mt-10 grid gap-5">
               {points.map(({ icon: Icon, title, text }) => (
                 <li key={title} className="flex gap-4">
@@ -84,7 +84,7 @@ export function SwitchAuth({ text, href, cta }: { text: string; href: string; ct
   return (
     <p className="mt-8 text-center text-sm text-muted-foreground">
       {text}{" "}
-      <Link href={href} className="font-semibold text-primary hover:underline">
+      <Link href={href} className="font-semibold text-link hover:underline">
         {cta}
       </Link>
     </p>

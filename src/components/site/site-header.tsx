@@ -9,7 +9,6 @@ import { UserMenu } from "./user-menu";
 const GUEST_LINKS: NavLink[] = [
   { href: "/explore", label: "Find a flat" },
   { href: "/#owners", label: "For owners" },
-  { href: "/#how-it-works", label: "How it works" },
 ];
 
 const RENTER_LINKS: NavLink[] = [
@@ -23,7 +22,7 @@ export async function SiteHeader() {
   const links = user ? (user.role === "client" ? RENTER_LINKS : [{ href: "/dashboard", label: "Dashboard" }, ...RENTER_LINKS]) : GUEST_LINKS;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-lg">
+    <header className="sticky top-0 z-40 border-b bg-card/90 backdrop-blur">
       <div className="container-page flex h-16 items-center gap-6">
         <Logo />
         <DesktopNav links={links} />
