@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { Logo } from "@/components/ui/logo";
+import { Logo } from "@/components/common/logo";
 import { cn } from "@/lib/cn";
 import hero from "../../../public/images/hero-building.jpg";
 
@@ -19,7 +19,7 @@ export function AuthShell({ aside, tint = "brand", children }: { aside: ReactNod
           )}
         />
         <div className="relative flex h-full flex-col justify-between p-12 text-white xl:p-16">
-          <Logo light />
+          <Logo className="text-white" />
           <div className="max-w-lg pb-6">{aside}</div>
         </div>
       </aside>

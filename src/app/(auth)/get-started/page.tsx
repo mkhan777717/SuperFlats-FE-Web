@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Briefcase, Building2, ChevronRight, Home, type LucideIcon } from "lucide-react";
 import { AsideText, AsideTitle, AuthShell } from "@/components/auth/auth-shell";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/common/status-badge";
 import { SITE } from "@/lib/config";
 import { cn } from "@/lib/cn";
 
@@ -40,7 +40,7 @@ export default function GetStartedPage() {
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-center gap-2 text-lg font-semibold">
                   {title}
-                  {!href && <Badge tone="gray">Use the app for now</Badge>}
+                  {!href && <StatusBadge>Use the app for now</StatusBadge>}
                 </span>
                 <span className="block text-ink-soft">{text}</span>
               </span>

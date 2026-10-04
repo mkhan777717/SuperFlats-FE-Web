@@ -2,7 +2,7 @@
 
 import { RefreshCw, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/common/empty-state";
 
 export default function TenantError({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   return (
@@ -11,8 +11,8 @@ export default function TenantError({ error, retry }: { error: Error & { digest?
         icon={TriangleAlert}
         title="Something went wrong"
         action={
-          <Button onClick={() => retry()} icon={<RefreshCw className="size-4" aria-hidden />}>
-            Try again
+          <Button onClick={() => retry()}>
+            <RefreshCw aria-hidden /> Try again
           </Button>
         }
       >

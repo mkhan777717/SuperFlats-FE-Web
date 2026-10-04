@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
-import { Logo } from "@/components/ui/logo";
+import { UserAvatar } from "@/components/common/user-avatar";
+import { Logo } from "@/components/common/logo";
 import { BottomNav, SidebarNav } from "@/components/shell/sidebar-nav";
 import { getCurrentUser } from "@/lib/api";
 
@@ -12,7 +12,7 @@ export default async function TenantLayout({ children }: LayoutProps<"/">) {
     <div className="flex min-h-dvh flex-1">
       <aside className="sticky top-0 hidden h-dvh w-72 shrink-0 flex-col border-r border-line bg-surface lg:flex">
         <div className="border-b border-line px-7 py-7">
-          <Logo href="/explore" subtitle="Tenant Portal" />
+          <Logo href="/explore" tagline="Tenant Portal" />
         </div>
         <div className="flex-1 py-6">
           <SidebarNav />
@@ -34,7 +34,7 @@ export default async function TenantLayout({ children }: LayoutProps<"/">) {
           </form>
           {user && (
             <Link href="/profile" className="ml-auto flex items-center gap-3 rounded-full py-1 pl-1 pr-1 hover:bg-muted sm:pr-4">
-              <Avatar name={user.name} src={user.profile_image} size={38} />
+              <UserAvatar name={user.name} src={user.profile_image} />
               <span className="hidden font-medium sm:block">{user.name}</span>
             </Link>
           )}

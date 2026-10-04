@@ -1,10 +1,11 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { SearchX } from "lucide-react";
 import { ListingCard } from "@/components/listings/listing-card";
 import { SearchFilters } from "@/components/listings/search-filters";
-import { ButtonLink } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
-import { Pagination } from "@/components/ui/pagination";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/common/empty-state";
+import { Pagination } from "@/components/common/pagination";
 import { api, getCurrentUser } from "@/lib/api";
 import { exploreHref, parseFilters, toApiQuery } from "@/lib/search";
 import type { ListingPage } from "@/lib/types";
@@ -47,16 +48,14 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
               </li>
             ))}
           </ul>
-          <Pagination page={filters.page} totalPages={result.totalPages} href={(page) => exploreHref({ ...filters, page })} />
+          <Pagination page={filters.page} totalPages={result.totalPages} href={(page: number) => exploreHref({ ...filters, page })} />
         </>
       ) : (
         <EmptyState
           icon={SearchX}
           title="No flats match your search"
           action={
-            <ButtonLink href="/explore" variant="outline">
-              Clear filters
-            </ButtonLink>
+            <Button asChild variant="outline"><Link href="/explore">Clear filters</Link></Button>
           }
         >
           Try another city, a wider rent range or a different flat type.
