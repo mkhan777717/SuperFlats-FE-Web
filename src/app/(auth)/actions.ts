@@ -27,8 +27,11 @@ async function post(path: string, body: unknown) {
   }
 }
 
-/** Where to land after auth: owners and agents get the owner area, renters go to `next`. */
-const landingFor = (role: string, next: string) => (role === "client" ? next : "/owner");
+/** Where to land after auth: renters go to `next`; owners and agents go to their console. */
+const landingFor = (role: string, next: string) => {
+  if (role === "client") return next.startsWith("/dashboard") ? "/explore" : next;
+  return next.startsWith("/dashboard") ? next : "/dashboard";
+};
 
 export async function login(_prev: FormState, formData: FormData): Promise<FormState> {
   const email = String(formData.get("email") ?? "").trim();
@@ -57,7 +60,9 @@ export async function register(_prev: FormState, formData: FormData): Promise<Fo
   // Backend accepts 10–15 digits only, so strip spaces, dashes and a leading +.
   const phone_number = String(formData.get("phone_number") ?? "").replace(/[^\d]/g, "");
   const next = safeNext(formData.get("next"));
-  const values = { name, email, phone_number };
+  // Owners get their own company on sign-up (/auth/admin/register); everyone else is a renter.
+  const isOwner = formData.get("account_type") === "owner";
+  const values = { name, email, phone_number, account_type: isOwner ? "owner" : "renter" };
 
   const fieldErrors: FormState["fieldErrors"] = {};
   if (!name) fieldErrors.name = "Enter your full name.";
@@ -66,7 +71,7 @@ export async function register(_prev: FormState, formData: FormData): Promise<Fo
   if (password.length < 8) fieldErrors.password = "Password must be at least 8 characters.";
   if (Object.keys(fieldErrors).length) return { fieldErrors, values };
 
-  const res = await post("/auth/register", { name, email, password, phone_number });
+  const res = await post(isOwner ? "/auth/admin/register" : "/auth/register", { name, email, password, phone_number });
   if (!res) return { error: "Can't reach Superflats right now. Check your connection and try again.", values };
   if (!res.ok) return { error: await readError(res), values };
 
