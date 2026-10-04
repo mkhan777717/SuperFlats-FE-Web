@@ -1,9 +1,14 @@
-import { Logo } from "@/components/common/logo";
+import { Hero } from "@/components/landing/hero";
+import { BrowseByType, FinalCta, ForOwners, HowItWorks } from "@/components/landing/sections";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="grid flex-1 place-items-center p-6">
-      <Logo tagline="Website coming soon" />
+    <main>
+      <Hero />
+      <HowItWorks />
+      <BrowseByType />
+      <ForOwners />
+      <FinalCta />
     </main>
   );
 }
