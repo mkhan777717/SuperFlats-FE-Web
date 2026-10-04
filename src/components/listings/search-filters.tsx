@@ -68,7 +68,7 @@ function FiltersPanel({ onDone }: { onDone: () => void }) {
 
         <section className="grid gap-2">
           <Label>Near a place</Label>
-          <PlaceSearch defaultValue={draft.near} onSelect={(p) => set({ near: p.label, lat: String(p.lat), lng: String(p.lng) })} />
+          <PlaceSearch key={draft.near} defaultValue={draft.near} onSelect={(p) => set({ near: p.label, lat: String(p.lat), lng: String(p.lng) })} />
           {draft.lat && (
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <span className="text-sm text-muted-foreground">Within</span>
