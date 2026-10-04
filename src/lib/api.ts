@@ -58,6 +58,24 @@ export async function api<T>(path: string, { query, returnTo, ...init }: Request
   return res.json() as Promise<T>;
 }
 
+/**
+ * Signed-in user for public pages: never redirects, just returns null when there is
+ * no valid session (expired tokens are handled once the visitor opens a private page).
+ */
+export const getOptionalUser = cache(async (): Promise<User | null> => {
+  const token = await getAccessToken();
+  if (!token) return null;
+  try {
+    const res = await fetch(buildUrl("/user/me"), {
+      cache: "no-store",
+      headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+    });
+    return res.ok ? ((await res.json()) as User) : null;
+  } catch {
+    return null;
+  }
+});
+
 /** Profile of the signed-in user, deduplicated per request. Null when signed out. */
 export const getCurrentUser = cache(async (): Promise<User | null> => {
   if (!(await getAccessToken())) return null;
