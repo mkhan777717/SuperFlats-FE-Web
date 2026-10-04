@@ -12,9 +12,16 @@ Website for Superflats, built on the existing [superflats-backend](https://githu
 
 ```bash
 npm install
-cp .env.local.template .env.local 2>/dev/null; # then set SUPERFLATS_API_URL (see below)
-npm run dev                  # http://localhost:3000
+npm run dev   # http://localhost:3000
 ```
+
+Optional settings go in a local `.env.local` file. Env files are git-ignored and must never be committed. Ask the team for the values.
+
+| Variable                    | Purpose                                                          |
+| --------------------------- | ---------------------------------------------------------------- |
+| `SUPERFLATS_API_URL`        | Backend base URL including `/api` (defaults to production)       |
+| `NEXT_PUBLIC_SITE_URL`      | Public URL of the website, used for metadata                     |
+| `NEXT_PUBLIC_SUPPORT_EMAIL` | Address shown on the forgot-password screen                      |
 
 | Script          | What it does                    |
 | --------------- | ------------------------------- |
