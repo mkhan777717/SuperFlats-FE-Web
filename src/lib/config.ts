@@ -1,7 +1,7 @@
 export const SITE = {
   name: "Superflats",
   description:
-    "Search verified rental flats, save the ones you like and book a visit with the owner — all in one place.",
+    "Search rental flats listed by their owners, save the ones you like and book a visit — all in one place.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "support@superflats.in",
 };
