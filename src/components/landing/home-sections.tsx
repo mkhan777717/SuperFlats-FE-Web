@@ -1,89 +1,57 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, LogIn } from "lucide-react";
+import { ArrowRight, BedDouble, Building2, LogIn } from "lucide-react";
+import { Sticker } from "@/components/common/decor";
 import { FavoriteButton } from "@/components/listings/favorite-button";
 import { ListingCard } from "@/components/listings/listing-card";
 import { Button } from "@/components/ui/button";
 import { FLAT_TYPES } from "@/lib/config";
 import type { Listing } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import building from "../../../public/images/hero-building.jpg";
-import { ListingRail } from "./listing-rail";
 
-export function SectionHeader({ title, subtitle, href, cta = "See all" }: { title: string; subtitle?: string; href?: string; cta?: string }) {
+export function SectionHeader({ title, href, cta = "View all listings" }: { title: string; href?: string; cta?: string }) {
   return (
     <div className="flex items-end justify-between gap-4">
-      <div>
-        <h2 className="text-2xl font-extrabold sm:text-3xl">{title}</h2>
-        {subtitle && <p className="mt-1 text-muted-foreground">{subtitle}</p>}
-      </div>
+      <h2 className="text-2xl font-extrabold sm:text-3xl">{title}</h2>
       {href && (
-        <Link href={href} className="group flex shrink-0 items-center gap-1 text-sm font-semibold text-link hover:underline">
-          {cta} <ArrowRight className="size-4 transition group-hover:translate-x-0.5" aria-hidden />
-        </Link>
+        <Button asChild variant="outline" className="shrink-0">
+          <Link href={href}>
+            <span className="hidden sm:inline">{cta}</span>
+            <span className="sm:hidden">View all</span>
+            <ArrowRight aria-hidden />
+          </Link>
+        </Button>
       )}
     </div>
   );
 }
 
-type GridProps = { listings: Listing[]; favorites: Set<number>; signedIn: boolean; priority?: boolean };
-
-const heart = (l: Listing, favorites: Set<number>, signedIn: boolean) => <FavoriteButton listingId={l.id} initial={favorites.has(l.id)} signedIn={signedIn} />;
-
-export function ListingGrid({ listings, favorites, signedIn, priority }: GridProps) {
+export function ListingGrid({ listings, favorites, signedIn, priority }: { listings: Listing[]; favorites: Set<number>; signedIn: boolean; priority?: boolean }) {
   return (
     <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {listings.map((l, i) => (
-        <li key={l.id}>
-          <ListingCard listing={l} priority={priority && i < 3} action={heart(l, favorites, signedIn)} />
+      {listings.map((listing, i) => (
+        <li key={listing.id}>
+          <ListingCard
+            listing={listing}
+            priority={priority && i < 3}
+            action={<FavoriteButton listingId={listing.id} initial={favorites.has(listing.id)} signedIn={signedIn} />}
+          />
         </li>
       ))}
     </ul>
   );
 }
 
-export function ListingRow({ listings, favorites, signedIn, label }: GridProps & { label: string }) {
-  return (
-    <ListingRail label={label}>
-      {listings.map((l) => (
-        <li key={l.id} className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]">
-          <ListingCard listing={l} action={heart(l, favorites, signedIn)} />
-        </li>
-      ))}
-    </ListingRail>
-  );
-}
-
-/** Size filter as a segmented bar under the hero. */
-export function SizeBar({ className }: { className?: string }) {
-  return (
-    <nav aria-label="Browse by flat size" className={cn("flex flex-wrap items-center justify-center gap-2", className)}>
-      <span className="mr-1 text-sm font-medium text-muted-foreground">Popular sizes</span>
-      {FLAT_TYPES.map((t) => (
-        <Link
-          key={t}
-          href={`/explore?type=${encodeURIComponent(t)}`}
-          className="rounded-full border bg-card px-4 py-1.5 text-sm font-semibold shadow-soft transition hover:-translate-y-0.5 hover:border-primary hover:text-primary"
-        >
-          {t}
-        </Link>
-      ))}
-    </nav>
-  );
-}
-
-/** Shown instead of listings while the backend still requires login to browse. */
+/** Shown in place of listings while the backend still requires login to browse. */
 export function SignInToBrowse() {
   return (
-    <div className="flex flex-col items-center rounded-3xl border bg-card px-6 py-14 text-center shadow-soft">
-      <span className="grid size-14 place-items-center rounded-2xl bg-accent text-accent-foreground">
+    <div className="brutal flex flex-col items-center rounded-3xl bg-card px-6 py-14 text-center">
+      <span className="grid size-14 place-items-center rounded-2xl border-2 border-ink bg-accent text-accent-foreground">
         <LogIn className="size-6" aria-hidden />
       </span>
-      <h3 className="mt-5 text-xl font-bold">Sign in to see available flats</h3>
-      <p className="mt-1.5 max-w-sm text-muted-foreground">It&apos;s free. Browse every listing, save favourites and book visits.</p>
+      <h3 className="mt-5 text-xl font-bold">Sign in to see all flats</h3>
+      <p className="mt-1.5 max-w-sm text-muted-foreground">Create a free account or sign in to browse listings, save favourites and book visits.</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Button asChild size="lg">
-          <Link href="/register">Create free account</Link>
+          <Link href="/register">Sign up free</Link>
         </Button>
         <Button asChild size="lg" variant="outline">
           <Link href="/login">Log in</Link>
@@ -93,30 +61,47 @@ export function SignInToBrowse() {
   );
 }
 
+export function BrowseBySize() {
+  return (
+    <div className="grid gap-6">
+      <h2 className="text-center text-2xl font-extrabold sm:text-3xl">Browse by size</h2>
+      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {FLAT_TYPES.map((type) => (
+          <li key={type}>
+            <Link href={`/explore?type=${encodeURIComponent(type)}`} className="brutal brutal-hover flex flex-col items-center gap-2 rounded-2xl bg-card px-4 py-6">
+              <span className="grid size-12 place-items-center rounded-xl border-2 border-ink bg-accent text-accent-foreground">
+                <BedDouble className="size-6" aria-hidden />
+              </span>
+              <span className="text-lg font-extrabold">{type}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function OwnerBand() {
   return (
-    <section id="owners" className="container-page scroll-mt-24 pb-20 sm:pb-24">
-      <div className="relative isolate overflow-hidden rounded-[2rem] bg-ink text-ink-foreground shadow-lift">
-        <div className="grid items-stretch lg:grid-cols-[1.2fr_1fr]">
-          <div className="flex flex-col justify-center px-6 py-12 text-center sm:px-12 lg:text-left">
-            <p className="text-sm font-semibold text-primary">For property owners</p>
-            <h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">Have a flat to rent out?</h2>
-            <p className="mt-3 text-lg opacity-70">Put it in front of renters today and manage visits, tenants and rent from your dashboard.</p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <Button asChild size="xl">
-                <Link href="/register?type=owner">
-                  List your property <ArrowRight aria-hidden />
-                </Link>
-              </Button>
-              <Button asChild size="xl" variant="ghost" className="hover:bg-white/10 hover:text-inherit">
-                <Link href="/login">Owner login</Link>
-              </Button>
+    <section id="owners" className="container-page scroll-mt-24 pb-20">
+      <div className="brutal relative overflow-hidden rounded-3xl bg-ink px-6 py-12 text-ink-foreground sm:px-12">
+        <div className="relative flex flex-col items-center gap-8 text-center lg:flex-row lg:justify-between lg:text-left">
+          <div className="flex flex-col items-center gap-5 lg:flex-row">
+            <span className="grid size-16 shrink-0 place-items-center rounded-2xl border-2 border-current bg-primary text-primary-foreground">
+              <Building2 className="size-8" aria-hidden />
+            </span>
+            <div>
+              <h2 className="text-2xl font-extrabold sm:text-4xl">
+                Own a flat? <Sticker className="shadow-[4px_4px_0_0_var(--ink-foreground)]">List it</Sticker>
+              </h2>
+              <p className="mt-3 text-lg opacity-75">Reach renters, confirm visits and track rent from one dashboard.</p>
             </div>
           </div>
-          <div className="relative min-h-64">
-            <Image src={building} alt="" fill placeholder="blur" sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent lg:bg-gradient-to-r" />
-          </div>
+          <Button asChild size="xl" className="shrink-0 border-ink-foreground shadow-[3px_3px_0_0_var(--ink-foreground)]">
+            <Link href="/register?type=owner">
+              Post your property <ArrowRight aria-hidden />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
