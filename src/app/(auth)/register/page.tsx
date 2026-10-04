@@ -1,45 +1,26 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Check } from "lucide-react";
-import { AsideText, AsideTitle, AuthShell, FormHeader } from "@/components/auth/auth-shell";
-import { SITE } from "@/lib/config";
+import { BarChart3, Building2, Users } from "lucide-react";
+import { AuthShell, FormHeader, SwitchAuth } from "@/components/auth/auth-shell";
 import { RegisterForm } from "./register-form";
 
 export const metadata: Metadata = { title: "Create account" };
 
-const perks = ["Browse flats listed directly by owners", "Save the ones you like", "Book a visit in a few taps", "Free to get started"];
+const OWNER_POINTS = [
+  { icon: Building2, title: "Properties, flats and listings", text: "Publish vacant flats and manage every unit in one place." },
+  { icon: Users, title: "Tenants and contracts", text: "Keep tenant records, bookings and ID documents together." },
+  { icon: BarChart3, title: "Rent on autopilot", text: "Monthly rent bills are generated for every active booking." },
+];
 
 export default async function RegisterPage({ searchParams }: PageProps<"/register">) {
-  const { next } = await searchParams;
+  const { next, type } = await searchParams;
   const nextPath = typeof next === "string" ? next : undefined;
+  const isOwner = type === "owner";
 
   return (
-    <AuthShell
-      aside={
-        <>
-          <AsideTitle>Join {SITE.name} Today</AsideTitle>
-          <AsideText>Everything you need to find your next home.</AsideText>
-          <ul className="mt-8 space-y-4">
-            {perks.map((perk) => (
-              <li key={perk} className="flex items-center gap-3 text-lg">
-                <span className="grid size-7 place-items-center rounded-full bg-white/20">
-                  <Check className="size-4" aria-hidden />
-                </span>
-                {perk}
-              </li>
-            ))}
-          </ul>
-        </>
-      }
-    >
-      <FormHeader title="Create Account" subtitle="Fill in your details to get started" />
-      <RegisterForm next={nextPath} />
-      <p className="mt-8 text-center text-ink-soft">
-        Already have an account?{" "}
-        <Link href={nextPath ? `/login?next=${encodeURIComponent(nextPath)}` : "/login"} className="font-medium text-brand-600 hover:underline">
-          Sign In
-        </Link>
-      </p>
+    <AuthShell points={isOwner ? OWNER_POINTS : undefined} panelTitle={isOwner ? "Run your rentals without the paperwork." : undefined}>
+      <FormHeader title="Create your account" subtitle="It's free and takes less than a minute." />
+      <RegisterForm next={nextPath} initialType={isOwner ? "owner" : "renter"} />
+      <SwitchAuth text="Already have an account?" href={nextPath ? `/login?next=${encodeURIComponent(nextPath)}` : "/login"} cta="Sign in" />
     </AuthShell>
   );
 }
