@@ -1,7 +1,8 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Building2, LogOut, Search } from "lucide-react";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { Logo } from "@/components/ui/logo";
+import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/common/logo";
 import { getCurrentUser } from "@/lib/api";
 import { logout } from "../(auth)/actions";
 
@@ -24,11 +25,10 @@ export default async function OwnerPage() {
           still browse listings here.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <ButtonLink href="/explore" icon={<Search className="size-4" aria-hidden />}>
-            Browse listings
-          </ButtonLink>
+          <Button asChild><Link href="/explore"><Search className="size-4" aria-hidden /> 
+            Browse listings</Link></Button>
           <form action={logout}>
-            <Button type="submit" variant="outline" className="w-full" icon={<LogOut className="size-4" aria-hidden />}>
+            <Button type="submit" variant="outline" className="w-full"><LogOut className="size-4" aria-hidden /> 
               Sign out
             </Button>
           </form>

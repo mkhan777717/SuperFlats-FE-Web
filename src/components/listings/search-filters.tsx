@@ -68,7 +68,7 @@ export function SearchFilters({ filters }: { filters: SearchFilters }) {
           </select>
         </label>
         <div className="flex gap-2 sm:col-span-2 lg:col-span-1">
-          <Button type="submit" className="flex-1 lg:flex-none" icon={<SlidersHorizontal className="size-4" aria-hidden />}>
+          <Button type="submit" className="flex-1 lg:flex-none"><SlidersHorizontal className="size-4" aria-hidden /> 
             Apply
           </Button>
           {hasFilters && (

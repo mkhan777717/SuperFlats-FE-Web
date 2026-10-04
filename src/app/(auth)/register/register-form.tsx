@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { ArrowRight, Lock, Mail, Phone, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/input";
+import { Field } from "@/components/common/field";
 import { FormAlert } from "@/components/auth/auth-shell";
 import { register, type FormState } from "../actions";
 

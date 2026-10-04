@@ -1,58 +1,202 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Design tokens taken from the Lovable design: teal primary, purple for brokers,
-   amber for operations, soft neutral surfaces and large rounded cards. */
-@theme {
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+@custom-variant dark (&:is(.dark *));
 
-  --color-brand-50: #e8f7f3;
-  --color-brand-100: #c9ede3;
-  --color-brand-200: #97dbc9;
-  --color-brand-300: #5ec3aa;
-  --color-brand-400: #2fad91;
-  --color-brand-500: #16a085;
-  --color-brand-600: #0f8a71;
-  --color-brand-700: #0d6f5c;
-  --color-brand-800: #0d584a;
-  --color-brand-900: #0b493e;
+/*
+ * Superflats design tokens.
+ * Primary is the deep purple from the Superflats apps, accent is the app's amber.
+ * Neutrals are slightly cool so purple surfaces feel calm rather than loud.
+ */
+:root {
+  --radius: 0.875rem;
 
-  --color-broker-500: #9333ea;
-  --color-ops-500: #f59e0b;
+  --background: oklch(0.99 0.003 290);
+  --foreground: oklch(0.2 0.02 285);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.02 285);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.02 285);
 
-  --color-canvas: #f8f8f8;
-  --color-surface: #ffffff;
-  --color-muted: #f1f2f4;
-  --color-line: #e7e8eb;
-  --color-ink: #111418;
-  --color-ink-soft: #5b6270;
-  --color-ink-faint: #9aa1ad;
+  --primary: oklch(0.49 0.2 292);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0.02 292);
+  --secondary-foreground: oklch(0.38 0.17 292);
+  --muted: oklch(0.965 0.006 290);
+  --muted-foreground: oklch(0.52 0.02 285);
+  --accent: oklch(0.96 0.02 292);
+  --accent-foreground: oklch(0.38 0.17 292);
+  --highlight: oklch(0.8 0.16 75);
+  --highlight-foreground: oklch(0.3 0.07 60);
 
-  --radius-card: 1.25rem;
-  --shadow-card: 0 1px 2px rgb(17 20 24 / 0.04), 0 8px 24px rgb(17 20 24 / 0.06);
-  --shadow-cta: 0 8px 20px rgb(22 160 133 / 0.28);
+  --success: oklch(0.6 0.15 155);
+  --success-soft: oklch(0.96 0.04 155);
+  --warning: oklch(0.68 0.16 65);
+  --warning-soft: oklch(0.97 0.05 85);
+  --info: oklch(0.58 0.15 250);
+  --info-soft: oklch(0.96 0.03 250);
+  --destructive: oklch(0.58 0.22 25);
+  --destructive-soft: oklch(0.96 0.03 25);
+
+  --border: oklch(0.92 0.008 290);
+  --input: oklch(0.9 0.01 290);
+  --ring: oklch(0.49 0.2 292);
+
+  --chart-1: oklch(0.49 0.2 292);
+  --chart-2: oklch(0.8 0.16 75);
+  --chart-3: oklch(0.6 0.15 155);
+  --chart-4: oklch(0.58 0.15 250);
+  --chart-5: oklch(0.58 0.22 25);
+
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.35 0.02 285);
+  --sidebar-primary: oklch(0.49 0.2 292);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.96 0.02 292);
+  --sidebar-accent-foreground: oklch(0.38 0.17 292);
+  --sidebar-border: oklch(0.93 0.008 290);
+  --sidebar-ring: oklch(0.49 0.2 292);
+
+  --shadow-soft: 0 1px 2px oklch(0.2 0.02 285 / 0.04), 0 4px 16px oklch(0.2 0.02 285 / 0.05);
+  --shadow-lift: 0 2px 4px oklch(0.2 0.02 285 / 0.05), 0 16px 40px oklch(0.2 0.02 285 / 0.1);
+}
+
+.dark {
+  --background: oklch(0.16 0.015 285);
+  --foreground: oklch(0.96 0.005 290);
+  --card: oklch(0.2 0.018 285);
+  --card-foreground: oklch(0.96 0.005 290);
+  --popover: oklch(0.22 0.02 285);
+  --popover-foreground: oklch(0.96 0.005 290);
+
+  --primary: oklch(0.68 0.17 292);
+  --primary-foreground: oklch(0.16 0.02 285);
+  --secondary: oklch(0.27 0.05 292);
+  --secondary-foreground: oklch(0.88 0.06 292);
+  --muted: oklch(0.25 0.015 285);
+  --muted-foreground: oklch(0.7 0.02 285);
+  --accent: oklch(0.27 0.05 292);
+  --accent-foreground: oklch(0.88 0.06 292);
+  --highlight: oklch(0.8 0.15 75);
+  --highlight-foreground: oklch(0.22 0.05 60);
+
+  --success: oklch(0.72 0.15 155);
+  --success-soft: oklch(0.28 0.05 155);
+  --warning: oklch(0.78 0.14 75);
+  --warning-soft: oklch(0.3 0.05 75);
+  --info: oklch(0.72 0.13 250);
+  --info-soft: oklch(0.28 0.05 250);
+  --destructive: oklch(0.7 0.19 22);
+  --destructive-soft: oklch(0.3 0.07 22);
+
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.68 0.17 292);
+
+  --sidebar: oklch(0.18 0.016 285);
+  --sidebar-foreground: oklch(0.82 0.01 290);
+  --sidebar-primary: oklch(0.68 0.17 292);
+  --sidebar-primary-foreground: oklch(0.16 0.02 285);
+  --sidebar-accent: oklch(0.26 0.04 292);
+  --sidebar-accent-foreground: oklch(0.92 0.04 292);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.68 0.17 292);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-lift: 0 16px 40px oklch(0 0 0 / 0.45);
+}
+
+@theme inline {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
 }
 
 @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
   html {
     -webkit-tap-highlight-color: transparent;
+    @apply scroll-smooth;
   }
   body {
-    @apply bg-canvas text-ink font-sans antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
   }
   h1, h2, h3, h4 {
-    @apply tracking-tight;
+    @apply font-heading tracking-tight text-balance;
   }
   ::selection {
-    @apply bg-brand-100 text-brand-900;
+    @apply bg-primary/15;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
 
-@utility card {
-  @apply rounded-[var(--radius-card)] bg-surface shadow-[var(--shadow-card)];
+/* Page container used by every screen. */
+@utility container-page {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
 }
 
-@utility hero-gradient {
-  background-image: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-700));
+/* Subtle brand wash behind hero sections. */
+@utility bg-brand-wash {
+  background:
+    radial-gradient(60% 80% at 15% 0%, oklch(0.49 0.2 292 / 0.12), transparent 70%),
+    radial-gradient(50% 60% at 95% 10%, oklch(0.8 0.16 75 / 0.14), transparent 70%);
 }
 
 @utility scrollbar-none {
@@ -60,4 +204,9 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Numbers in stats and prices line up neatly. */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
 }

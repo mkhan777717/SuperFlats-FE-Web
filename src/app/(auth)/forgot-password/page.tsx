@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
 import { AsideText, AsideTitle, AuthShell } from "@/components/auth/auth-shell";
-import { buttonClass } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { SITE } from "@/lib/config";
 
 export const metadata: Metadata = { title: "Forgot password" };
@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
       <p className="mt-3 text-lg text-ink-soft">
         Email us from the address you signed up with and we&apos;ll help you reset your password.
       </p>
-      <a href={`mailto:${SITE.supportEmail}?subject=${subject}`} className={buttonClass("primary", "lg", "mt-8 w-full")}>
+      <a href={`mailto:${SITE.supportEmail}?subject=${subject}`} className={buttonVariants({ size: "xl", className: "mt-8 w-full" })}>
         Email {SITE.supportEmail}
       </a>
       <p className="mt-4 text-sm text-ink-faint">Signed in on the Superflats app? You can change your password from Profile.</p>
