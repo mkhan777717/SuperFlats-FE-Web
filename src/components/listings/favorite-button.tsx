@@ -48,11 +48,11 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
       aria-pressed={saved}
       aria-label={saved ? "Remove from saved" : "Save this flat"}
       className={cn(
-        "grid size-10 place-items-center rounded-full bg-white/90 text-neutral-900 shadow-soft backdrop-blur transition hover:scale-110 active:scale-95",
+        "grid size-9 place-items-center rounded-full border-[1.5px] border-ink bg-card shadow-[2px_2px_0_0_var(--ink)] transition hover:scale-105 active:scale-95",
         className,
       )}
     >
-      <Heart className={cn("size-5 transition", saved && "fill-primary text-primary")} aria-hidden />
+      <Heart className={cn("size-[18px] transition", saved ? "fill-primary text-primary" : "text-ink")} aria-hidden />
     </button>
   );
 }
