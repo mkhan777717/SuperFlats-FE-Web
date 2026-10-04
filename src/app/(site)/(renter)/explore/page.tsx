@@ -24,20 +24,26 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
         : "Flats for rent";
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="text-2xl font-bold sm:text-3xl">{heading}</h1>
-        <p className="mt-1 text-muted-foreground tabular">
-          {result.totalItems === 1 ? "1 flat available" : `${result.totalItems.toLocaleString("en-IN")} flats available`}
-        </p>
-      </div>
-
-      <ExploreShell filters={filters} controls={<SearchFilters total={result.totalItems} />}>
-        <div className="grid gap-6">
+    <div className="grid gap-10">
+      <ExploreShell
+        filters={filters}
+        controls={
+          <header className="grid gap-6 text-center">
+            <div>
+              <h1 className="text-3xl font-extrabold sm:text-4xl">{heading}</h1>
+              <p className="mt-2 text-muted-foreground tabular">
+                {result.totalItems === 1 ? "1 flat available" : `${result.totalItems.toLocaleString("en-IN")} flats available`}
+              </p>
+            </div>
+            <SearchFilters />
+          </header>
+        }
+      >
+        <div className="mt-8 grid gap-8">
           <ActiveFilters />
           {result.listings.length ? (
             <>
-              <ul className="grid gap-x-6 gap-y-9 sm:grid-cols-2 xl:grid-cols-3">
+              <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                 {result.listings.map((listing, i) => (
                   <li key={listing.id}>
                     <ListingCard listing={listing} priority={i < 3} />
@@ -47,8 +53,8 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
               <Pagination className="mt-4" page={filters.page} totalPages={result.totalPages} href={(page: number) => exploreHref({ ...filters, page })} />
             </>
           ) : (
-            <EmptyState icon={SearchX} title="No flats match your search">
-              Try a wider budget, a different flat type or a bigger distance. You can remove filters above.
+            <EmptyState icon={SearchX} title="No flats match your search" className="mx-auto max-w-xl">
+              Try a wider budget, another flat type or a bigger distance — or clear the filters above.
             </EmptyState>
           )}
         </div>
