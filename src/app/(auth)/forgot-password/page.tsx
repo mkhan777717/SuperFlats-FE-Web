@@ -1,40 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Mail } from "lucide-react";
-import { AsideText, AsideTitle, AuthShell } from "@/components/auth/auth-shell";
+import { ArrowLeft, KeyRound } from "lucide-react";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE } from "@/lib/config";
 
 export const metadata: Metadata = { title: "Forgot password" };
 
-// The backend has no password-reset endpoint yet, so this screen routes people to support
+// The backend has no password-reset endpoint yet, so this routes people to support
 // instead of pretending to send a reset link.
 export default function ForgotPasswordPage() {
   const subject = encodeURIComponent(`Password reset for my ${SITE.name} account`);
 
   return (
-    <AuthShell
-      aside={
-        <>
-          <AsideTitle>Locked out?</AsideTitle>
-          <AsideText>It happens. Our team will help you get back into your account.</AsideText>
-        </>
-      }
-    >
-      <Link href="/login" className="mb-10 inline-flex items-center gap-2 text-ink-soft hover:text-ink">
-        <ArrowLeft className="size-4" aria-hidden /> Back to Sign In
+    <AuthShell>
+      <Link href="/login" className="mb-8 inline-flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+        <ArrowLeft className="size-4" aria-hidden /> Back to sign in
       </Link>
-      <span className="mb-6 grid size-16 place-items-center rounded-2xl bg-brand-50 text-brand-600">
-        <Mail className="size-7" aria-hidden />
+      <span className="mb-5 grid size-12 place-items-center rounded-2xl bg-secondary text-secondary-foreground">
+        <KeyRound className="size-5" aria-hidden />
       </span>
-      <h2 className="text-4xl font-bold">Forgot Password?</h2>
-      <p className="mt-3 text-lg text-ink-soft">
-        Email us from the address you signed up with and we&apos;ll help you reset your password.
-      </p>
+      <h1 className="text-3xl font-bold">Forgot your password?</h1>
+      <p className="mt-2 text-muted-foreground">Email us from the address you signed up with and we&apos;ll help you reset it.</p>
       <a href={`mailto:${SITE.supportEmail}?subject=${subject}`} className={buttonVariants({ size: "xl", className: "mt-8 w-full" })}>
         Email {SITE.supportEmail}
       </a>
-      <p className="mt-4 text-sm text-ink-faint">Signed in on the Superflats app? You can change your password from Profile.</p>
+      <p className="mt-4 text-sm text-muted-foreground">Still signed in on the Superflats app? You can change your password from your profile there.</p>
     </AuthShell>
   );
 }
