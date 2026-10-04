@@ -6,13 +6,13 @@
 
 /*
  * Superflats design tokens.
- * Warm coral is the single accent (actions, highlights); everything else is a warm
- * neutral so real flat photos carry the colour. Depth comes from layered shadows.
+ * Warm cream canvas, ink outlines and hard offset shadows give a tactile, raised look;
+ * coral is the single accent for actions and highlights.
  */
 :root {
   --radius: 0.875rem;
 
-  --background: oklch(0.985 0.004 75);
+  --background: oklch(0.968 0.018 78);
   --foreground: oklch(0.2 0.012 50);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.012 50);
@@ -23,7 +23,7 @@
   --primary-foreground: oklch(0.2 0.012 50);
   --secondary: oklch(0.96 0.01 60);
   --secondary-foreground: oklch(0.25 0.015 50);
-  --muted: oklch(0.96 0.006 70);
+  --muted: oklch(0.95 0.014 75);
   --muted-foreground: oklch(0.5 0.015 55);
   --accent: oklch(0.95 0.03 40);
   --accent-foreground: oklch(0.45 0.15 35);
@@ -40,7 +40,7 @@
   --destructive: oklch(0.55 0.2 27);
   --destructive-soft: oklch(0.96 0.02 27);
 
-  --border: oklch(0.91 0.008 70);
+  --border: oklch(0.88 0.015 70);
   --input: oklch(0.88 0.01 70);
   --ring: oklch(0.64 0.18 35);
 
@@ -197,6 +197,28 @@
 /* Page container used by every screen. */
 @utility container-page {
   @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+/* Raised "sticker" surface: ink outline with a hard offset shadow. */
+@utility brutal {
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 0 var(--ink);
+}
+@utility brutal-sm {
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 0 var(--ink);
+}
+/* Lifts toward the light on hover, presses in on click. */
+@utility brutal-hover {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--ink);
+  }
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 0 var(--ink);
+  }
 }
 
 /* Frosted glass panel for content that sits on top of photos. */
