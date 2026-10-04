@@ -1,37 +1,36 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 
-/** Page numbers around the current page, with ellipses: 1 … 4 5 6 … 12 */
+/** Page numbers around the current page, with gaps: 1 … 4 5 6 … 12 */
 function pageWindow(current: number, total: number) {
-  const pages = new Set([1, total, current - 1, current, current + 1]);
-  const sorted = [...pages].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
-  const out: (number | "…")[] = [];
-  sorted.forEach((p, i) => {
-    if (i > 0 && p - sorted[i - 1]! > 1) out.push("…");
+  const pages = [...new Set([1, total, current - 1, current, current + 1])].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
+  const out: (number | "gap")[] = [];
+  pages.forEach((p, i) => {
+    if (i > 0 && p - pages[i - 1]! > 1) out.push("gap");
     out.push(p);
   });
   return out;
 }
 
-export function Pagination({ page, totalPages, href }: { page: number; totalPages: number; href: (page: number) => string }) {
+export function Pagination({ page, totalPages, href, className }: { page: number; totalPages: number; href: (page: number) => string; className?: string }) {
   if (totalPages <= 1) return null;
-  const item = "grid size-11 place-items-center rounded-xl text-[15px] font-medium transition";
+  const item = "grid h-9 min-w-9 place-items-center rounded-lg px-2 text-sm font-medium transition tabular";
 
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-1.5">
+    <nav aria-label="Pagination" className={cn("flex items-center justify-center gap-1", className)}>
       {page > 1 ? (
-        <Link href={href(page - 1)} className={cn(item, "text-ink-soft hover:bg-surface")} aria-label="Previous page">
-          <ChevronLeft className="size-5" />
+        <Link href={href(page - 1)} className={cn(item, "hover:bg-muted")} aria-label="Previous page">
+          <ChevronLeft className="size-4" />
         </Link>
       ) : (
-        <span className={cn(item, "text-ink-faint/50")} aria-hidden>
-          <ChevronLeft className="size-5" />
+        <span className={cn(item, "text-muted-foreground/40")} aria-hidden>
+          <ChevronLeft className="size-4" />
         </span>
       )}
       {pageWindow(page, totalPages).map((p, i) =>
-        p === "…" ? (
-          <span key={`gap-${i}`} className="px-1 text-ink-faint">
+        p === "gap" ? (
+          <span key={`gap-${i}`} className="px-1 text-muted-foreground">
             …
           </span>
         ) : (
@@ -39,19 +38,19 @@ export function Pagination({ page, totalPages, href }: { page: number; totalPage
             key={p}
             href={href(p)}
             aria-current={p === page ? "page" : undefined}
-            className={cn(item, p === page ? "bg-brand-500 text-white shadow-[var(--shadow-cta)]" : "text-ink-soft hover:bg-surface")}
+            className={cn(item, p === page ? "bg-primary text-primary-foreground" : "hover:bg-muted")}
           >
             {p}
           </Link>
         ),
       )}
       {page < totalPages ? (
-        <Link href={href(page + 1)} className={cn(item, "text-ink-soft hover:bg-surface")} aria-label="Next page">
-          <ChevronRight className="size-5" />
+        <Link href={href(page + 1)} className={cn(item, "hover:bg-muted")} aria-label="Next page">
+          <ChevronRight className="size-4" />
         </Link>
       ) : (
-        <span className={cn(item, "text-ink-faint/50")} aria-hidden>
-          <ChevronRight className="size-5" />
+        <span className={cn(item, "text-muted-foreground/40")} aria-hidden>
+          <ChevronRight className="size-4" />
         </span>
       )}
     </nav>
