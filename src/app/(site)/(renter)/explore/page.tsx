@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { SearchX } from "lucide-react";
 import { EmptyState } from "@/components/common/empty-state";
 import { Pagination } from "@/components/common/pagination";
+import { ListingGrid, SignInToBrowse } from "@/components/landing/home-sections";
 import { ExploreShell } from "@/components/listings/explore-shell";
-import { ListingCard } from "@/components/listings/listing-card";
 import { ActiveFilters, SearchFilters } from "@/components/listings/search-filters";
-import { api } from "@/lib/api";
+import { getOptionalUser, publicApi } from "@/lib/api";
+import { getFavoriteIds } from "@/lib/favorites";
 import { exploreHref, parseFilters, toApiQuery } from "@/lib/search";
 import type { ListingPage } from "@/lib/types";
 
@@ -13,7 +14,11 @@ export const metadata: Metadata = { title: "Explore flats" };
 
 export default async function ExplorePage({ searchParams }: PageProps<"/explore">) {
   const filters = parseFilters(await searchParams);
-  const result = await api<ListingPage>("/listings/public/search", { query: toApiQuery(filters), returnTo: exploreHref(filters) });
+  const [user, result, favorites] = await Promise.all([
+    getOptionalUser(),
+    publicApi<ListingPage>("/listings/public/search", toApiQuery(filters)),
+    getFavoriteIds(),
+  ]);
 
   const heading = filters.near
     ? `Flats near ${filters.near.split(",")[0]}`
@@ -31,9 +36,11 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
           <header className="grid gap-6 text-center">
             <div>
               <h1 className="text-3xl font-extrabold sm:text-4xl">{heading}</h1>
-              <p className="mt-2 text-muted-foreground tabular">
-                {result.totalItems === 1 ? "1 flat available" : `${result.totalItems.toLocaleString("en-IN")} flats available`}
-              </p>
+              {result.ok && (
+                <p className="mt-2 text-muted-foreground tabular">
+                  {result.data.totalItems === 1 ? "1 flat available" : `${result.data.totalItems.toLocaleString("en-IN")} flats available`}
+                </p>
+              )}
             </div>
             <SearchFilters />
           </header>
@@ -41,16 +48,12 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
       >
         <div className="mt-8 grid gap-8">
           <ActiveFilters />
-          {result.listings.length ? (
+          {!result.ok ? (
+            <SignInToBrowse />
+          ) : result.data.listings.length ? (
             <>
-              <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                {result.listings.map((listing, i) => (
-                  <li key={listing.id}>
-                    <ListingCard listing={listing} priority={i < 3} />
-                  </li>
-                ))}
-              </ul>
-              <Pagination className="mt-4" page={filters.page} totalPages={result.totalPages} href={(page: number) => exploreHref({ ...filters, page })} />
+              <ListingGrid listings={result.data.listings} favorites={favorites} signedIn={!!user} priority />
+              <Pagination className="mt-4" page={filters.page} totalPages={result.data.totalPages} href={(page: number) => exploreHref({ ...filters, page })} />
             </>
           ) : (
             <EmptyState icon={SearchX} title="No flats match your search" className="mx-auto max-w-xl">
