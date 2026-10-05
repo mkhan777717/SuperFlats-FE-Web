@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, BedDouble, Building2, LogIn } from "lucide-react";
 import { Sticker } from "@/components/common/decor";
+import { Reveal, Stagger, StaggerItem } from "@/components/common/motion";
 import { FavoriteButton } from "@/components/listings/favorite-button";
 import { ListingCard } from "@/components/listings/listing-card";
 import { Button } from "@/components/ui/button";
@@ -26,17 +27,17 @@ export function SectionHeader({ title, href, cta = "View all listings" }: { titl
 
 export function ListingGrid({ listings, favorites, signedIn, priority }: { listings: Listing[]; favorites: Set<number>; signedIn: boolean; priority?: boolean }) {
   return (
-    <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <Stagger as="ul" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {listings.map((listing, i) => (
-        <li key={listing.id}>
+        <StaggerItem as="li" key={listing.id}>
           <ListingCard
             listing={listing}
             priority={priority && i < 3}
             action={<FavoriteButton listingId={listing.id} initial={favorites.has(listing.id)} signedIn={signedIn} />}
           />
-        </li>
+        </StaggerItem>
       ))}
-    </ul>
+    </Stagger>
   );
 }
 
@@ -65,18 +66,18 @@ export function BrowseBySize() {
   return (
     <div className="grid gap-6">
       <h2 className="text-center text-2xl font-extrabold sm:text-3xl">Browse by size</h2>
-      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <Stagger as="ul" stagger={0.06} className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {FLAT_TYPES.map((type) => (
-          <li key={type}>
+          <StaggerItem as="li" key={type}>
             <Link href={`/explore?type=${encodeURIComponent(type)}`} className="brutal brutal-hover flex flex-col items-center gap-2 rounded-2xl bg-card px-4 py-6">
               <span className="grid size-12 place-items-center rounded-xl border-2 border-ink bg-accent text-accent-foreground">
                 <BedDouble className="size-6" aria-hidden />
               </span>
               <span className="text-lg font-extrabold">{type}</span>
             </Link>
-          </li>
+          </StaggerItem>
         ))}
-      </ul>
+      </Stagger>
     </div>
   );
 }
@@ -84,7 +85,7 @@ export function BrowseBySize() {
 export function OwnerBand() {
   return (
     <section id="owners" className="container-page scroll-mt-24 pb-20">
-      <div className="brutal relative overflow-hidden rounded-3xl bg-ink px-6 py-12 text-ink-foreground sm:px-12">
+      <Reveal className="brutal relative overflow-hidden rounded-3xl bg-ink px-6 py-12 text-ink-foreground sm:px-12">
         <div className="relative flex flex-col items-center gap-8 text-center lg:flex-row lg:justify-between lg:text-left">
           <div className="flex flex-col items-center gap-5 lg:flex-row">
             <span className="grid size-16 shrink-0 place-items-center rounded-2xl border-2 border-current bg-primary text-primary-foreground">
@@ -103,7 +104,7 @@ export function OwnerBand() {
             </Link>
           </Button>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
