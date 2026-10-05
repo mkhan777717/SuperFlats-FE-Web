@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Heart } from "lucide-react";
+import { motion } from "motion/react";
 import { toast } from "sonner";
 import { clientApi } from "@/lib/client-api";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,8 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
   const pathname = usePathname();
   const [saved, setSaved] = useState(initial);
   const [pending, start] = useTransition();
+  // Bumped only when the user saves, so the heart pops on taps, not on page load.
+  const [pops, setPops] = useState(0);
 
   const toggle = () => {
     if (!signedIn) {
@@ -24,6 +27,7 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
     }
     const next = !saved;
     setSaved(next);
+    if (next) setPops((n) => n + 1);
     start(async () => {
       try {
         const res = await clientApi<{ is_favorite: boolean }>(`/favorites/toggle/${listingId}`, { method: "POST" });
@@ -52,7 +56,9 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
         className,
       )}
     >
-      <Heart className={cn("size-[18px] transition", saved ? "fill-primary text-primary" : "text-ink")} aria-hidden />
+      <motion.span key={pops} initial={pops ? { scale: 0.4 } : false} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 12 }} className="grid">
+        <Heart className={cn("size-[18px] transition-colors", saved ? "fill-primary text-primary" : "text-ink")} aria-hidden />
+      </motion.span>
     </button>
   );
 }
