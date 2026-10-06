@@ -33,9 +33,10 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
       <ExploreShell
         filters={filters}
         controls={
-          <header className="grid gap-6 text-center">
+          <header className="grid gap-6">
             <div>
-              <h1 className="text-3xl font-extrabold sm:text-4xl">{heading}</h1>
+              <p className="eyebrow">Properties for rent</p>
+              <h1 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">{heading}</h1>
               {result.ok && (
                 <p className="mt-2 text-muted-foreground tabular">
                   {result.data.totalItems === 1 ? "1 flat available" : `${result.data.totalItems.toLocaleString("en-IN")} flats available`}

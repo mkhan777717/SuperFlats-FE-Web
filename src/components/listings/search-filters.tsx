@@ -121,7 +121,7 @@ export function SearchFilters() {
 
   return (
     <div className="grid gap-4">
-      <form onSubmit={onSearch} role="search" className="mx-auto flex w-full max-w-2xl gap-2">
+      <form onSubmit={onSearch} role="search" className="flex w-full gap-2">
         <label className="relative flex-1">
           <span className="sr-only">Search listings</span>
           <Search className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden />
@@ -132,7 +132,7 @@ export function SearchFilters() {
         </Button>
       </form>
 
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center gap-2">
         <div className="scrollbar-none flex items-center gap-2 overflow-x-auto">
           {["", ...FLAT_TYPES].map((t) => {
             const active = filters.type === t;
@@ -143,8 +143,8 @@ export function SearchFilters() {
                 onClick={() => apply({ type: t })}
                 aria-pressed={active}
                 className={cn(
-                  "h-9 shrink-0 rounded-full border px-4 text-sm font-medium transition",
-                  active ? "border-foreground bg-foreground text-background" : "bg-card text-muted-foreground hover:text-foreground",
+                  "h-9 shrink-0 rounded-md border px-4 text-sm font-medium transition",
+                  active ? "border-primary bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground",
                 )}
               >
                 {t || "All"}
@@ -154,7 +154,7 @@ export function SearchFilters() {
         </div>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="shrink-0 rounded-full">
+            <Button variant="outline" className="shrink-0">
               <SlidersHorizontal aria-hidden /> Filters
               {count > 0 && <span className="grid size-5 place-items-center rounded-full bg-foreground text-[11px] text-background">{count}</span>}
             </Button>
@@ -184,13 +184,13 @@ export function ActiveFilters() {
   if (!chips.length) return null;
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       {chips.map((c) => (
         <button
           key={c.label}
           type="button"
           onClick={() => apply(c.clear)}
-          className="inline-flex h-8 items-center gap-1.5 rounded-full border bg-card pr-2 pl-3 text-sm font-medium hover:bg-muted"
+          className="inline-flex h-8 items-center gap-1.5 rounded-md border bg-accent pr-2 pl-3 text-sm font-medium text-accent-foreground hover:bg-accent/70"
           aria-label={`Remove filter ${c.label}`}
         >
           {c.label} <X className="size-3.5" aria-hidden />
