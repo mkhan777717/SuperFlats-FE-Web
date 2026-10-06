@@ -52,12 +52,12 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
       aria-pressed={saved}
       aria-label={saved ? "Remove from saved" : "Save this flat"}
       className={cn(
-        "grid size-9 place-items-center rounded-full border-[1.5px] border-ink bg-card shadow-[2px_2px_0_0_var(--ink)] transition hover:scale-105 active:scale-95",
+        "grid size-9 place-items-center rounded-full bg-white/95 text-neutral-900 shadow-lift backdrop-blur transition hover:scale-110 active:scale-95",
         className,
       )}
     >
       <motion.span key={pops} initial={pops ? { scale: 0.4 } : false} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 12 }} className="grid">
-        <Heart className={cn("size-[18px] transition-colors", saved ? "fill-primary text-primary" : "text-ink")} aria-hidden />
+        <Heart className={cn("size-[18px] transition-colors", saved ? "fill-red-500 text-red-500" : "text-neutral-800")} aria-hidden />
       </motion.span>
     </button>
   );
