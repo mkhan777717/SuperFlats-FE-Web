@@ -5,14 +5,15 @@ import { Slot } from "radix-ui"
 import { Loader2 } from "lucide-react"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-xl border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "border-2 border-ink bg-primary text-primary-foreground shadow-[3px_3px_0_0_var(--ink)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_0_var(--ink)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
-        ink: "border-2 border-ink bg-ink text-ink-foreground shadow-[3px_3px_0_0_var(--primary)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+        default: "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90",
+        gold: "bg-gold text-gold-foreground shadow-soft hover:bg-gold/90",
+        ink: "bg-ink text-ink-foreground hover:bg-ink/90",
         outline:
-          "border-2 border-ink bg-card shadow-[3px_3px_0_0_var(--ink)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_0_var(--ink)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none aria-expanded:bg-muted",
+          "border-input bg-card text-foreground shadow-soft hover:border-primary/40 hover:bg-accent aria-expanded:bg-accent dark:bg-input/20",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
@@ -23,13 +24,13 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 gap-2 px-4",
-        xs: "h-7 gap-1 rounded-lg px-2.5 text-xs [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-9 gap-1.5 rounded-lg px-3 text-[0.8125rem]",
+        xs: "h-7 gap-1 rounded-sm px-2.5 text-xs [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-9 gap-1.5 px-3 text-[0.8125rem]",
         lg: "h-11 gap-2 px-5 text-[0.9375rem]",
-        xl: "h-12 gap-2 rounded-2xl px-6 text-base",
+        xl: "h-12 gap-2 px-6 text-base",
         icon: "size-10",
-        "icon-xs": "size-7 rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-9 rounded-lg",
+        "icon-xs": "size-7 rounded-sm [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "size-9",
         "icon-lg": "size-11",
       },
     },
