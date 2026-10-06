@@ -1,98 +1,84 @@
 import Image from "next/image";
-import Link from "next/link";
-import { MapPin, Search } from "lucide-react";
-import { Doodle, Sticker, Wave } from "@/components/common/decor";
+import { BedDouble, IndianRupee, MapPin, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { FLAT_TYPES } from "@/lib/config";
-import heroPhoto from "../../../public/images/hero-living.jpg";
+import heroPhoto from "../../../public/images/hero-building.jpg";
+
+const BUDGETS = [10000, 15000, 20000, 30000, 50000, 75000];
 
 /*
- * Hero entrance runs on CSS (tw-animate) instead of Motion: it's visible in the
- * server HTML before any JavaScript loads, so the search box never "pops in" late.
+ * Entrance runs on CSS (tw-animate), so the search panel is in the server HTML and
+ * visible before JavaScript loads.
  */
-const ENTER = "animate-in fade-in slide-in-from-bottom-4 animation-duration-700 fill-mode-both ease-out motion-reduce:animate-none";
-const POP = "animate-in fade-in zoom-in-50 spin-in-12 animation-duration-500 fill-mode-both ease-out motion-reduce:animate-none";
+const ENTER = "animate-in fade-in slide-in-from-bottom-3 animation-duration-700 fill-mode-both ease-out motion-reduce:animate-none";
 
-const TAGS = [
-  { label: "Cozy", className: "top-[18%] -left-6" },
-  { label: "Sunny", className: "top-[8%] right-6" },
-  { label: "Spacious", className: "bottom-[22%] -right-4" },
-];
+function Field({ icon: Icon, label, children }: { icon: typeof MapPin; label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex min-w-0 flex-1 flex-col gap-1.5">
+      <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</span>
+      <span className="relative flex items-center">
+        <Icon className="pointer-events-none absolute left-3 size-4 text-muted-foreground" aria-hidden />
+        {children}
+      </span>
+    </label>
+  );
+}
 
+const control =
+  "h-12 w-full rounded-md border border-input bg-card pr-3 pl-9 text-[0.9375rem] text-foreground outline-none transition focus:border-ring focus:ring-3 focus:ring-ring/20";
+
+/** Full-width property photo with a classic search panel: location, type, budget. */
 export function Hero({ liveCount }: { liveCount?: number }) {
   return (
-    <section className="relative overflow-hidden">
-      <Doodle className="absolute -top-10 -left-20 w-[520px] text-primary/25" />
-      <Doodle className="absolute right-[-120px] bottom-10 w-[420px] rotate-180 text-ink/10" />
+    <section className="relative isolate">
+      <Image src={heroPhoto} alt="" fill priority placeholder="blur" sizes="100vw" className="animate-ken-burns -z-10 object-cover object-[50%_35%]" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[oklch(0.2_0.045_258/0.85)] via-[oklch(0.2_0.045_258/0.6)] to-[oklch(0.2_0.045_258/0.85)]" />
 
-      <div className="container-page relative grid items-center gap-12 pt-10 pb-16 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:pb-20">
-        <div className="text-center lg:text-left">
-          <div className={ENTER}>
-            <h1 className="text-[2.6rem] leading-[1.15] font-extrabold sm:text-6xl">
-              Find your perfect
-              <br />
-              <span className={`inline-block delay-500 ${POP}`}>
-                <Sticker>flat</Sticker>
-              </span>{" "}
-              to rent
-            </h1>
-          </div>
+      <div className="container-page flex flex-col items-center pt-20 pb-24 text-center text-white sm:pt-28 sm:pb-32">
+        <p className={`eyebrow ${ENTER}`}>Properties for rent · Direct from owners</p>
+        <h1 className={`mt-5 max-w-4xl font-display text-4xl leading-[1.1] font-semibold delay-100 sm:text-6xl ${ENTER}`}>Find the right home to rent</h1>
+        <p className={`mt-5 max-w-2xl text-lg text-white/80 delay-150 ${ENTER}`}>
+          {liveCount
+            ? `${liveCount.toLocaleString("en-IN")} properties available, with rent and deposit shown upfront.`
+            : "Browse flats listed by their owners, with rent and deposit shown upfront."}
+        </p>
 
-          <div className={`delay-100 ${ENTER}`}>
-            <p className="mt-6 text-lg text-muted-foreground">
-              {liveCount ? (
-                <>
-                  <span className="font-bold text-foreground tabular">{liveCount.toLocaleString("en-IN")}</span> flats live right now, listed directly by owners.
-                </>
-              ) : (
-                "Flats listed directly by owners. Save your favourites and book a visit."
-              )}
-            </p>
-          </div>
-
-          <div className={`delay-200 ${ENTER}`}>
-            <form action="/explore" role="search" className="brutal mx-auto mt-8 flex max-w-xl items-center gap-2 rounded-2xl bg-card p-1.5 lg:mx-0">
-              <label className="relative flex-1">
-                <span className="sr-only">Area, society or city</span>
-                <MapPin className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-primary" aria-hidden />
-                <input
-                  name="keywords"
-                  placeholder='Try "Vijay Nagar" or "2BHK near metro"'
-                  className="h-12 w-full rounded-xl bg-transparent pr-3 pl-11 text-base outline-none placeholder:text-muted-foreground"
-                />
-              </label>
-              <button
-                type="submit"
-                className="grid h-12 shrink-0 place-items-center rounded-xl border-2 border-ink bg-primary px-5 font-semibold text-primary-foreground transition hover:bg-primary/90 sm:px-7"
-              >
-                <span className="hidden sm:inline">Search</span>
-                <Search className="size-5 sm:hidden" aria-label="Search" />
-              </button>
-            </form>
-          </div>
-
-          <div className={`mt-5 delay-300 ${ENTER} flex flex-wrap items-center justify-center gap-2 lg:justify-start`}>
-            {FLAT_TYPES.map((t) => (
-              <Link key={t} href={`/explore?type=${encodeURIComponent(t)}`} className="brutal-sm brutal-hover rounded-full bg-card px-3.5 py-1 text-sm font-semibold">
-                {t}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className={`relative mx-auto w-full max-w-[440px] delay-150 ${ENTER}`} aria-hidden>
-          <div className="brutal relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-3xl bg-accent">
-            <Image src={heroPhoto} alt="" fill priority placeholder="blur" sizes="(min-width: 1024px) 440px, 90vw" className="object-cover" />
-          </div>
-          {TAGS.map((t, i) => (
-            <span key={t.label} className={`absolute ${POP} ${t.className}`} style={{ animationDelay: `${700 + i * 150}ms` }}>
-              <span className="brutal-sm animate-float block rounded-full bg-card px-4 py-1.5 text-sm font-semibold" style={{ animationDelay: `${i * -2}s` }}>
-                {t.label}
-              </span>
+        <form action="/explore" role="search" className={`mt-10 w-full max-w-5xl rounded-lg bg-card text-left text-foreground shadow-float delay-200 ${ENTER}`}>
+          <div className="flex border-b px-5" role="tablist" aria-label="Search type">
+            <span role="tab" aria-selected className="relative -mb-px border-b-2 border-gold px-1 py-3.5 text-sm font-semibold">
+              Rent
             </span>
-          ))}
-        </div>
+          </div>
+          <div className="grid gap-4 p-5 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
+            <Field icon={MapPin} label="Location">
+              <input name="keywords" placeholder="Area, society or city" className={control} />
+            </Field>
+            <Field icon={BedDouble} label="Property type">
+              <select name="type" defaultValue="" className={`${control} cursor-pointer appearance-none`}>
+                <option value="">All types</option>
+                {FLAT_TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field icon={IndianRupee} label="Max rent">
+              <select name="max_rent" defaultValue="" className={`${control} cursor-pointer appearance-none`}>
+                <option value="">Any price</option>
+                {BUDGETS.map((b) => (
+                  <option key={b} value={b}>
+                    ₹{b.toLocaleString("en-IN")} / month
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Button type="submit" size="xl" className="w-full md:w-auto md:px-8">
+              <Search aria-hidden /> Search
+            </Button>
+          </div>
+        </form>
       </div>
-      <Wave className="text-card" />
     </section>
   );
 }
