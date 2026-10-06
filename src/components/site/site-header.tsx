@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { Logo } from "@/components/common/logo";
 import { ThemeToggle } from "@/components/common/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -7,13 +8,13 @@ import { DesktopNav, MobileNav, type NavLink } from "./site-nav";
 import { UserMenu } from "./user-menu";
 
 const GUEST_LINKS: NavLink[] = [
-  { href: "/explore", label: "Browse flats" },
+  { href: "/explore", label: "Rent" },
   { href: "/saved", label: "Saved" },
-  { href: "/register?type=owner", label: "List property" },
+  { href: "/#owners", label: "For owners" },
 ];
 
 const RENTER_LINKS: NavLink[] = [
-  { href: "/explore", label: "Explore" },
+  { href: "/explore", label: "Rent" },
   { href: "/saved", label: "Saved" },
   { href: "/visits", label: "My visits" },
 ];
@@ -23,11 +24,11 @@ export async function SiteHeader() {
   const links = user ? (user.role === "client" ? RENTER_LINKS : [{ href: "/dashboard", label: "Dashboard" }, ...RENTER_LINKS]) : GUEST_LINKS;
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-card/90 backdrop-blur">
-      <div className="container-page flex h-16 items-center gap-6">
-        <Logo />
+    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+      <div className="container-page flex h-[72px] items-stretch gap-10">
+        <Logo className="self-center" />
         <DesktopNav links={links} />
-        <div className="ml-auto flex items-center gap-1.5">
+        <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
           {user ? (
             <UserMenu user={user} />
@@ -37,7 +38,9 @@ export async function SiteHeader() {
                 <Link href="/login">Log in</Link>
               </Button>
               <Button asChild className="hidden sm:inline-flex">
-                <Link href="/register">Sign up</Link>
+                <Link href="/register?type=owner">
+                  <Plus aria-hidden /> List your property
+                </Link>
               </Button>
             </>
           )}
