@@ -5,7 +5,7 @@ import { BadgeCheck, CalendarCheck, Heart, type LucideIcon } from "lucide-react"
 import { Logo } from "@/components/common/logo";
 import { SITE } from "@/lib/config";
 import { cn } from "@/lib/utils";
-import hero from "../../../public/images/hero-apartments.jpg";
+import hero from "../../../public/images/hero-living-room.jpg";
 
 type Point = { icon: LucideIcon; title: string; text: string };
 
