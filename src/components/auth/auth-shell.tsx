@@ -6,7 +6,7 @@ import { Logo } from "@/components/common/logo";
 import { ThemeToggle } from "@/components/common/theme-toggle";
 import { SITE } from "@/lib/config";
 import { cn } from "@/lib/utils";
-import hero from "../../../public/images/hero-building.jpg";
+import hero from "../../../public/images/hero-apartments.jpg";
 
 type Point = { icon: LucideIcon; title: string; text: string };
 
@@ -30,7 +30,15 @@ export function AuthShell({ children, points = DEFAULT_POINTS, panelTitle }: { c
           © {new Date().getFullYear()} {SITE.name} ·{" "}
           <a href={`mailto:${SITE.supportEmail}`} className="hover:text-foreground">
             Help
-          </a>
+          </a>{" "}
+          ·{" "}
+          <Link href="/privacy" className="hover:text-foreground">
+            Privacy
+          </Link>{" "}
+          ·{" "}
+          <Link href="/terms" className="hover:text-foreground">
+            Terms
+          </Link>
         </p>
       </div>
 
