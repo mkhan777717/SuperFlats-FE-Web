@@ -74,13 +74,13 @@ export function BookVisit({ listingId, signedIn }: { listingId: number; signedIn
   }
 
   return (
-    <div>
+    <div className="min-w-0">
       <h3 className="text-lg font-semibold tracking-tight text-primary">Book a viewing</h3>
       <p className="mt-1 text-sm text-muted-foreground">Free to request. The owner confirms the time.</p>
 
-      <fieldset className="mt-5">
+      <fieldset className="mt-5 min-w-0">
         <legend className="mb-2 text-[0.7rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase">Day</legend>
-        <div className="scrollbar-none -mx-1 flex min-h-[76px] gap-2 overflow-x-auto px-1 pb-1">
+        <div className="scrollbar-none flex min-h-[76px] snap-x gap-2 overflow-x-auto pb-1">
           {days.map((d) => {
             const active = !!day && sameDay(d, day);
             const full = SLOTS.every((s) => isPast(d, s.hour));
@@ -95,7 +95,7 @@ export function BookVisit({ listingId, signedIn }: { listingId: number; signedIn
                 }}
                 aria-pressed={active}
                 className={cn(
-                  "flex w-[58px] shrink-0 flex-col items-center rounded-sm border py-2 transition disabled:opacity-40",
+                  "flex w-14 shrink-0 snap-start flex-col items-center rounded-sm border py-2 transition disabled:opacity-40",
                   active ? "border-primary bg-primary text-primary-foreground" : "hover:border-primary/40",
                 )}
               >
@@ -110,7 +110,7 @@ export function BookVisit({ listingId, signedIn }: { listingId: number; signedIn
         </div>
       </fieldset>
 
-      <fieldset className="mt-4" disabled={!day}>
+      <fieldset className="mt-4 min-w-0" disabled={!day}>
         <legend className="mb-2 text-[0.7rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase">Time</legend>
         <div className="grid grid-cols-3 gap-2">
           {SLOTS.map((s) => {
@@ -124,11 +124,11 @@ export function BookVisit({ listingId, signedIn }: { listingId: number; signedIn
                 onClick={() => setHour(s.hour)}
                 aria-pressed={active}
                 className={cn(
-                  "flex items-center justify-center gap-1.5 rounded-sm border py-2.5 text-sm font-medium transition disabled:opacity-40",
+                  "flex items-center justify-center gap-1 rounded-sm border px-1 py-2.5 text-[0.8125rem] font-medium whitespace-nowrap transition disabled:opacity-40",
                   active ? "border-gold bg-accent text-foreground" : "hover:border-primary/40",
                 )}
               >
-                <Clock className="size-3.5" aria-hidden /> {s.label}
+                <Clock className="size-3.5 shrink-0" aria-hidden /> {s.label}
               </button>
             );
           })}

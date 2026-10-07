@@ -78,7 +78,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         <div className="grid min-w-0 gap-10">
           <PhotoGallery photos={sortedPhotos(flat)} title={listing.title} />
 
-          <header className="flex flex-wrap items-start justify-between gap-4">
+          <header className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="eyebrow">{flat?.type} for rent</p>
               <h1 className="mt-2 font-display text-3xl font-medium text-primary sm:text-4xl">{listing.title}</h1>
@@ -143,8 +143,8 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
           )}
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="grid gap-6 rounded-sm border bg-card p-6 shadow-lift">
+        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+          <div className="grid min-w-0 gap-6 overflow-hidden rounded-sm border bg-card p-6 shadow-lift">
             <div>
               <p className="text-4xl font-semibold tracking-tight text-primary tabular">
                 {formatRupees(listing.monthly_rent)}
@@ -154,7 +154,7 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
                 + {formatRupees(listing.security_amount)} {listing.security_type === "lease" ? "lease" : "deposit"}
               </p>
             </div>
-            <div className="border-t pt-6">
+            <div className="min-w-0 border-t pt-6">
               <BookVisit listingId={listing.id} signedIn={!!user} />
             </div>
             <div className="flex items-center gap-3 border-t pt-6">
