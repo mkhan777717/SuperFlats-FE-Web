@@ -15,7 +15,7 @@ const control =
 function Field({ label, icon: Icon, select, children }: { label: string; icon: typeof MapPin; select?: boolean; children: React.ReactNode }) {
   return (
     <label className="grid min-w-0 gap-2">
-      <span className="text-sm font-medium">{label}</span>
+      <span className="text-[0.7rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{label}</span>
       <span className="relative flex items-center">
         <Icon className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground" aria-hidden />
         {children}
@@ -50,7 +50,7 @@ export function HeroSearch() {
               aria-controls={`hero-panel-${id}`}
               onClick={() => setTab(id)}
               className={cn(
-                "flex h-12 items-center gap-2 rounded-t-lg px-7 text-[0.9375rem] font-semibold transition",
+                "caps flex h-12 items-center gap-2 rounded-t-sm px-7 transition",
                 active ? "bg-primary text-primary-foreground" : "bg-card/90 text-foreground backdrop-blur hover:bg-card",
               )}
             >
@@ -60,7 +60,7 @@ export function HeroSearch() {
         })}
       </div>
 
-      <div className="rounded-tr-lg rounded-b-lg bg-card p-5 shadow-float sm:p-6">
+      <div className="rounded-tr-sm rounded-b-sm border-t-2 border-gold bg-card p-5 shadow-float sm:p-7">
         {tab === "rent" ? (
           <form id="hero-panel-rent" role="tabpanel" aria-labelledby="hero-tab-rent" action="/explore" className="grid gap-4 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
             <Field label="Location" icon={MapPin}>

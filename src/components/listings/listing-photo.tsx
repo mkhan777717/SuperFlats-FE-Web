@@ -7,7 +7,7 @@ export function ListingPhoto({ src, alt, sizes, priority, className }: { src: st
   return (
     <div className={cn("relative overflow-hidden bg-muted", className)}>
       {src ? (
-        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover transition duration-500 group-hover:scale-[1.04]" />
+        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover transition duration-[1200ms] ease-out group-hover:scale-[1.06]" />
       ) : (
         <div className="absolute inset-0 grid place-items-center bg-muted text-muted-foreground">
           <span className="flex flex-col items-center gap-2 text-xs font-medium">

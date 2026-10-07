@@ -11,9 +11,12 @@ import interior from "../../../public/images/hero-living.jpg";
 export function SectionHeader({ title, href, cta = "View all" }: { title: string; href?: string; cta?: string }) {
   return (
     <div className="flex items-end justify-between gap-6">
-      <h2 className="font-display text-3xl font-semibold text-primary sm:text-[2.1rem] dark:text-foreground">{title}</h2>
+      <div>
+        <h2 className="font-display text-3xl font-medium text-primary sm:text-[2.4rem]">{title}</h2>
+        <span className="gold-rule mt-4" aria-hidden />
+      </div>
       {href && (
-        <Link href={href} className="group flex shrink-0 items-center gap-1.5 text-sm font-medium text-gold hover:underline">
+        <Link href={href} className="caps group flex shrink-0 items-center gap-1.5 text-gold-strong hover:underline">
           {cta} <ArrowRight className="size-4 transition group-hover:translate-x-0.5" aria-hidden />
         </Link>
       )}
@@ -101,7 +104,8 @@ const POPULAR = [
 export function PopularSearches() {
   return (
     <section className="container-page pb-14">
-      <h2 className="font-display text-3xl font-semibold text-primary sm:text-[2.1rem] dark:text-foreground">Popular searches</h2>
+      <h2 className="font-display text-3xl font-medium text-primary sm:text-[2.4rem]">Popular searches</h2>
+      <span className="gold-rule mt-4" aria-hidden />
       <Reveal className="mt-5 flex flex-wrap items-center gap-y-3">
         {POPULAR.map((p, i) => (
           <span key={p.href} className="flex items-center">

@@ -3,10 +3,9 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { BadgeCheck, CalendarCheck, Heart, type LucideIcon } from "lucide-react";
 import { Logo } from "@/components/common/logo";
-import { ThemeToggle } from "@/components/common/theme-toggle";
 import { SITE } from "@/lib/config";
 import { cn } from "@/lib/utils";
-import hero from "../../../public/images/hero-apartments.jpg";
+import hero from "../../../public/images/hero-living-room.jpg";
 
 type Point = { icon: LucideIcon; title: string; text: string };
 
@@ -23,7 +22,6 @@ export function AuthShell({ children, points = DEFAULT_POINTS, panelTitle }: { c
       <div className="flex min-w-0 flex-col px-5 py-6 sm:px-10">
         <div className="flex items-center justify-between">
           <Logo />
-          <ThemeToggle />
         </div>
         <main className="mx-auto flex w-full max-w-[26rem] flex-1 flex-col justify-center py-10">{children}</main>
         <p className="text-center text-xs text-muted-foreground">
