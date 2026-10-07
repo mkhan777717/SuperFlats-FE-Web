@@ -4,9 +4,12 @@ import { Providers } from "@/components/common/providers";
 import { SITE } from "@/lib/config";
 import "./globals.css";
 
+// Inter is the closest open font to Apple's San Francisco. The optical-size axis gives it
+// SF's behaviour: tighter, crisper letters at large sizes and roomier ones at small sizes.
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  axes: ["opsz"],
 });
 
 // Serif for display headings only; everything else is set in Inter.
