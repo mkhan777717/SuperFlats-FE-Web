@@ -1,24 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BedDouble, CalendarCheck, Building2, CheckCircle2, IndianRupee, LogIn, Users } from "lucide-react";
+import { ArrowRight, BedDouble, BedSingle, Building, Building2, CalendarCheck, ChartColumn, LogIn, Sofa, Users, type LucideIcon } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/common/motion";
-import { Tilt } from "@/components/common/tilt";
 import { FavoriteButton } from "@/components/listings/favorite-button";
 import { ListingCard } from "@/components/listings/listing-card";
 import { Button } from "@/components/ui/button";
-import { FLAT_TYPES } from "@/lib/config";
 import type { Listing } from "@/lib/types";
 import interior from "../../../public/images/hero-living.jpg";
 
-export function SectionHeader({ eyebrow, title, href, cta = "View all" }: { eyebrow?: string; title: string; href?: string; cta?: string }) {
+export function SectionHeader({ title, href, cta = "View all" }: { title: string; href?: string; cta?: string }) {
   return (
     <div className="flex items-end justify-between gap-6">
-      <div>
-        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">{title}</h2>
-      </div>
+      <h2 className="font-display text-3xl font-semibold text-primary sm:text-[2.1rem] dark:text-foreground">{title}</h2>
       {href && (
-        <Link href={href} className="group flex shrink-0 items-center gap-1.5 text-sm font-semibold text-link hover:underline">
+        <Link href={href} className="group flex shrink-0 items-center gap-1.5 text-sm font-medium text-gold hover:underline">
           {cta} <ArrowRight className="size-4 transition group-hover:translate-x-0.5" aria-hidden />
         </Link>
       )}
@@ -52,7 +47,7 @@ export function SignInToBrowse() {
       <h3 className="mt-5 text-xl font-semibold">Sign in to view available properties</h3>
       <p className="mt-1.5 max-w-md text-muted-foreground">Create a free account to browse every listing, save properties and book viewings.</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Button asChild size="lg">
+        <Button asChild size="lg" variant="gold">
           <Link href="/register">Create free account</Link>
         </Button>
         <Button asChild size="lg" variant="outline">
@@ -63,144 +58,96 @@ export function SignInToBrowse() {
   );
 }
 
-const TYPE_TEXT: Record<string, string> = {
-  "1RK": "Room with kitchen",
-  "1BHK": "One bedroom",
-  "2BHK": "Two bedrooms",
-  "3BHK": "Three bedrooms",
-  "3BHK+": "Four or more",
-};
+const TYPES: { type: string; label: string; icon: LucideIcon }[] = [
+  { type: "1RK", label: "Compact", icon: BedSingle },
+  { type: "1BHK", label: "Cozy", icon: Sofa },
+  { type: "2BHK", label: "Popular", icon: BedDouble },
+  { type: "3BHK", label: "Spacious", icon: Building },
+  { type: "3BHK+", label: "Premium", icon: Building2 },
+];
 
 export function PropertyTypes() {
   return (
-    <section className="bg-muted/60">
-      <div className="container-page py-20">
-        <SectionHeader eyebrow="Browse" title="Explore by property type" />
-        <Stagger as="ul" stagger={0.06} className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {FLAT_TYPES.map((type) => (
-            <StaggerItem as="li" key={type}>
-              <Tilt className="rounded-lg" max={8}>
-                <Link
-                  href={`/explore?type=${encodeURIComponent(type)}`}
-                  className="group flex h-full flex-col justify-between gap-8 rounded-lg border bg-card p-5 shadow-soft transition-shadow hover:shadow-lift"
-                >
-                  <span className="flex items-center justify-between">
-                    <span className="grid size-11 place-items-center rounded-md bg-accent text-accent-foreground [transform:translateZ(24px)]">
-                      <BedDouble className="size-5" aria-hidden />
-                    </span>
-                    <ArrowUpRight className="size-5 text-muted-foreground transition group-hover:text-foreground" aria-hidden />
-                  </span>
-                  <span>
-                    <span className="block text-xl font-bold">{type}</span>
-                    <span className="text-sm text-muted-foreground">{TYPE_TEXT[type]}</span>
-                  </span>
-                </Link>
-              </Tilt>
-            </StaggerItem>
-          ))}
-        </Stagger>
-      </div>
+    <section className="container-page pt-4 pb-14">
+      <SectionHeader title="Explore by property type" href="/explore" cta="View all types" />
+      <Stagger as="ul" stagger={0.06} className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {TYPES.map(({ type, label, icon: Icon }) => (
+          <StaggerItem as="li" key={type}>
+            <Link
+              href={`/explore?type=${encodeURIComponent(type)}`}
+              className="flex items-center gap-4 rounded-lg border bg-card px-5 py-5 transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lift"
+            >
+              <Icon className="size-9 shrink-0 stroke-[1.4] text-primary dark:text-foreground" aria-hidden />
+              <span>
+                <span className="block font-semibold">{type}</span>
+                <span className="text-sm text-muted-foreground">{label}</span>
+              </span>
+            </Link>
+          </StaggerItem>
+        ))}
+      </Stagger>
     </section>
   );
 }
 
-const BUDGET_LINKS: Record<string, number[]> = {
-  "1RK": [8000, 12000],
-  "1BHK": [12000, 18000],
-  "2BHK": [20000, 30000],
-  "3BHK": [30000, 45000],
-};
+const POPULAR = [
+  { label: "2BHK under ₹25,000", href: "/explore?type=2BHK&max_rent=25000" },
+  { label: "1BHK under ₹15,000", href: "/explore?type=1BHK&max_rent=15000" },
+  { label: "1RK under ₹10,000", href: "/explore?type=1RK&max_rent=10000" },
+  { label: "3BHK flats", href: "/explore?type=3BHK" },
+  { label: "Newest listings", href: "/explore" },
+];
 
-/** Portal-style quick links: size × budget, each a pre-filtered search. */
 export function PopularSearches() {
   return (
-    <section className="container-page py-20">
-      <SectionHeader eyebrow="Popular searches" title="Find a home within your budget" />
-      <Reveal className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {Object.entries(BUDGET_LINKS).map(([type, budgets]) => (
-          <div key={type}>
-            <h3 className="border-b pb-3 text-sm font-semibold">{type} flats for rent</h3>
-            <ul className="mt-3 grid gap-2.5">
-              {budgets.map((b) => (
-                <li key={b}>
-                  <Link href={`/explore?type=${encodeURIComponent(type)}&max_rent=${b}`} className="text-sm text-muted-foreground transition hover:text-link">
-                    {type} under ₹{b.toLocaleString("en-IN")}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link href={`/explore?type=${encodeURIComponent(type)}&sort=rent_asc`} className="text-sm text-muted-foreground transition hover:text-link">
-                  Cheapest {type} first
-                </Link>
-              </li>
-            </ul>
-          </div>
+    <section className="container-page pb-14">
+      <h2 className="font-display text-3xl font-semibold text-primary sm:text-[2.1rem] dark:text-foreground">Popular searches</h2>
+      <Reveal className="mt-5 flex flex-wrap items-center gap-y-3">
+        {POPULAR.map((p, i) => (
+          <span key={p.href} className="flex items-center">
+            {i > 0 && <span className="mx-5 hidden h-5 w-px bg-border sm:block" aria-hidden />}
+            <Link href={p.href} className="group mr-5 flex items-center gap-2 text-[0.9375rem] text-primary hover:underline sm:mr-0 dark:text-foreground">
+              {p.label} <ArrowRight className="size-4 text-gold transition group-hover:translate-x-0.5" aria-hidden />
+            </Link>
+          </span>
         ))}
       </Reveal>
     </section>
   );
 }
 
-const OWNER_POINTS = [
-  { icon: Building2, text: "Publish properties, flats and listings with photos" },
-  { icon: CalendarCheck, text: "Confirm viewing requests and assign your agents" },
-  { icon: Users, text: "Keep tenants, contracts and ID documents together" },
-  { icon: IndianRupee, text: "Monthly rent bills generated automatically" },
+const OWNER_FEATURES: { icon: LucideIcon; label: string }[] = [
+  { icon: CalendarCheck, label: "Viewing requests" },
+  { icon: Users, label: "Tenant records" },
+  { icon: ChartColumn, label: "Rent tracking" },
 ];
 
-export function OwnerSection() {
+export function OwnerBand() {
   return (
-    <section id="owners" className="scroll-mt-24 overflow-hidden bg-ink text-ink-foreground">
-      <div className="container-page grid items-center gap-16 py-24 lg:grid-cols-2">
-        <Reveal>
-          <p className="eyebrow">For owners &amp; property managers</p>
-          <h2 className="mt-3 font-display text-3xl leading-tight font-semibold sm:text-5xl">Rent out faster. Manage everything in one place.</h2>
-          <ul className="mt-8 grid gap-4">
-            {OWNER_POINTS.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-center gap-3 text-white/85">
-                <span className="grid size-9 shrink-0 place-items-center rounded-md bg-white/10 text-gold">
-                  <Icon className="size-[18px]" aria-hidden />
-                </span>
-                {text}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Button asChild size="xl" variant="gold">
-              <Link href="/register?type=owner">
-                List your property <ArrowRight aria-hidden />
-              </Link>
-            </Button>
-            <Button asChild size="xl" variant="ghost" className="text-white hover:bg-white/10 hover:text-white">
-              <Link href="/login">Owner login</Link>
-            </Button>
-          </div>
-        </Reveal>
-
-        <div className="relative mx-auto w-full max-w-xl [perspective:1400px]" aria-hidden>
-          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-float ring-1 ring-white/10 [transform:rotateY(-12deg)_rotateX(5deg)]">
-            <Image src={interior} alt="" fill placeholder="blur" sizes="(min-width: 1024px) 40vw, 90vw" className="object-cover" />
-          </Reveal>
-          <div className="animate-float absolute -bottom-6 left-2 z-10 flex items-center gap-3 rounded-lg bg-card p-3 pr-5 text-card-foreground shadow-float sm:-left-8">
-            <span className="grid size-10 place-items-center rounded-md bg-success-soft text-success">
-              <CheckCircle2 className="size-5" />
-            </span>
-            <span className="text-sm leading-tight">
-              <span className="block font-semibold">Rent received</span>
-              <span className="text-muted-foreground">Flat B-204 · October</span>
-            </span>
-          </div>
-          <div className="animate-float absolute -top-6 right-2 z-10 flex items-center gap-3 rounded-lg bg-card p-3 pr-5 text-card-foreground shadow-float [animation-delay:-3s] sm:-right-6">
-            <span className="grid size-10 place-items-center rounded-md bg-accent text-accent-foreground">
-              <CalendarCheck className="size-5" />
-            </span>
-            <span className="text-sm leading-tight">
-              <span className="block font-semibold">Viewing confirmed</span>
-              <span className="text-muted-foreground">Sat · 11:00 AM</span>
-            </span>
-          </div>
+    <section id="owners" className="container-page scroll-mt-24 pb-16">
+      <Reveal className="grid items-center gap-8 overflow-hidden rounded-lg bg-primary p-5 text-primary-foreground shadow-lift sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_auto] lg:gap-10 dark:bg-ink">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-md">
+          <Image src={interior} alt="A furnished living room in a rental flat" fill placeholder="blur" sizes="(min-width: 1024px) 25vw, 90vw" className="object-cover" />
         </div>
-      </div>
+        <div>
+          <p className="eyebrow">For property owners</p>
+          <h2 className="mt-2 font-display text-3xl font-semibold">List your property with Superflats</h2>
+          <p className="mt-2 text-white/80">Reach renters, manage viewings and handle everything from one place.</p>
+          <Button asChild variant="gold" size="xl" className="mt-6">
+            <Link href="/register?type=owner">
+              List your property <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        </div>
+        <ul className="grid grid-cols-3 border-white/15 lg:border-l lg:pl-4">
+          {OWNER_FEATURES.map(({ icon: Icon, label }, i) => (
+            <li key={label} className={`flex flex-col items-center gap-2 px-5 py-2 text-center text-sm ${i > 0 ? "border-l border-white/15" : ""}`}>
+              <Icon className="size-7 text-gold" aria-hidden />
+              {label}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </section>
   );
 }

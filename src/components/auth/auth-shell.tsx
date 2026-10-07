@@ -6,7 +6,7 @@ import { Logo } from "@/components/common/logo";
 import { ThemeToggle } from "@/components/common/theme-toggle";
 import { SITE } from "@/lib/config";
 import { cn } from "@/lib/utils";
-import hero from "../../../public/images/hero-building.jpg";
+import hero from "../../../public/images/hero-apartments.jpg";
 
 type Point = { icon: LucideIcon; title: string; text: string };
 

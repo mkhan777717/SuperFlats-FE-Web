@@ -1,83 +1,40 @@
 import Image from "next/image";
-import { BedDouble, IndianRupee, MapPin, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FLAT_TYPES } from "@/lib/config";
-import heroPhoto from "../../../public/images/hero-building.jpg";
-
-const BUDGETS = [10000, 15000, 20000, 30000, 50000, 75000];
+import heroPhoto from "../../../public/images/hero-apartments.jpg";
+import { HeroSearch } from "./hero-search";
 
 /*
- * Entrance runs on CSS (tw-animate), so the search panel is in the server HTML and
- * visible before JavaScript loads.
+ * Entrance runs on CSS (tw-animate), so the text and search card are in the server
+ * HTML and visible before JavaScript loads.
  */
 const ENTER = "animate-in fade-in slide-in-from-bottom-3 animation-duration-700 fill-mode-both ease-out motion-reduce:animate-none";
 
-function Field({ icon: Icon, label, children }: { icon: typeof MapPin; label: string; children: React.ReactNode }) {
+/** Headline on the left, apartments photo on the right, tabbed search card below. */
+export function Hero() {
   return (
-    <label className="flex min-w-0 flex-1 flex-col gap-1.5">
-      <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</span>
-      <span className="relative flex items-center">
-        <Icon className="pointer-events-none absolute left-3 size-4 text-muted-foreground" aria-hidden />
-        {children}
-      </span>
-    </label>
-  );
-}
+    <section className="relative isolate -mt-[72px] overflow-hidden border-b">
+      <Image src={heroPhoto} alt="" fill priority placeholder="blur" sizes="100vw" className="animate-ken-burns -z-20 object-cover object-[75%_40%]" />
+      {/*
+        One continuous fade in the theme's background colour (light or dark), so the
+        headline sits on a calm surface and there is no visible edge in either theme.
+      */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background from-0% via-background/90 via-40% to-background/5 to-80%" />
+      <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background/80 to-transparent" />
+      {/* Soft wash under the transparent header so its links stay readable over the photo. */}
+      <div className="absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-background/85 via-background/40 to-transparent" />
 
-const control =
-  "h-12 w-full rounded-md border border-input bg-card pr-3 pl-9 text-[0.9375rem] text-foreground outline-none transition focus:border-ring focus:ring-3 focus:ring-ring/20";
-
-/** Full-width property photo with a classic search panel: location, type, budget. */
-export function Hero({ liveCount }: { liveCount?: number }) {
-  return (
-    <section className="relative isolate">
-      <Image src={heroPhoto} alt="" fill priority placeholder="blur" sizes="100vw" className="animate-ken-burns -z-10 object-cover object-[50%_35%]" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[oklch(0.2_0.045_258/0.85)] via-[oklch(0.2_0.045_258/0.6)] to-[oklch(0.2_0.045_258/0.85)]" />
-
-      <div className="container-page flex flex-col items-center pt-20 pb-24 text-center text-white sm:pt-28 sm:pb-32">
-        <p className={`eyebrow ${ENTER}`}>Properties for rent · Direct from owners</p>
-        <h1 className={`mt-5 max-w-4xl font-display text-4xl leading-[1.1] font-semibold delay-100 sm:text-6xl ${ENTER}`}>Find the right home to rent</h1>
-        <p className={`mt-5 max-w-2xl text-lg text-white/80 delay-150 ${ENTER}`}>
-          {liveCount
-            ? `${liveCount.toLocaleString("en-IN")} properties available, with rent and deposit shown upfront.`
-            : "Browse flats listed by their owners, with rent and deposit shown upfront."}
-        </p>
-
-        <form action="/explore" role="search" className={`mt-10 w-full max-w-5xl rounded-lg bg-card text-left text-foreground shadow-float delay-200 ${ENTER}`}>
-          <div className="flex border-b px-5" role="tablist" aria-label="Search type">
-            <span role="tab" aria-selected className="relative -mb-px border-b-2 border-gold px-1 py-3.5 text-sm font-semibold">
-              Rent
-            </span>
-          </div>
-          <div className="grid gap-4 p-5 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
-            <Field icon={MapPin} label="Location">
-              <input name="keywords" placeholder="Area, society or city" className={control} />
-            </Field>
-            <Field icon={BedDouble} label="Property type">
-              <select name="type" defaultValue="" className={`${control} cursor-pointer appearance-none`}>
-                <option value="">All types</option>
-                {FLAT_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field icon={IndianRupee} label="Max rent">
-              <select name="max_rent" defaultValue="" className={`${control} cursor-pointer appearance-none`}>
-                <option value="">Any price</option>
-                {BUDGETS.map((b) => (
-                  <option key={b} value={b}>
-                    ₹{b.toLocaleString("en-IN")} / month
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Button type="submit" size="xl" className="w-full md:w-auto md:px-8">
-              <Search aria-hidden /> Search
-            </Button>
-          </div>
-        </form>
+      <div className="container-page pt-[calc(72px+3.5rem)] pb-16 sm:pt-[calc(72px+5rem)] sm:pb-20">
+        <div className="max-w-xl">
+          <p className={`eyebrow ${ENTER}`}>Rent smarter</p>
+          <h1 className={`mt-4 font-display text-5xl leading-[1.04] font-semibold text-primary delay-100 sm:text-7xl dark:text-foreground ${ENTER}`}>
+            Find Your Next Home in India
+          </h1>
+          <p className={`mt-6 max-w-md text-lg text-foreground/80 delay-150 ${ENTER}`}>
+            Discover flats directly from owners and property managers. Book viewings, compare options and find a place you&apos;ll love.
+          </p>
+        </div>
+        <div className={`mt-10 delay-200 ${ENTER}`}>
+          <HeroSearch />
+        </div>
       </div>
     </section>
   );

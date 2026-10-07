@@ -8,9 +8,20 @@ export const formatRupees = (value: string | number | null | undefined) => {
   return `₹${inr.format(Number.isFinite(n) ? n : 0)}`;
 };
 
+/** Short Indian-style amounts for tight spaces: ₹60K, ₹1L, ₹1.2Cr. */
+export const formatCompactRupees = (value: string | number | null | undefined) => {
+  const n = Number(value ?? 0);
+  if (!Number.isFinite(n) || n <= 0) return "₹0";
+  const trim = (x: number) => (Math.round(x * 10) / 10).toString().replace(/\.0$/, "");
+  if (n >= 1e7) return `₹${trim(n / 1e7)}Cr`;
+  if (n >= 1e5) return `₹${trim(n / 1e5)}L`;
+  if (n >= 1e3) return `₹${trim(n / 1e3)}K`;
+  return `₹${inr.format(n)}`;
+};
+
 export const formatArea = (value: string | number | null | undefined) => {
   const n = Number(value);
-  return Number.isFinite(n) && n > 0 ? `${inr.format(n)} sqft` : null;
+  return Number.isFinite(n) && n > 0 ? `${inr.format(n)} sq ft` : null;
 };
 
 export const formatDateTime = (iso: string) =>
