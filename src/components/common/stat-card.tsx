@@ -29,18 +29,18 @@ export function StatCard({
   const body = (
     <>
       <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-medium text-muted-foreground">{label}</p>
-        <span className={cn("grid size-9 shrink-0 place-items-center rounded-xl", tones[tone])}>
+        <p className="text-[0.7rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">{label}</p>
+        <span className={cn("grid size-9 shrink-0 place-items-center rounded-sm", tones[tone])}>
           <Icon className="size-[18px]" aria-hidden />
         </span>
       </div>
-      <p className="mt-2 text-2xl font-bold tabular sm:text-[1.75rem]">{value}</p>
+      <p className="mt-3 text-[1.75rem] font-semibold tracking-tight text-primary tabular">{value}</p>
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </>
   );
-  const cls = "block rounded-2xl border bg-card p-5 shadow-soft transition";
+  const cls = "block rounded-sm border bg-card p-5 transition";
   return href ? (
-    <Link href={href} className={cn(cls, "hover:border-foreground/20")}>
+    <Link href={href} className={cn(cls, "hover:border-gold hover:shadow-lift")}>
       {body}
     </Link>
   ) : (
