@@ -61,7 +61,7 @@ export function BookVisit({ listingId, signedIn }: { listingId: number; signedIn
         <span className="mx-auto mb-4 grid size-12 place-items-center rounded-full bg-success-soft text-success">
           <CalendarCheck className="size-6" aria-hidden />
         </span>
-        <h3 className="font-display text-xl font-medium text-primary">Visit requested</h3>
+        <h3 className="text-lg font-semibold tracking-tight text-primary">Visit requested</h3>
         <p className="mt-2 text-sm text-muted-foreground">
           {day.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })} at {SLOTS.find((s) => s.hour === hour)?.label}. The owner will confirm it with
           you.
@@ -75,7 +75,7 @@ export function BookVisit({ listingId, signedIn }: { listingId: number; signedIn
 
   return (
     <div>
-      <h3 className="font-display text-xl font-medium text-primary">Book a viewing</h3>
+      <h3 className="text-lg font-semibold tracking-tight text-primary">Book a viewing</h3>
       <p className="mt-1 text-sm text-muted-foreground">Free to request. The owner confirms the time.</p>
 
       <fieldset className="mt-5">

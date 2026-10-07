@@ -146,9 +146,9 @@ export default async function ListingPage({ params }: PageProps<"/listings/[id]"
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <div className="grid gap-6 rounded-sm border bg-card p-6 shadow-lift">
             <div>
-              <p className="font-display text-4xl font-medium text-primary tabular">
+              <p className="text-4xl font-semibold tracking-tight text-primary tabular">
                 {formatRupees(listing.monthly_rent)}
-                <span className="ml-1.5 font-sans text-base font-normal text-muted-foreground">/ month</span>
+                <span className="ml-1.5 text-base font-normal tracking-normal text-muted-foreground">/ month</span>
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 + {formatRupees(listing.security_amount)} {listing.security_type === "lease" ? "lease" : "deposit"}
