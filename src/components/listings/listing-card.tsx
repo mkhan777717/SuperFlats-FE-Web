@@ -14,16 +14,16 @@ export function ListingCard({ listing, action, priority, className }: { listing:
   const by = listing.company?.name || listing.lister?.name || "Owner";
 
   return (
-    <Tilt className="rounded-lg" max={3}>
+    <Tilt className="rounded-sm" max={2}>
       <article
         className={cn(
-          "group relative flex h-full flex-col overflow-hidden rounded-lg border bg-card shadow-soft transition-shadow duration-300 hover:shadow-lift",
+          "group relative flex h-full flex-col overflow-hidden rounded-sm border bg-card transition-shadow duration-500 hover:shadow-lift",
           className,
         )}
       >
         <div className="relative overflow-hidden">
           <ListingPhoto src={coverPhoto(listing)} alt={listing.title} sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" priority={priority} className="aspect-[16/10]" />
-          <span className="absolute top-3 left-3 rounded-sm bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground">For rent</span>
+          <span className="absolute top-3 left-3 rounded-sm bg-primary px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.14em] text-primary-foreground uppercase">For rent</span>
           {photos > 0 && (
             <span className="absolute right-3 bottom-3 inline-flex items-center gap-1 rounded-sm bg-black/65 px-2 py-0.5 text-xs font-medium text-white backdrop-blur">
               <Camera className="size-3.5" aria-hidden /> {photos} {photos === 1 ? "photo" : "photos"}
@@ -33,9 +33,9 @@ export function ListingCard({ listing, action, priority, className }: { listing:
         </div>
 
         <div className="flex flex-1 flex-col px-4 pt-4">
-          <p className="text-[1.35rem] leading-none font-bold tracking-tight tabular">
+          <p className="font-display text-[1.6rem] leading-none font-medium text-primary tabular">
             {formatRupees(listing.monthly_rent)}
-            <span className="ml-1.5 text-sm font-normal text-muted-foreground">/ month</span>
+            <span className="ml-1.5 font-sans text-sm font-normal text-muted-foreground">/ month</span>
           </p>
           <h3 className="mt-2 line-clamp-1 font-semibold">
             <Link href={`/listings/${listing.id}`} className="after:absolute after:inset-0 focus-visible:outline-none">
