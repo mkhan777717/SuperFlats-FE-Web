@@ -8,16 +8,17 @@ import { HeroSearch } from "./hero-search";
  */
 const ENTER = "animate-in fade-in slide-in-from-bottom-3 animation-duration-700 fill-mode-both ease-out motion-reduce:animate-none";
 
-/** Headline on a light sky on the left, apartments photo on the right, tabbed search card below. */
+/** Headline on the left, apartments photo on the right, tabbed search card below. */
 export function Hero() {
   return (
-    <section className="relative isolate overflow-hidden border-b bg-gradient-to-b from-[oklch(0.95_0.03_70)] to-background">
-      {/* Photo sits in the right two thirds (as in the design) and fades into the page. */}
-      <div className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[66%]">
-        <Image src={heroPhoto} alt="" fill priority placeholder="blur" sizes="(min-width: 1024px) 66vw, 100vw" className="animate-ken-burns object-cover object-[60%_45%]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent lg:from-[oklch(0.95_0.03_70)] lg:via-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/80 to-transparent" />
-      </div>
+    <section className="relative isolate overflow-hidden border-b">
+      <Image src={heroPhoto} alt="" fill priority placeholder="blur" sizes="100vw" className="animate-ken-burns -z-20 object-cover object-[75%_40%]" />
+      {/*
+        One continuous fade in the theme's background colour (light or dark), so the
+        headline sits on a calm surface and there is no visible edge in either theme.
+      */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background from-0% via-background/90 via-40% to-background/5 to-80%" />
+      <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background/80 to-transparent" />
 
       <div className="container-page pt-14 pb-16 sm:pt-20 sm:pb-20">
         <div className="max-w-xl">
