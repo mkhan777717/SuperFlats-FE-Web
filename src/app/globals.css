@@ -30,6 +30,8 @@
   --accent-foreground: oklch(0.31 0.08 256);
   --gold: oklch(0.72 0.09 78);
   --gold-foreground: oklch(0.2 0.03 258);
+  /* Deeper gold for filled buttons so white text keeps 4.7:1 contrast. */
+  --gold-strong: oklch(0.56 0.1 75);
   --ink: oklch(0.2 0.045 258);
   --ink-foreground: oklch(0.98 0.003 255);
   --link: oklch(0.47 0.15 258);
@@ -85,6 +87,7 @@
   --accent-foreground: oklch(0.92 0.02 255);
   --gold: oklch(0.8 0.08 80);
   --gold-foreground: oklch(0.2 0.04 258);
+  --gold-strong: oklch(0.56 0.1 75);
   --ink: oklch(0.12 0.03 258);
   --ink-foreground: oklch(0.96 0.005 255);
   --link: oklch(0.75 0.11 255);
@@ -137,6 +140,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
+  --color-gold-strong: var(--gold-strong);
   --color-ink: var(--ink);
   --color-ink-foreground: var(--ink-foreground);
   --color-link: var(--link);

@@ -1,4 +1,5 @@
 import { Hero } from "@/components/landing/hero";
+import { NearbyListings } from "@/components/landing/nearby-listings";
 import { ListingGrid, OwnerBand, PopularSearches, PropertyTypes, SectionHeader, SignInToBrowse } from "@/components/landing/home-sections";
 import { getOptionalUser, publicApi } from "@/lib/api";
 import { getFavoriteIds } from "@/lib/favorites";
@@ -14,6 +15,7 @@ export default async function HomePage() {
   return (
     <main>
       <Hero />
+      <NearbyListings signedIn={!!user} favoriteIds={[...favorites]} />
 
       <section className="container-page py-14">
         <SectionHeader title="Latest properties for rent" href="/explore" />
