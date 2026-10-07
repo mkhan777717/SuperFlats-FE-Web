@@ -63,6 +63,14 @@ export function SiteFooter() {
           <p className="mt-6 border-t pt-5 text-xs text-muted-foreground">
             © {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </p>
+          <p className="mt-2 flex gap-4 text-xs">
+            <Link href="/privacy" className="text-muted-foreground hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-muted-foreground hover:text-foreground">
+              Terms of Service
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
