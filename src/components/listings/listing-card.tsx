@@ -33,9 +33,9 @@ export function ListingCard({ listing, action, priority, className }: { listing:
         </div>
 
         <div className="flex flex-1 flex-col px-4 pt-4">
-          <p className="font-display text-[1.6rem] leading-none font-medium text-primary tabular">
+          <p className="text-[1.4rem] leading-none font-semibold tracking-tight text-primary tabular">
             {formatRupees(listing.monthly_rent)}
-            <span className="ml-1.5 font-sans text-sm font-normal text-muted-foreground">/ month</span>
+            <span className="ml-1.5 text-sm font-normal tracking-normal text-muted-foreground">/ month</span>
           </p>
           <h3 className="mt-2 line-clamp-1 font-semibold">
             <Link href={`/listings/${listing.id}`} className="after:absolute after:inset-0 focus-visible:outline-none">
