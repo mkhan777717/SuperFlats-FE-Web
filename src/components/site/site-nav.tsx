@@ -26,7 +26,7 @@ export function DesktopNav({ links }: { links: NavLink[] }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex items-center text-[0.9375rem] font-medium transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
+              "caps relative flex items-center transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
               active ? "text-foreground after:bg-gold" : "text-muted-foreground after:bg-transparent hover:text-foreground",
             )}
           >

@@ -25,8 +25,8 @@ export function Hero() {
       <div className="container-page pt-[calc(72px+3.5rem)] pb-16 sm:pt-[calc(72px+5rem)] sm:pb-20">
         <div className="max-w-xl">
           <p className={`eyebrow ${ENTER}`}>Rent smarter</p>
-          <h1 className={`mt-4 font-display text-5xl leading-[1.04] font-semibold text-primary delay-100 sm:text-7xl dark:text-foreground ${ENTER}`}>
-            Find Your Next Home in India
+          <h1 className={`mt-4 font-display text-5xl leading-[1.04] font-medium text-primary delay-100 sm:text-7xl ${ENTER}`}>
+            Find Your Next <em className="text-gold-strong">Home</em> in India
           </h1>
           <p className={`mt-6 max-w-md text-lg text-foreground/80 delay-150 ${ENTER}`}>
             Discover flats directly from owners and property managers. Book viewings, compare options and find a place you&apos;ll love.
