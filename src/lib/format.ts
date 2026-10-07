@@ -60,3 +60,28 @@ export const listingLocation = (listing: Pick<Listing, "flat">) => {
   if (!p) return "";
   return [p.address, p.city].filter(Boolean).join(", ");
 };
+
+const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
+  ["year", 31536000],
+  ["month", 2592000],
+  ["week", 604800],
+  ["day", 86400],
+  ["hour", 3600],
+  ["minute", 60],
+];
+
+/** "3 hours ago", "yesterday", "just now". */
+export function timeAgo(iso?: string | null) {
+  if (!iso) return "";
+  const seconds = Math.round((new Date(iso).getTime() - Date.now()) / 1000);
+  for (const [unit, size] of UNITS) {
+    if (Math.abs(seconds) >= size) return rtf.format(Math.round(seconds / size), unit);
+  }
+  return "just now";
+}
+
+/** Flat-specific amenities first, then the building's, without duplicates. */
+export const listingAmenities = (listing: Pick<Listing, "flat">) => [
+  ...new Set([...toStringArray(listing.flat?.unique_amenities), ...toStringArray(listing.flat?.property?.amenities)].map((a) => a.trim()).filter(Boolean)),
+];

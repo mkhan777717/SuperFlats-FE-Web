@@ -3,7 +3,8 @@ import { NextResponse, type NextRequest } from "next/server";
 const ACCESS_COOKIE = "sf_access";
 const ROLE_COOKIE = "sf_role";
 
-const RENTER_AREA = ["/explore", "/listings", "/saved", "/visits", "/profile"];
+// Browsing (/, /explore, /listings/*) is public; personal pages need a session.
+const RENTER_AREA = ["/saved", "/visits", "/profile"];
 const CONSOLE_AREA = ["/dashboard"];
 const GUEST_ONLY = ["/login", "/register"];
 

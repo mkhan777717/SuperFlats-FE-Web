@@ -37,7 +37,7 @@ export function LoginForm({ next, expired }: { next?: string; expired?: boolean 
         autoComplete="current-password"
         error={state.fieldErrors?.password}
         labelAside={
-          <Link href="/forgot-password" className="text-sm font-medium text-primary hover:underline">
+          <Link href="/forgot-password" className="text-sm font-medium text-link hover:underline">
             Forgot password?
           </Link>
         }

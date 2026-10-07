@@ -52,10 +52,32 @@ export async function api<T>(path: string, { query, returnTo, ...init }: Request
   });
 
   if (res.status === 401) {
-    redirect(`/auth/refresh?next=${encodeURIComponent(returnTo ?? "/explore")}`);
+    const next = encodeURIComponent(returnTo ?? "/explore");
+    // Signed out: plain login. Signed in: the token went stale, try rotating it first.
+    redirect(token ? `/auth/refresh?next=${next}` : `/login?next=${next}`);
   }
   if (!res.ok) throw new ApiError(res.status, await readError(res));
   return res.json() as Promise<T>;
+}
+
+export type PublicResult<T> = { ok: true; data: T } | { ok: false; status: number };
+
+/**
+ * For pages anyone can open (home, explore, listing details): sends the token when there
+ * is one, never redirects. `ok: false, status: 401` means the backend still requires login
+ * for this endpoint, and the page shows a sign-in prompt instead.
+ */
+export async function publicApi<T>(path: string, query?: Query): Promise<PublicResult<T>> {
+  const token = await getAccessToken();
+  try {
+    const res = await fetch(buildUrl(path, query), {
+      cache: "no-store",
+      headers: { Accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    return res.ok ? { ok: true, data: (await res.json()) as T } : { ok: false, status: res.status };
+  } catch {
+    return { ok: false, status: 503 };
+  }
 }
 
 /**

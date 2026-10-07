@@ -35,15 +35,15 @@ export function AuthShell({ children, points = DEFAULT_POINTS, panelTitle }: { c
       </div>
 
       <aside className="relative hidden p-3 lg:block">
-        <div className="relative h-full overflow-hidden rounded-[1.75rem]">
+        <div className="relative h-full overflow-hidden rounded-lg">
           <Image src={hero} alt="" fill priority placeholder="blur" sizes="55vw" className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.22_0.12_292)] via-[oklch(0.3_0.15_292/0.75)] to-[oklch(0.4_0.18_292/0.25)]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.2_0.045_258/0.95)] via-[oklch(0.2_0.045_258/0.55)] to-[oklch(0.2_0.045_258/0.15)]" />
           <div className="relative flex h-full flex-col justify-end p-10 text-white xl:p-14">
-            <h2 className="max-w-md text-4xl leading-tight font-bold xl:text-5xl">{panelTitle ?? "Your next home is a few taps away."}</h2>
+            <h2 className="max-w-md font-display text-4xl leading-tight font-semibold xl:text-5xl">{panelTitle ?? "Your next home is a few taps away."}</h2>
             <ul className="mt-10 grid gap-5">
               {points.map(({ icon: Icon, title, text }) => (
                 <li key={title} className="flex gap-4">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/15 backdrop-blur">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-md bg-white/10 text-gold backdrop-blur">
                     <Icon className="size-5" aria-hidden />
                   </span>
                   <span>
@@ -63,7 +63,7 @@ export function AuthShell({ children, points = DEFAULT_POINTS, panelTitle }: { c
 export function FormHeader({ title, subtitle }: { title: string; subtitle: ReactNode }) {
   return (
     <header className="mb-8">
-      <h1 className="text-3xl font-bold">{title}</h1>
+      <h1 className="font-display text-4xl font-semibold">{title}</h1>
       <p className="mt-2 text-muted-foreground">{subtitle}</p>
     </header>
   );
@@ -84,7 +84,7 @@ export function SwitchAuth({ text, href, cta }: { text: string; href: string; ct
   return (
     <p className="mt-8 text-center text-sm text-muted-foreground">
       {text}{" "}
-      <Link href={href} className="font-semibold text-primary hover:underline">
+      <Link href={href} className="font-semibold text-link hover:underline">
         {cta}
       </Link>
     </p>
