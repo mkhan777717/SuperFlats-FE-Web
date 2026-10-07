@@ -31,15 +31,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b1626" },
-  ],
+  themeColor: "#ffffff",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable} h-full`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${playfair.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         <Providers>{children}</Providers>
       </body>

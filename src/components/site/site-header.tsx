@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Logo } from "@/components/common/logo";
-import { ThemeToggle } from "@/components/common/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { getOptionalUser } from "@/lib/api";
 import { HeaderFrame } from "./header-frame";
@@ -30,8 +29,6 @@ export async function SiteHeader() {
         <Logo className="self-center" />
         <DesktopNav links={links} />
         <div className="ml-auto flex items-center gap-2">
-          <ThemeToggle />
-          <span className="mx-1 hidden h-6 w-px bg-border sm:block" aria-hidden />
           {user ? (
             <UserMenu user={user} />
           ) : (
