@@ -17,10 +17,10 @@ export function Hero() {
         One continuous fade in the theme's background colour (light or dark), so the
         headline sits on a calm surface and there is no visible edge in either theme.
       */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background from-0% via-background/90 via-40% to-background/5 to-80%" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background/90 from-0% via-background/65 via-35% to-transparent to-65% dark:from-background dark:via-background/85 dark:via-40% dark:to-background/10 dark:to-80%" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background/80 to-transparent" />
       {/* Soft wash under the transparent header so its links stay readable over the photo. */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-background/85 via-background/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-28 bg-gradient-to-b from-background/60 to-transparent dark:from-background/85" />
 
       <div className="container-page pt-[calc(72px+3.5rem)] pb-16 sm:pt-[calc(72px+5rem)] sm:pb-20">
         <div className="max-w-xl">
