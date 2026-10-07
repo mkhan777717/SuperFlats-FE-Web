@@ -4,6 +4,7 @@ import { Logo } from "@/components/common/logo";
 import { ThemeToggle } from "@/components/common/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { getOptionalUser } from "@/lib/api";
+import { HeaderFrame } from "./header-frame";
 import { DesktopNav, MobileNav, type NavLink } from "./site-nav";
 import { UserMenu } from "./user-menu";
 
@@ -24,7 +25,7 @@ export async function SiteHeader() {
   const links = user ? (user.role === "client" ? RENTER_LINKS : [{ href: "/dashboard", label: "Dashboard" }, ...RENTER_LINKS]) : GUEST_LINKS;
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+    <HeaderFrame>
       <div className="container-page flex h-[72px] items-stretch gap-10">
         <Logo className="self-center" />
         <DesktopNav links={links} />
@@ -48,6 +49,6 @@ export async function SiteHeader() {
           <MobileNav links={links} signedIn={!!user} />
         </div>
       </div>
-    </header>
+    </HeaderFrame>
   );
 }
