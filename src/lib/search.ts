@@ -10,7 +10,7 @@ export const SORTS = {
 
 export type SortKey = keyof typeof SORTS;
 
-export const RADII = [1, 2, 5, 10] as const;
+export const RADII = [1, 2, 5, 10, 25] as const;
 
 export type SearchFilters = {
   keywords: string;
