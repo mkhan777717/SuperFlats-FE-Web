@@ -33,6 +33,8 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
         const res = await clientApi<{ is_favorite: boolean }>(`/favorites/toggle/${listingId}`, { method: "POST" });
         setSaved(res.is_favorite);
         toast.success(res.is_favorite ? "Saved to your shortlist" : "Removed from your shortlist");
+        // Re-read server data so every heart on the page (and the Saved page) matches the backend.
+        router.refresh();
       } catch (e) {
         setSaved(!next);
         toast.error(e instanceof Error ? e.message : "Couldn't update your shortlist");
@@ -52,12 +54,12 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
       aria-pressed={saved}
       aria-label={saved ? "Remove from saved" : "Save this flat"}
       className={cn(
-        "grid size-8 place-items-center rounded-full bg-white text-neutral-900 shadow-soft transition hover:scale-110 active:scale-95",
+        "grid size-10 place-items-center rounded-full bg-white text-neutral-900 shadow-soft transition hover:scale-110 active:scale-95",
         className,
       )}
     >
       <motion.span key={pops} initial={pops ? { scale: 0.4 } : false} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 12 }} className="grid">
-        <Heart className={cn("size-4 transition-colors", saved ? "fill-red-500 text-red-500" : "text-red-500")} aria-hidden />
+        <Heart className={cn("size-[18px] transition-colors", saved ? "fill-red-500 text-red-500" : "text-red-500")} aria-hidden />
       </motion.span>
     </button>
   );
