@@ -102,3 +102,104 @@ export interface AuthResponse extends User {
   accessToken: string;
   refreshToken: string;
 }
+
+// ---- Owner console ----
+
+export interface DashboardStats {
+  totalProperties: number;
+  totalFlats: number;
+  activeTenants: number;
+  totalListings: number;
+  totalRentDue: number;
+  appointmentsToday: number;
+}
+
+export interface BusinessKpis {
+  totalRevenueThisMonth: number;
+  appointmentsCompleted: number;
+  appointmentsCanceled: number;
+  newLeadsThisWeek: number;
+}
+
+export interface OwnerProperty extends Property {
+  company_id: number;
+  count_1rk?: number;
+  count_1bhk?: number;
+  count_2bhk?: number;
+  count_3bhk?: number;
+  count_3bhk_plus?: number;
+  total_flats?: number;
+  total_tenants?: number;
+  photos?: Photo[];
+  created_at?: string;
+}
+
+export interface PropertyPage extends Paginated {
+  properties: OwnerProperty[];
+}
+
+export interface Tenant {
+  id: number;
+  name: string;
+  phone_number: string;
+  status: "available" | "occupied";
+  property_id: number;
+  property?: { id: number; name: string };
+  photos?: Photo[];
+  created_at?: string;
+}
+
+export interface TenantPage extends Paginated {
+  tenants: Tenant[];
+}
+
+export interface Booking {
+  id: number;
+  flat_id: number;
+  tenant_id: number;
+  start_date: string;
+  end_date: string;
+  monthly_rent: string | number;
+  security_amount: string | number;
+  security_type: "lease" | "deposit";
+  status: "active" | "ended" | "cancelled";
+  flat?: Flat;
+  tenant?: { id: number; name: string; phone_number: string };
+}
+
+export interface BookingPage extends Paginated {
+  bookings: Booking[];
+}
+
+export interface RentBill {
+  id: number;
+  booking_id: number;
+  tenant_id: number;
+  amount: string | number;
+  bill_month: string;
+  is_paid: boolean;
+  payment_date?: string | null;
+  tenant?: { id: number; name: string };
+  booking?: { id: number; flat?: { id: number; unit_number: string; property?: { id: number; name: string } } };
+}
+
+export interface RentBillPage extends Paginated {
+  bills: RentBill[];
+}
+
+export interface Employee {
+  id: number;
+  user_id: number;
+  company_id: number;
+  joined_at: string;
+  status: "active" | "inactive";
+  user?: Pick<User, "id" | "name" | "email" | "phone_number" | "role" | "profile_image">;
+}
+
+export interface EmployeePage extends Paginated {
+  employees: Employee[];
+}
+
+export interface OwnerListingPage extends Paginated {
+  listings: Listing[];
+}
