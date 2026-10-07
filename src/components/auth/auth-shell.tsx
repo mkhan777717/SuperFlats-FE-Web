@@ -30,7 +30,15 @@ export function AuthShell({ children, points = DEFAULT_POINTS, panelTitle }: { c
           © {new Date().getFullYear()} {SITE.name} ·{" "}
           <a href={`mailto:${SITE.supportEmail}`} className="hover:text-foreground">
             Help
-          </a>
+          </a>{" "}
+          ·{" "}
+          <Link href="/privacy" className="hover:text-foreground">
+            Privacy
+          </Link>{" "}
+          ·{" "}
+          <Link href="/terms" className="hover:text-foreground">
+            Terms
+          </Link>
         </p>
       </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState } from "react";
 import { ArrowRight, Building2, Home, Lock, Mail, Phone, User } from "lucide-react";
 import { FormAlert } from "@/components/auth/auth-shell";
@@ -80,6 +81,17 @@ export function RegisterForm({ next, initialType }: { next?: string; initialType
       <Button type="submit" size="xl" className="mt-1 w-full" loading={pending}>
         {type === "owner" ? "Create owner account" : "Create account"} {!pending && <ArrowRight aria-hidden />}
       </Button>
+      <p className="-mt-1 text-center text-xs text-muted-foreground">
+        By creating an account you agree to our{" "}
+        <Link href="/terms" className="font-medium text-link hover:underline">
+          Terms of Service
+        </Link>{" "}
+        and{" "}
+        <Link href="/privacy" className="font-medium text-link hover:underline">
+          Privacy Policy
+        </Link>
+        .
+      </p>
       {type === "owner" && (
         <p className="-mt-1 text-center text-xs text-muted-foreground">We set up a workspace for your properties. You can invite your team later.</p>
       )}
