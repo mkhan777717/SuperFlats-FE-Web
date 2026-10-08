@@ -8,7 +8,7 @@ import type { AuthResponse } from "@/lib/types";
 
 export type FormState = {
   error?: string;
-  fieldErrors?: Partial<Record<"name" | "email" | "phone_number" | "password", string>>;
+  fieldErrors?: Partial<Record<"name" | "email" | "phone_number" | "password" | "confirm", string>>;
   values?: Record<string, string>;
 };
 
@@ -78,6 +78,39 @@ export async function register(_prev: FormState, formData: FormData): Promise<Fo
   const user = (await res.json()) as AuthResponse;
   await setSession({ accessToken: user.accessToken, refreshToken: user.refreshToken, role: user.role });
   redirect(landingFor(user.role, next));
+}
+
+export type ResetState = FormState & { sent?: boolean; done?: boolean };
+
+const RESET_UNAVAILABLE = "Password reset isn't available yet. Please try again later.";
+
+/** Always reports success for a valid email so the form can't be used to find out who has an account. */
+export async function requestPasswordReset(_prev: ResetState, formData: FormData): Promise<ResetState> {
+  const email = String(formData.get("email") ?? "").trim();
+  const values = { email };
+  if (!EMAIL_RE.test(email)) return { fieldErrors: { email: "Enter a valid email address." }, values };
+
+  const res = await post("/auth/forgot-password", { email });
+  if (!res) return { error: "Can't reach Superflats right now. Check your connection and try again.", values };
+  if (res.status === 404) return { error: RESET_UNAVAILABLE, values };
+  if (!res.ok && res.status !== 400) return { error: await readError(res), values };
+  return { sent: true, values };
+}
+
+export async function resetPassword(_prev: ResetState, formData: FormData): Promise<ResetState> {
+  const token = String(formData.get("token") ?? "");
+  const password = String(formData.get("password") ?? "");
+  const confirm = String(formData.get("confirm") ?? "");
+
+  if (!token) return { error: "This reset link is incomplete. Request a new one." };
+  if (password.length < 8) return { fieldErrors: { password: "Password must be at least 8 characters." } };
+  if (password !== confirm) return { fieldErrors: { confirm: "Passwords don't match." } };
+
+  const res = await post("/auth/reset-password", { token, password });
+  if (!res) return { error: "Can't reach Superflats right now. Check your connection and try again." };
+  if (res.status === 404) return { error: RESET_UNAVAILABLE };
+  if (!res.ok) return { error: await readError(res) };
+  return { done: true };
 }
 
 export async function logout() {
