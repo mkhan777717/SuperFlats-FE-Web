@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/common/page-header";
 import { Status, StatusBadge } from "@/components/common/status-badge";
 import { FilterTabs, hrefWith, PAGE_SIZE, readListParams, Table, TableEmpty, TableFooter, TableSearch, Td } from "@/components/console/data-table";
-import { RowAction } from "@/components/console/row-action";
+import { AddBookingButton, BookingRowActions } from "@/components/console/booking-actions";
 import { api } from "@/lib/api";
 import { formatDate, formatRupees } from "@/lib/format";
 import type { BookingPage } from "@/lib/types";
@@ -26,7 +26,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/dashboa
 
   return (
     <div className="grid gap-8">
-      <PageHeader eyebrow="Contracts" title="Bookings" description="Rental contracts between your flats and tenants. Rent bills are created monthly for active bookings." />
+      <PageHeader eyebrow="Contracts" title="Bookings" description="Rental contracts between your flats and tenants. Rent bills are created monthly for active bookings." actions={<AddBookingButton />} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <FilterTabs
@@ -37,7 +37,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/dashboa
       </div>
 
       <div className="grid gap-4">
-        <Table head={["Tenant", "Flat", "Period", "Rent", "Security", "Status", ""]} empty={!data.bookings.length && <TableEmpty>No bookings here.</TableEmpty>}>
+        <Table head={["Tenant", "Flat", "Period", "Rent", "Security", "Status", ""]} empty={!data.bookings.length && <TableEmpty>No bookings here. Use “New booking” to rent a flat to a tenant.</TableEmpty>}>
           {data.bookings.map((b) => {
             const endingSoon = isEndingSoon(b.status, b.end_date);
             return (
@@ -68,22 +68,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/dashboa
                   <Status value={b.status} />
                 </Td>
                 <Td>
-                  {b.status === "active" && (
-                    <div className="flex justify-end">
-                      <RowAction
-                        path={`/bookings/${b.id}`}
-                        body={{ status: "ended" }}
-                        label="End"
-                        success="Booking ended. The flat and tenant are available again."
-                        variant="ghost"
-                        confirm={{
-                          title: "End this booking?",
-                          description: "The flat becomes available and the tenant is freed for a new booking. No more rent bills will be created.",
-                          action: "End booking",
-                        }}
-                      />
-                    </div>
-                  )}
+                  <BookingRowActions booking={b} />
                 </Td>
               </tr>
             );
