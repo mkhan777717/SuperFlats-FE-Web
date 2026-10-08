@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { LayoutGrid, Map as MapIcon, Search, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -151,6 +151,27 @@ export function SearchFilters() {
               </button>
             );
           })}
+        </div>
+        <div role="group" aria-label="View" className="flex shrink-0 rounded-sm border p-0.5">
+          {(
+            [
+              { id: "list", label: "List", icon: LayoutGrid },
+              { id: "map", label: "Map", icon: MapIcon },
+            ] as const
+          ).map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => apply({ view: id, page: filters.page })}
+              aria-pressed={filters.view === id}
+              className={cn(
+                "caps flex h-8 items-center gap-1.5 rounded-[3px] px-3 transition",
+                filters.view === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Icon className="size-4" aria-hidden /> {label}
+            </button>
+          ))}
         </div>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>

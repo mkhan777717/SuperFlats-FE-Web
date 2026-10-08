@@ -25,6 +25,8 @@ export type SearchFilters = {
   lat: string;
   lng: string;
   radius: string;
+  /** Results as a card grid or on a map. */
+  view: "list" | "map";
 };
 
 type Params = Record<string, string | string[] | undefined>;
@@ -57,6 +59,7 @@ export function parseFilters(params: Params): SearchFilters {
     lat: hasNear ? lat : "",
     lng: hasNear ? lng : "",
     radius: hasNear ? (RADII.map(String).includes(radius) ? radius : "5") : "",
+    view: one(params.view) === "map" ? "map" : "list",
   };
 }
 
@@ -84,6 +87,7 @@ export function exploreHref(f: Partial<SearchFilters>) {
     if (value === "" || value === undefined) continue;
     if (key === "sort" && value === "newest") continue;
     if (key === "page" && value === 1) continue;
+    if (key === "view" && value === "list") continue;
     qs.set(key, String(value));
   }
   const s = qs.toString();
