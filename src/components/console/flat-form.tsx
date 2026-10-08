@@ -105,7 +105,7 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
 
       {editing && (
         <FormSection title="Photos">
-          <PhotoManager photos={flat.photos ?? []} uploadPath={`/flats/${flat.id}/photos`} deletePath={(id) => `/flats/${flat.id}/photos/${id}`} canDelete={canDeletePhotos} />
+          <PhotoManager photos={flat.photos ?? []} uploadPath={`/flats/${flat.id}/photos`} deleteBase={`/flats/${flat.id}/photos`} canDelete={canDeletePhotos} />
         </FormSection>
       )}
     </div>

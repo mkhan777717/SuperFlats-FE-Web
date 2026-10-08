@@ -77,7 +77,7 @@ export default async function PropertyPage({ params }: PageProps<"/dashboard/pro
         <PhotoManager
           photos={property.photos ?? []}
           uploadPath={`/properties/upload-photo/${property.id}`}
-          deletePath={(photoId) => `/properties/${property.id}/photos/${photoId}`}
+          deleteBase={`/properties/${property.id}/photos`}
         />
       </section>
 
