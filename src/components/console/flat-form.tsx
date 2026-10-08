@@ -11,6 +11,7 @@ import { unitsLeft } from "@/lib/units";
 import type { Flat, OwnerProperty } from "@/lib/types";
 import { FLAT_AMENITY_SUGGESTIONS, FormError, FormSection, SelectField, TagInput, TextAreaField, TextField } from "./form-bits";
 import { PhotoManager } from "./photo-manager";
+import { PhotoPicker, uploadQueued } from "./photo-picker";
 
 type Errors = Partial<Record<"title" | "unit_number" | "type" | "area_sqft", string>>;
 
@@ -21,6 +22,8 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string>();
   const [saving, setSaving] = useState(false);
+  // New flats: photos chosen in the form, uploaded right after the flat is created.
+  const [newPhotos, setNewPhotos] = useState<File[]>([]);
   const available = FLAT_TYPES.filter((t) => unitsLeft(property, t) > 0 || t === flat?.type);
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
@@ -51,8 +54,14 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
         await clientApi(`/flats/${flat.id}`, { method: "PATCH", body: JSON.stringify(body) });
         toast.success("Flat updated");
       } else {
-        await clientApi(`/properties/${property.id}/flats`, { method: "POST", body: JSON.stringify(body) });
-        toast.success("Flat added. Open it again to add photos.");
+        const res = await clientApi<{ flat: Flat }>(`/properties/${property.id}/flats`, { method: "POST", body: JSON.stringify(body) });
+        if (newPhotos.length) {
+          const ok = await uploadQueued(newPhotos, (form) => clientApi(`/flats/${res.flat.id}/photos`, { method: "POST", body: form }));
+          if (ok === newPhotos.length) toast.success(`Flat added with ${ok} photo${ok === 1 ? "" : "s"}`);
+          else toast.warning(`Flat added. ${ok} of ${newPhotos.length} photos uploaded; edit the flat to retry the rest.`);
+        } else {
+          toast.success("Flat added");
+        }
       }
       router.refresh();
       onDone();
@@ -88,9 +97,13 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
           </div>
           <TextAreaField label="Description" name="description" defaultValue={flat?.description ?? ""} rows={3} placeholder="Layout, floor, view, furnishing" />
           <TagInput label="Flat amenities" value={amenities} onChange={setAmenities} placeholder="Type and press Enter" suggestions={FLAT_AMENITY_SUGGESTIONS} />
+          {!editing && <PhotoPicker files={newPhotos} onChange={setNewPhotos} />}
         </FormSection>
         {!editing && !available.length && (
-          <FormError>All unit slots of this property are used. Edit the property to increase the unit counts first.</FormError>
+          <FormError>
+            No units left to add. Each property says how many flats of each type it has (1RK, 1BHK…), and every flat you add uses one. Close this panel, press
+            “Edit” at the top of the property page and increase the count for the type you want to add.
+          </FormError>
         )}
         <FormError>{formError}</FormError>
         <div className="flex justify-end gap-2">
@@ -98,7 +111,7 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
             Cancel
           </Button>
           <Button type="submit" loading={saving} disabled={!editing && !available.length}>
-            {editing ? "Save changes" : "Add flat"}
+            {editing ? "Save changes" : newPhotos.length ? `Add flat with ${newPhotos.length} photo${newPhotos.length === 1 ? "" : "s"}` : "Add flat"}
           </Button>
         </div>
       </form>

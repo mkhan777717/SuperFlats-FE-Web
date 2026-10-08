@@ -3,6 +3,7 @@ import { PageHeader } from "@/components/common/page-header";
 import { Status } from "@/components/common/status-badge";
 import { FilterTabs, hrefWith, PAGE_SIZE, readListParams, Table, TableEmpty, TableFooter, Td } from "@/components/console/data-table";
 import { RowAction } from "@/components/console/row-action";
+import { ManageViewingButton } from "@/components/console/viewing-manage";
 import { api } from "@/lib/api";
 import type { AppointmentPage } from "@/lib/types";
 
@@ -51,6 +52,7 @@ export default async function ViewingsPage({ searchParams }: PageProps<"/dashboa
               </Td>
               <Td>
                 <div className="flex justify-end gap-2">
+                  <ManageViewingButton viewing={a} />
                   {a.status === "pending" && <RowAction path={`/appointments/${a.id}`} body={{ status: "confirmed" }} label="Confirm" success="Viewing confirmed" />}
                   {(a.status === "pending" || a.status === "confirmed") && (
                     <>

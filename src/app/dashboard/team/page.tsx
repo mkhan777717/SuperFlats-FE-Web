@@ -4,6 +4,7 @@ import { Status, StatusBadge } from "@/components/common/status-badge";
 import { UserAvatar } from "@/components/common/user-avatar";
 import { hrefWith, PAGE_SIZE, readListParams, Table, TableEmpty, TableFooter, TableSearch, Td } from "@/components/console/data-table";
 import { RowAction } from "@/components/console/row-action";
+import { AddMemberButton, EditMemberButton } from "@/components/console/team-forms";
 import { api, getCurrentUser } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 import type { EmployeePage } from "@/lib/types";
@@ -23,7 +24,7 @@ export default async function TeamPage({ searchParams }: PageProps<"/dashboard/t
 
   return (
     <div className="grid gap-8">
-      <PageHeader eyebrow="Company" title="Team" description="Admins and agents who can manage your properties. Agents handle the viewings assigned to them." />
+      <PageHeader eyebrow="Company" title="Team" description="Admins and agents who can manage your properties. Agents handle the viewings assigned to them." actions={isAdmin && <AddMemberButton />} />
 
       <div className="flex justify-end">
         <TableSearch base={BASE} value={f.q} placeholder="Search name, email or phone" />
@@ -59,6 +60,7 @@ export default async function TeamPage({ searchParams }: PageProps<"/dashboard/t
                 <Td>
                   {isAdmin && !self && u && (
                     <div className="flex justify-end gap-2">
+                      <EditMemberButton employee={e} />
                       <RowAction
                         path={`/employees/${e.id}`}
                         method="PUT"
