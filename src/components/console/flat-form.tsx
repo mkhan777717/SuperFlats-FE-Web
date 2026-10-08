@@ -100,7 +100,10 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
           {!editing && <PhotoPicker files={newPhotos} onChange={setNewPhotos} />}
         </FormSection>
         {!editing && !available.length && (
-          <FormError>All unit slots of this property are used. Edit the property to increase the unit counts first.</FormError>
+          <FormError>
+            No units left to add. Each property says how many flats of each type it has (1RK, 1BHK…), and every flat you add uses one. Close this panel, press
+            “Edit” at the top of the property page and increase the count for the type you want to add.
+          </FormError>
         )}
         <FormError>{formError}</FormError>
         <div className="flex justify-end gap-2">

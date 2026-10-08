@@ -68,6 +68,7 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
     if (!/^\d{6}$/.test(body.zipcode)) next.zipcode = "PIN code must be 6 digits.";
     if (get("area_sqft") && !(Number(get("area_sqft")) > 0)) next.area_sqft = "Area must be a positive number.";
     if (UNIT_FIELDS.some(({ key }) => !Number.isInteger(num(key)) || num(key) < 0)) next.units = "Unit counts must be whole numbers.";
+    else if (!editing && UNIT_FIELDS.every(({ key }) => num(key) === 0)) next.units = "Enter how many flats of at least one type the building has. You can only add flats up to these numbers.";
     setErrors(next);
     setFormError(undefined);
     if (Object.keys(next).length) return;
