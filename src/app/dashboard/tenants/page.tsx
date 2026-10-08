@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHeader } from "@/components/common/page-header";
 import { Status } from "@/components/common/status-badge";
 import { UserAvatar } from "@/components/common/user-avatar";
 import { FilterTabs, hrefWith, PAGE_SIZE, readListParams, Table, TableEmpty, TableFooter, TableSearch, Td } from "@/components/console/data-table";
+import { AddTenantButton } from "@/components/console/tenant-actions";
 import { api } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 import type { TenantPage } from "@/lib/types";
@@ -20,7 +22,7 @@ export default async function TenantsPage({ searchParams }: PageProps<"/dashboar
 
   return (
     <div className="grid gap-8">
-      <PageHeader eyebrow="People" title="Tenants" description="Tenant records across your properties. Occupied tenants have an active booking." />
+      <PageHeader eyebrow="People" title="Tenants" description="Tenant records across your properties. Occupied tenants have an active booking." actions={<AddTenantButton />} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <FilterTabs
@@ -35,13 +37,15 @@ export default async function TenantsPage({ searchParams }: PageProps<"/dashboar
       </div>
 
       <div className="grid gap-4">
-        <Table head={["Tenant", "Phone", "Property", "Documents", "Status", "Added"]} empty={!data.tenants.length && <TableEmpty>{f.q ? "No tenants match your search." : "No tenants yet."}</TableEmpty>}>
+        <Table head={["Tenant", "Phone", "Property", "Documents", "Status", "Added"]} empty={!data.tenants.length && <TableEmpty>{f.q ? "No tenants match your search." : "No tenants yet. Use “Add tenant” to create one."}</TableEmpty>}>
           {data.tenants.map((t) => (
             <tr key={t.id}>
               <Td>
                 <span className="flex items-center gap-3">
                   <UserAvatar name={t.name} className="size-8 text-xs" />
-                  <span className="font-medium">{t.name}</span>
+                  <Link href={`/dashboard/tenants/${t.id}`} className="font-medium hover:text-link">
+                    {t.name}
+                  </Link>
                 </span>
               </Td>
               <Td>
