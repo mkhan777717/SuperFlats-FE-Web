@@ -142,6 +142,10 @@
   }
   body {
     @apply bg-background font-sans text-foreground antialiased;
+    /* SF-style text: optical sizing and slightly tight tracking. */
+    font-optical-sizing: auto;
+    letter-spacing: -0.011em;
+    font-feature-settings: "ss03";
   }
   h1, h2, h3, h4 {
     @apply font-heading tracking-tight text-balance;
