@@ -18,15 +18,15 @@ const MAX_MB = 15;
 export function PhotoManager({
   photos,
   uploadPath,
-  deletePath,
+  deleteBase,
   max = 10,
   canDelete = true,
 }: {
   photos: Photo[];
   /** e.g. `/properties/upload-photo/12` */
   uploadPath: string;
-  /** e.g. `(id) => /properties/12/photos/${id}` */
-  deletePath: (photoId: number) => string;
+  /** Photo id is appended, e.g. `/properties/12/photos` → `/properties/12/photos/34`. A plain string so server pages can pass it. */
+  deleteBase: string;
   max?: number;
   canDelete?: boolean;
 }) {
@@ -71,7 +71,7 @@ export function PhotoManager({
   const remove = async (id: number) => {
     setDeleting(id);
     try {
-      await clientApi(deletePath(id), { method: "DELETE" });
+      await clientApi(`${deleteBase}/${id}`, { method: "DELETE" });
       toast.success("Photo removed");
       router.refresh();
     } catch (e) {

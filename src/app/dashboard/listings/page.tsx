@@ -5,6 +5,7 @@ import { ExternalLink, Megaphone } from "lucide-react";
 import { PageHeader } from "@/components/common/page-header";
 import { Status } from "@/components/common/status-badge";
 import { hrefWith, PAGE_SIZE, readListParams, Table, TableEmpty, TableFooter, TableSearch, Td } from "@/components/console/data-table";
+import { AddListingButton, ListingRowActions } from "@/components/console/listing-actions";
 import { RowAction } from "@/components/console/row-action";
 import { api, getCurrentUser } from "@/lib/api";
 import { coverPhoto, formatDate, formatRupees } from "@/lib/format";
@@ -25,7 +26,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/dashboa
 
   return (
     <div className="grid gap-8">
-      <PageHeader eyebrow="Marketing" title="Listings" description="Flats you have advertised to renters. Only active listings are shown on the website." />
+      <PageHeader eyebrow="Marketing" title="Listings" description="Flats you have advertised to renters. Only active listings are shown on the website." actions={<AddListingButton />} />
 
       <div className="flex justify-end">
         <TableSearch base={BASE} value={f.q} placeholder="Search title, unit or property" />
@@ -34,7 +35,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/dashboa
       <div className="grid gap-4">
         <Table
           head={["Listing", "Rent", "Deposit", "Status", "Listed", ""]}
-          empty={!data.listings.length && <TableEmpty>{f.q ? "No listings match your search." : "No listings yet. Create one from the Superflats Admin app."}</TableEmpty>}
+          empty={!data.listings.length && <TableEmpty>{f.q ? "No listings match your search." : "No listings yet. Use “Add listing” to advertise a flat."}</TableEmpty>}
         >
           {data.listings.map((l) => {
             const photo = coverPhoto(l);
@@ -69,6 +70,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/dashboa
                       </Link>
                     )}
                     {isAdmin && l.status !== "active" && <RowAction path={`/listings/${l.id}`} body={{ status: "active" }} label="Activate" success="Listing is now live" />}
+                    {isAdmin && <ListingRowActions listing={l} />}
                     {isAdmin && l.status === "active" && (
                       <RowAction
                         path={`/listings/${l.id}`}
