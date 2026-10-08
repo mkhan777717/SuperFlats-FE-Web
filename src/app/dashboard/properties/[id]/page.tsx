@@ -5,13 +5,13 @@ import { Building2, CheckCircle2, ChevronLeft, DoorOpen, IndianRupee, MapPin, Us
 import { StatCard } from "@/components/common/stat-card";
 import { Status, StatusBadge } from "@/components/common/status-badge";
 import { Table, TableEmpty, Td } from "@/components/console/data-table";
-import { unitsLeft } from "@/components/console/flat-form";
 import { PhotoManager } from "@/components/console/photo-manager";
 import { AddFlatButton, FlatRowActions, PropertyActions } from "@/components/console/property-actions";
 import { ApiError, api, getCurrentUser } from "@/lib/api";
 import { FLAT_TYPES } from "@/lib/config";
 import { formatArea, formatRupees, toStringArray } from "@/lib/format";
 import type { Flat, OwnerProperty, Paginated } from "@/lib/types";
+import { unitsLeft } from "@/lib/units";
 
 export const metadata: Metadata = { title: "Property" };
 
@@ -77,7 +77,7 @@ export default async function PropertyPage({ params }: PageProps<"/dashboard/pro
         <PhotoManager
           photos={property.photos ?? []}
           uploadPath={`/properties/upload-photo/${property.id}`}
-          deletePath={(photoId) => `/properties/${property.id}/photos/${photoId}`}
+          deleteBase={`/properties/${property.id}/photos`}
         />
       </section>
 
