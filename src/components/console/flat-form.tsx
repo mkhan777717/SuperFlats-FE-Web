@@ -7,20 +7,10 @@ import { Button } from "@/components/ui/button";
 import { FLAT_TYPES } from "@/lib/config";
 import { clientApi } from "@/lib/client-api";
 import { toStringArray } from "@/lib/format";
+import { unitsLeft } from "@/lib/units";
 import type { Flat, OwnerProperty } from "@/lib/types";
 import { FLAT_AMENITY_SUGGESTIONS, FormError, FormSection, SelectField, TagInput, TextAreaField, TextField } from "./form-bits";
 import { PhotoManager } from "./photo-manager";
-
-const COUNT_KEY: Record<string, keyof OwnerProperty> = {
-  "1RK": "count_1rk",
-  "1BHK": "count_1bhk",
-  "2BHK": "count_2bhk",
-  "3BHK": "count_3bhk",
-  "3BHK+": "count_3bhk_plus",
-};
-
-/** Units of each type the property still has room for (the backend decrements these as flats are added). */
-export const unitsLeft = (property: OwnerProperty, type: string) => Number(property[COUNT_KEY[type]!] ?? 0);
 
 type Errors = Partial<Record<"title" | "unit_number" | "type" | "area_sqft", string>>;
 
