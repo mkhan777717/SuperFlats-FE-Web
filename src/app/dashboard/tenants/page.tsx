@@ -12,10 +12,11 @@ export const metadata: Metadata = { title: "Tenants" };
 const BASE = "/dashboard/tenants";
 
 export default async function TenantsPage({ searchParams }: PageProps<"/dashboard/tenants">) {
-  const f = readListParams(await searchParams, ["status"]);
+  const f = readListParams(await searchParams, ["status", "propertyId"]);
+  const propertyId = /^\d+$/.test(f.propertyId) ? f.propertyId : "";
   const status = f.status === "occupied" || f.status === "available" ? f.status : "";
-  const data = await api<TenantPage>("/tenants", { query: { keywords: f.q, status: status || undefined, limit: PAGE_SIZE, offset: f.offset }, returnTo: BASE });
-  const current = { q: f.q, status, page: f.page };
+  const data = await api<TenantPage>("/tenants", { query: { keywords: f.q, status: status || undefined, propertyId: propertyId || undefined, limit: PAGE_SIZE, offset: f.offset }, returnTo: BASE });
+  const current = { q: f.q, status, propertyId, page: f.page };
 
   return (
     <div className="grid gap-8">
@@ -30,7 +31,7 @@ export default async function TenantsPage({ searchParams }: PageProps<"/dashboar
             { label: "Available", value: "available", href: hrefWith(BASE, current, { status: "available", page: 1 }) },
           ]}
         />
-        <TableSearch base={BASE} value={f.q} placeholder="Search name or phone" keep={{ status }} />
+        <TableSearch base={BASE} value={f.q} placeholder="Search name or phone" keep={{ status, propertyId }} />
       </div>
 
       <div className="grid gap-4">

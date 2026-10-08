@@ -304,3 +304,22 @@
 .leaflet-container {
   font-family: var(--font-sans);
 }
+
+/* Draggable pin in the property location picker. */
+.sf-location-pin {
+  background: none;
+  border: 0;
+}
+.sf-location-pin span {
+  position: absolute;
+  left: -12px;
+  top: -30px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--gold-strong);
+  border: 3px solid #fff;
+  transform: rotate(-45deg);
+  box-shadow: 0 4px 10px oklch(0.2 0.04 258 / 0.35);
+  cursor: grab;
+}

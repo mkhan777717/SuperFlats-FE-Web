@@ -14,14 +14,15 @@ const BASE = "/dashboard/rent";
 const monthLabel = (iso: string) => new Date(iso).toLocaleDateString("en-IN", { month: "long", year: "numeric", timeZone: "UTC" });
 
 export default async function RentPage({ searchParams }: PageProps<"/dashboard/rent">) {
-  const f = readListParams(await searchParams, ["paid", "month"]);
+  const f = readListParams(await searchParams, ["paid", "month", "propertyId"]);
+  const propertyId = /^\d+$/.test(f.propertyId) ? f.propertyId : "";
   const paid = f.paid === "true" || f.paid === "false" ? f.paid : "";
   const month = /^\d{4}-\d{2}$/.test(f.month) ? f.month : "";
   const data = await api<RentBillPage>("/rents/bills", {
-    query: { is_paid: paid || undefined, month: month || undefined, limit: PAGE_SIZE, offset: f.offset, sortBy: "bill_month", sortOrder: "DESC" },
+    query: { is_paid: paid || undefined, month: month || undefined, propertyId: propertyId || undefined, limit: PAGE_SIZE, offset: f.offset, sortBy: "bill_month", sortOrder: "DESC" },
     returnTo: BASE,
   });
-  const current = { paid, month, page: f.page };
+  const current = { paid, month, propertyId, page: f.page };
 
   return (
     <div className="grid gap-8">
@@ -38,6 +39,7 @@ export default async function RentPage({ searchParams }: PageProps<"/dashboard/r
         />
         <form action={BASE} className="flex items-center gap-2">
           {paid && <input type="hidden" name="paid" value={paid} />}
+          {propertyId && <input type="hidden" name="propertyId" value={propertyId} />}
           <label className="text-sm text-muted-foreground" htmlFor="month">
             Month
           </label>
