@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Building2, MapPin } from "lucide-react";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/common/page-header";
 import { StatusBadge } from "@/components/common/status-badge";
 import { FilterTabs, hrefWith, PAGE_SIZE, readListParams, TableFooter, TableSearch } from "@/components/console/data-table";
+import { AddPropertyButton } from "@/components/console/property-actions";
 import { api } from "@/lib/api";
 import { formatArea } from "@/lib/format";
 import type { PropertyPage } from "@/lib/types";
@@ -23,7 +25,7 @@ export default async function PropertiesPage({ searchParams }: PageProps<"/dashb
 
   return (
     <div className="grid gap-8">
-      <PageHeader eyebrow="Portfolio" title="Properties" description="Buildings in your company and how many flats and tenants each has." />
+      <PageHeader eyebrow="Portfolio" title="Properties" description="Buildings in your company and how many flats and tenants each has." actions={<AddPropertyButton />} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <FilterTabs
@@ -44,7 +46,7 @@ export default async function PropertiesPage({ searchParams }: PageProps<"/dashb
               const photo = [...(p.photos ?? [])].sort((a, b) => Number(b.is_primary) - Number(a.is_primary))[0];
               const area = formatArea(p.area_sqft);
               return (
-                <li key={p.id} className="overflow-hidden rounded-sm border bg-card">
+                <li key={p.id} className="group relative overflow-hidden rounded-sm border bg-card transition hover:border-gold hover:shadow-lift">
                   <div className="relative aspect-[16/9] bg-muted">
                     {photo ? (
                       <Image src={photo.photo_url} alt={p.name} fill sizes="(min-width: 1280px) 30vw, 50vw" className="object-cover" />
@@ -56,7 +58,11 @@ export default async function PropertiesPage({ searchParams }: PageProps<"/dashb
                     {p.is_managed && <StatusBadge tone="primary" className="absolute top-3 left-3 bg-white">Managed</StatusBadge>}
                   </div>
                   <div className="p-5">
-                    <h3 className="font-semibold">{p.name}</h3>
+                    <h3 className="font-semibold">
+                      <Link href={`/dashboard/properties/${p.id}`} className="after:absolute after:inset-0 focus-visible:outline-none">
+                        {p.name}
+                      </Link>
+                    </h3>
                     <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
                       <MapPin className="size-3.5 shrink-0" aria-hidden />
                       <span className="line-clamp-1">{[p.address, p.city].filter(Boolean).join(", ")}</span>
@@ -83,8 +89,8 @@ export default async function PropertiesPage({ searchParams }: PageProps<"/dashb
           <TableFooter total={data.totalItems} page={f.page} totalPages={data.totalPages} href={(page) => hrefWith(BASE, current, { page })} />
         </>
       ) : (
-        <EmptyState icon={Building2} title={f.q ? "No properties match your search" : "No properties yet"}>
-          {f.q ? "Try a different name or address." : "Add your first property from the Superflats Admin app. Adding properties on the web is coming next."}
+        <EmptyState icon={Building2} title={f.q ? "No properties match your search" : "No properties yet"} action={!f.q && <AddPropertyButton />}>
+          {f.q ? "Try a different name or address." : "Add your first property to start listing flats."}
         </EmptyState>
       )}
     </div>
