@@ -10,6 +10,7 @@ import { toStringArray } from "@/lib/format";
 import type { OwnerProperty } from "@/lib/types";
 import { AMENITY_SUGGESTIONS, FormError, FormSection, SelectField, SwitchField, TagInput, TextAreaField, TextField } from "./form-bits";
 import { LocationPicker, type Coords } from "./location-picker";
+import { PhotoPicker, uploadQueued } from "./photo-picker";
 
 const UNIT_FIELDS = [
   { key: "count_1rk", label: "1RK" },
@@ -35,6 +36,7 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string>();
   const [saving, setSaving] = useState(false);
+  const [newPhotos, setNewPhotos] = useState<File[]>([]);
   const cities = (STATES as Record<string, string[]>)[state] ?? [];
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
@@ -66,6 +68,7 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
     if (!/^\d{6}$/.test(body.zipcode)) next.zipcode = "PIN code must be 6 digits.";
     if (get("area_sqft") && !(Number(get("area_sqft")) > 0)) next.area_sqft = "Area must be a positive number.";
     if (UNIT_FIELDS.some(({ key }) => !Number.isInteger(num(key)) || num(key) < 0)) next.units = "Unit counts must be whole numbers.";
+    else if (!editing && UNIT_FIELDS.every(({ key }) => num(key) === 0)) next.units = "Enter how many flats of at least one type the building has. You can only add flats up to these numbers.";
     setErrors(next);
     setFormError(undefined);
     if (Object.keys(next).length) return;
@@ -79,7 +82,11 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
         onDone?.();
       } else {
         const res = await clientApi<{ property: OwnerProperty }>("/properties", { method: "POST", body: JSON.stringify(body) });
-        toast.success("Property created. Add photos and flats next.");
+        const ok = newPhotos.length
+          ? await uploadQueued(newPhotos, (form) => clientApi(`/properties/upload-photo/${res.property.id}`, { method: "POST", body: form }))
+          : 0;
+        if (ok < newPhotos.length) toast.warning(`Property created. ${ok} of ${newPhotos.length} photos uploaded; add the rest on the property page.`);
+        else toast.success(newPhotos.length ? `Property created with ${ok} photo${ok === 1 ? "" : "s"}. Add flats next.` : "Property created. Add photos and flats next.");
         onDone?.();
         router.push(`/dashboard/properties/${res.property.id}`);
       }
@@ -138,6 +145,12 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
         <SwitchField label="Managed by us" description="Show this property in bookings, tenants and rent." checked={managed} onCheckedChange={setManaged} />
         <TagInput label="Amenities" value={amenities} onChange={setAmenities} placeholder="Type and press Enter" suggestions={AMENITY_SUGGESTIONS} />
       </FormSection>
+
+      {!editing && (
+        <FormSection title="Photos">
+          <PhotoPicker files={newPhotos} onChange={setNewPhotos} />
+        </FormSection>
+      )}
 
       <FormError>{formError}</FormError>
       <div className="sticky bottom-0 -mx-6 flex justify-end gap-2 border-t bg-background px-6 py-4">
