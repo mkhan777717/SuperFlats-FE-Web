@@ -112,7 +112,7 @@ export default async function PropertyPage({ params }: PageProps<"/dashboard/pro
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-sm border bg-card p-6">
+        <div className="rounded-2xl border bg-card p-6 shadow-soft">
           <h2 className="font-display text-xl font-medium text-primary">Details</h2>
           <dl className="mt-4 grid grid-cols-2 gap-4 text-sm">
             <div>
@@ -134,7 +134,7 @@ export default async function PropertyPage({ params }: PageProps<"/dashboard/pro
           </dl>
           {property.description && <p className="mt-5 border-t pt-4 text-sm leading-relaxed whitespace-pre-line text-foreground/80">{property.description}</p>}
         </div>
-        <div className="rounded-sm border bg-card p-6">
+        <div className="rounded-2xl border bg-card p-6 shadow-soft">
           <h2 className="font-display text-xl font-medium text-primary">Amenities</h2>
           {amenities.length ? (
             <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">

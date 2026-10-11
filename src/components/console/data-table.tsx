@@ -37,7 +37,7 @@ export function TableSearch({ base, value, placeholder, keep = {} }: { base: str
         type="search"
         defaultValue={value}
         placeholder={placeholder}
-        className="h-10 w-full rounded-sm border border-input bg-card pr-3 pl-9 text-sm outline-none focus:border-ring focus:ring-3 focus:ring-ring/20"
+        className="h-10 w-full rounded-xl border border-input bg-card pr-3 pl-9 text-sm outline-none focus:border-ring focus:ring-3 focus:ring-ring/20"
       />
     </form>
   );
@@ -66,7 +66,7 @@ export function FilterTabs({ items, active }: { items: { label: string; href: st
 
 export function Table({ head, children, empty }: { head: string[]; children: ReactNode; empty?: ReactNode }) {
   return (
-    <div className="overflow-x-auto rounded-sm border bg-card">
+    <div className="overflow-x-auto rounded-2xl border bg-card shadow-soft">
       <table className="w-full min-w-[720px] text-left text-sm">
         <thead className="border-b bg-muted/60">
           <tr>
