@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -553,11 +554,10 @@ export default async function DashboardPage() {
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 transition-all duration-500"
                     style={{
-                      width: `${
-                        kpis.totalRevenueThisMonth + stats.totalRentDue > 0
+                      width: `${kpis.totalRevenueThisMonth + stats.totalRentDue > 0
                           ? Math.min(100, Math.round((kpis.totalRevenueThisMonth / (kpis.totalRevenueThisMonth + stats.totalRentDue)) * 100))
                           : 0
-                      }%`,
+                        }%`,
                     }}
                   />
                 </div>
