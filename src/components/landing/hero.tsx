@@ -13,16 +13,17 @@ export function Hero() {
   return (
     <section className="relative isolate -mt-[72px] overflow-hidden border-b">
       <Image src={heroPhoto} alt="" fill priority placeholder="blur" sizes="100vw" className="animate-ken-burns -z-20 object-cover object-[60%_50%]" />
-      {/* Soft fade on the left so the headline reads over the photo without hiding it. */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background/90 from-0% via-background/60 via-35% to-transparent to-65%" />
-      <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background/80 to-transparent" />
+      {/* Mobile-optimized high-contrast wash & desktop panoramic gradient */}
+      <div className="absolute inset-0 -z-10 bg-background/85 backdrop-blur-[2px] sm:backdrop-blur-none sm:bg-transparent" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/95 via-background/85 to-background/95 sm:bg-gradient-to-r sm:from-background/95 sm:via-background/80 sm:via-45% sm:to-transparent sm:to-75%" />
+      <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-background via-background/80 to-transparent" />
       {/* Soft wash under the transparent header so its links stay readable over the photo. */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-28 bg-gradient-to-b from-background/60 to-transparent" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-background/95 to-transparent" />
 
-      <div className="container-page pt-[calc(72px+3.5rem)] pb-16 sm:pt-[calc(72px+5rem)] sm:pb-20">
+      <div className="container-page pt-[calc(72px+3rem)] pb-16 sm:pt-[calc(72px+5rem)] sm:pb-20">
         <div className="max-w-xl">
           <p className={`eyebrow ${ENTER}`}>Rent smarter</p>
-          <h1 className={`mt-4 font-display text-5xl leading-[1.04] font-medium text-primary delay-100 sm:text-7xl ${ENTER}`}>
+          <h1 className={`mt-4 font-display text-4xl leading-[1.08] font-medium text-primary delay-100 sm:text-6xl lg:text-7xl ${ENTER}`}>
             Find Your Next <em className="text-gold-strong">Home</em> in India
           </h1>
           <p className={`mt-6 max-w-md text-lg text-foreground/80 delay-150 ${ENTER}`}>
