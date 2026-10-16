@@ -374,6 +374,7 @@ export default async function DashboardPage() {
   // ─────────────────────────────────────────────────────────────
   return (
     <div className="space-y-6 sm:space-y-8 font-sans">
+
       {/* ── 1. Hero Welcome Banner ── */}
       <section className="relative overflow-hidden rounded-[26px] bg-gradient-to-br from-[#0B192C] via-[#10233D] to-[#18365B] p-6 text-white shadow-xl sm:p-8 lg:p-10">
         <div
