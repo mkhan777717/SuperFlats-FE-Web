@@ -49,6 +49,7 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
   if (!res.ok) return { error: await readError(res), values };
 
   const user = (await res.json()) as AuthResponse;
+  console.log("[DEBUG login] email:", email, "role:", user.role, "full response keys:", Object.keys(user));
   await setSession({ accessToken: user.accessToken, refreshToken: user.refreshToken, role: user.role });
   redirect(landingFor(user.role, next));
 }
