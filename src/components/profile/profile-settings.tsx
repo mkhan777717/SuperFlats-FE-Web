@@ -10,6 +10,7 @@ import { UserAvatar } from "@/components/common/user-avatar";
 import { Button } from "@/components/ui/button";
 import { clientApi } from "@/lib/client-api";
 import type { User as SfUser } from "@/lib/types";
+import { PhotoCropper } from "./photo-cropper";
 
 function Section({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
@@ -33,11 +34,21 @@ export function ProfileSettings({ user }: { user: SfUser }) {
   const [detailsBusy, setDetailsBusy] = useState(false);
   const [passwordBusy, setPasswordBusy] = useState(false);
   const [passwordError, setPasswordError] = useState<string>();
+  // Cropper state
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [cropOpen, setCropOpen] = useState(false);
 
-  const uploadPhoto = async (file: File) => {
+  const handleFileSelect = (file: File) => {
     if (!file.type.startsWith("image/")) return toast.error("Please choose an image file.");
     if (file.size > 10 * 1024 * 1024) return toast.error("Please choose an image under 10 MB.");
+    const url = URL.createObjectURL(file);
+    setCropSrc(url);
+    setCropOpen(true);
+  };
+
+  const uploadPhoto = async (file: File) => {
     setPhotoBusy(true);
+    setCropOpen(false);
     try {
       const body = new FormData();
       body.append("profile_image", file);
@@ -48,6 +59,8 @@ export function ProfileSettings({ user }: { user: SfUser }) {
       toast.error(e instanceof Error ? e.message : "Couldn't upload the photo");
     } finally {
       setPhotoBusy(false);
+      if (cropSrc) URL.revokeObjectURL(cropSrc);
+      setCropSrc(null);
       if (fileInput.current) fileInput.current.value = "";
     }
   };
@@ -113,7 +126,7 @@ export function ProfileSettings({ user }: { user: SfUser }) {
         <div className="flex items-center gap-6">
           <UserAvatar name={user.name} src={user.profile_image} className="size-20 text-xl" />
           <div className="flex flex-wrap gap-2">
-            <input ref={fileInput} type="file" accept="image/*" className="sr-only" onChange={(e) => e.target.files?.[0] && uploadPhoto(e.target.files[0])} />
+            <input ref={fileInput} type="file" accept="image/*" className="sr-only" onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0])} />
             <Button variant="outline" size="sm" loading={photoBusy} onClick={() => fileInput.current?.click()}>
               <Camera aria-hidden /> {user.profile_image ? "Change photo" : "Upload photo"}
             </Button>
@@ -159,6 +172,7 @@ export function ProfileSettings({ user }: { user: SfUser }) {
           </Button>
         </form>
       </Section>
+      <PhotoCropper open={cropOpen} imageSrc={cropSrc} onClose={() => { setCropOpen(false); if (cropSrc) URL.revokeObjectURL(cropSrc); setCropSrc(null); if (fileInput.current) fileInput.current.value = ""; }} onCropped={uploadPhoto} />
     </div>
   );
 }
