@@ -35,7 +35,7 @@ export default async function PropertyPage({ params }: PageProps<"/dashboard/pro
   // Another company's property (or a deleted one) is reported as not found.
   if (!property || !flats || property.company_id !== user?.company_id) notFound();
 
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "admin" || user?.role === "super_admin";
   const amenities = toStringArray(property.amenities);
   const address = [property.address, property.city, property.state, property.zipcode].filter(Boolean).join(", ");
   const slots = FLAT_TYPES.map((t) => ({ type: t, left: unitsLeft(property, t) })).filter((s) => s.left > 0);

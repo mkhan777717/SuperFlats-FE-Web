@@ -89,10 +89,6 @@ export default async function DashboardPage() {
                   <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl tabular">
                     {formatRupees(kpis.totalRevenueThisMonth)}
                   </p>
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-                    <TrendingUp className="size-3.5" aria-hidden />
-                    <span>Global Network Active</span>
-                  </div>
                 </div>
 
                 <div className="hidden h-16 w-px bg-white/20 sm:block" aria-hidden />
@@ -130,7 +126,6 @@ export default async function DashboardPage() {
             value={stats.activeTenants}
             icon={Users}
             tone="orange"
-            trend={{ value: "+18%", positive: true }}
             href="/dashboard/tenants"
           />
           <StatCard
@@ -145,7 +140,6 @@ export default async function DashboardPage() {
             value={stats.totalProperties}
             icon={Building2}
             tone="blue"
-            trend={{ value: "+5%", positive: true }}
             href="/dashboard/properties"
           />
         </section>
@@ -244,10 +238,6 @@ export default async function DashboardPage() {
                   <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl tabular">
                     {stats.appointmentsToday}
                   </p>
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-                    <CalendarCheck className="size-3.5" aria-hidden />
-                    <span>Active Field Schedule</span>
-                  </div>
                 </div>
 
                 <div className="hidden h-16 w-px bg-white/20 sm:block" aria-hidden />
@@ -292,7 +282,6 @@ export default async function DashboardPage() {
             value={stats.activeTenants}
             icon={Users}
             tone="orange"
-            trend={{ value: "+18%", positive: true }}
             href="/dashboard/tenants"
           />
           <StatCard
@@ -300,7 +289,6 @@ export default async function DashboardPage() {
             value={kpis.appointmentsCompleted}
             icon={CheckCircle2}
             tone="blue"
-            trend={{ value: "+14%", positive: true }}
             href="/dashboard/viewings"
           />
         </section>
@@ -410,10 +398,6 @@ export default async function DashboardPage() {
                 <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl tabular">
                   {formatRupees(kpis.totalRevenueThisMonth)}
                 </p>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-                  <TrendingUp className="size-3.5 stroke-[2.2]" aria-hidden />
-                  <span>Collections on track</span>
-                </div>
               </div>
 
               <div className="hidden h-16 w-px bg-white/20 sm:block" aria-hidden />
@@ -451,7 +435,6 @@ export default async function DashboardPage() {
           value={stats.activeTenants}
           icon={Users}
           tone="orange"
-          trend={{ value: "+18%", positive: true }}
           href="/dashboard/tenants"
         />
         <StatCard
@@ -466,7 +449,6 @@ export default async function DashboardPage() {
           value={stats.totalProperties}
           icon={Building2}
           tone="blue"
-          trend={{ value: "+3%", positive: true }}
           href="/dashboard/properties"
         />
       </section>
@@ -574,7 +556,7 @@ export default async function DashboardPage() {
                       width: `${
                         kpis.totalRevenueThisMonth + stats.totalRentDue > 0
                           ? Math.min(100, Math.round((kpis.totalRevenueThisMonth / (kpis.totalRevenueThisMonth + stats.totalRentDue)) * 100))
-                          : 100
+                          : 0
                       }%`,
                     }}
                   />

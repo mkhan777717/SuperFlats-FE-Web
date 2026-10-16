@@ -58,15 +58,15 @@ export default async function DashboardLayout({ children }: LayoutProps<"/dashbo
           </div>
 
           {/* Center Search Pill */}
-          <div className="relative hidden max-w-md flex-1 md:block">
+          <form action="/dashboard/properties" method="GET" className="relative hidden max-w-md flex-1 md:block">
             <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400" aria-hidden />
             <input
               type="search"
-              placeholder="Search properties, agents, leads..."
+              name="q"
+              placeholder="Search properties, flats, units..."
               className="h-9 w-full rounded-full border border-slate-200 bg-slate-50/80 pr-4 pl-9 text-xs transition-colors placeholder:text-slate-400 focus:border-primary/40 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/10"
-              readOnly
             />
-          </div>
+          </form>
 
           {/* Right Action Icons & User Pill */}
           <div className="flex items-center gap-2 sm:gap-3">
@@ -76,9 +76,6 @@ export default async function DashboardLayout({ children }: LayoutProps<"/dashbo
               aria-label="Viewings notifications"
             >
               <Bell className="size-4 stroke-[2.2]" />
-              <span className="absolute top-1.5 right-1.5 grid size-3.5 place-items-center rounded-full bg-rose-500 text-[9px] font-bold text-white">
-                3
-              </span>
             </Link>
             <Link
               href="/dashboard/profile"

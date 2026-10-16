@@ -21,7 +21,7 @@ export default async function ListingsPage({ searchParams }: PageProps<"/dashboa
     getCurrentUser(),
     api<OwnerListingPage>("/listings/me", { query: { keywords: f.q, limit: PAGE_SIZE, offset: f.offset }, returnTo: BASE }),
   ]);
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "admin" || user?.role === "super_admin";
   const current = { q: f.q, page: f.page };
 
   return (
