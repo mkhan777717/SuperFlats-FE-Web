@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowRight, Building2, ChevronDown, Home, IndianRupee, LayoutGrid, MapPin, Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Building2, ChevronDown, Home, IndianRupee, LayoutGrid, Loader2, MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FLAT_TYPES } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,23 @@ const CITIES = [
   "Noida", "Gurgaon", "Kochi", "Bhopal", "Nagpur", "Coimbatore",
   "Mysuru", "Vadodara", "Surat", "Visakhapatnam", "Thiruvananthapuram",
 ];
+
+const GEO_CITY_KEY = "sf-geo-city";
+
+/** Reverse-geocode coords → city name via OpenStreetMap Nominatim (free, no key). */
+async function reverseGeocode(lat: number, lng: number): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=10`,
+      { headers: { "Accept-Language": "en" } },
+    );
+    if (!res.ok) return "";
+    const data = await res.json();
+    return data.address?.city || data.address?.town || data.address?.suburb || data.address?.state_district || data.address?.state || "";
+  } catch {
+    return "";
+  }
+}
 
 const control =
   "h-12 w-full appearance-none rounded-md border border-input bg-card pr-9 pl-10 text-[0.9375rem] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-ring focus:ring-3 focus:ring-ring/20";
@@ -37,10 +54,59 @@ type Tab = "rent" | "owners";
 /** Tabbed search card from the design: "Rent" searches listings, "For owners" points to listing a property. */
 export function HeroSearch() {
   const [tab, setTab] = useState<Tab>("rent");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [locating, setLocating] = useState(false);
   const tabs: { id: Tab; label: string; icon: typeof Home }[] = [
     { id: "rent", label: "Rent", icon: Home },
     { id: "owners", label: "For owners", icon: Building2 },
   ];
+
+  // Auto-fill location from GPS on mount
+  useEffect(() => {
+    let cancelled = false;
+
+    const fill = async (lat: number, lng: number) => {
+      const city = await reverseGeocode(lat, lng);
+      if (cancelled || !city || !inputRef.current) return;
+      if (!inputRef.current.value) {
+        inputRef.current.value = city;
+        try { sessionStorage.setItem(GEO_CITY_KEY, city); } catch {}
+      }
+      setLocating(false);
+    };
+
+    const start = async () => {
+      // 1. Check session cache first
+      try {
+        const cached = sessionStorage.getItem(GEO_CITY_KEY);
+        if (cached && inputRef.current && !inputRef.current.value) {
+          inputRef.current.value = cached;
+          return;
+        }
+      } catch {}
+
+      // 2. Only auto-locate if permission already granted (won't show a prompt)
+      if (!("geolocation" in navigator)) return;
+      try {
+        const perm = await navigator.permissions?.query({ name: "geolocation" as PermissionName });
+        if (cancelled) return;
+        if (perm?.state === "denied") return;
+        if (perm?.state === "granted") {
+          setLocating(true);
+          navigator.geolocation.getCurrentPosition(
+            ({ coords }) => fill(coords.latitude, coords.longitude),
+            () => setLocating(false),
+            { enableHighAccuracy: false, timeout: 8000, maximumAge: 10 * 60 * 1000 },
+          );
+        }
+        // If "prompt" state — don't auto-trigger from the search bar.
+        // The NearbyListings section already handles that prompt.
+      } catch {}
+    };
+
+    start();
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <div className="w-full max-w-5xl">
@@ -70,8 +136,8 @@ export function HeroSearch() {
       <div className="rounded-tr-sm rounded-b-sm border-t-2 border-gold bg-card p-5 shadow-float sm:p-7">
         {tab === "rent" ? (
           <form id="hero-panel-rent" role="tabpanel" aria-labelledby="hero-tab-rent" action="/explore" className="grid gap-4 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
-            <Field label="Location" icon={MapPin}>
-              <input name="keywords" list="hero-cities" placeholder="Search by area, society or city" className={control} />
+            <Field label="Location" icon={locating ? Loader2 : MapPin}>
+              <input ref={inputRef} name="keywords" list="hero-cities" placeholder="Search by area, society or city" className={cn(control, locating && "[&+datalist]:hidden")} />
               <datalist id="hero-cities">
                 {CITIES.map((c) => (
                   <option key={c} value={c} />
