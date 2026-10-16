@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, Heart, LayoutDashboard, LogOut, Search, User } from "lucide-react";
+import { Building2, CalendarDays, Heart, LayoutDashboard, LogOut, Search, User } from "lucide-react";
 import { UserAvatar } from "@/components/common/user-avatar";
 import {
   DropdownMenu,
@@ -31,28 +31,45 @@ export function UserMenu({ user }: { user: Pick<SfUser, "name" | "email" | "role
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {isConsole && (
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard">
-                <LayoutDashboard /> Dashboard
-              </Link>
-            </DropdownMenuItem>
+          {isConsole ? (
+            // Owner / Admin / Agent — show console links
+            <>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard">
+                  <LayoutDashboard /> Dashboard
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/properties">
+                  <Building2 /> My Properties
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/viewings">
+                  <CalendarDays /> Viewings
+                </Link>
+              </DropdownMenuItem>
+            </>
+          ) : (
+            // Renter / Client — show browse links
+            <>
+              <DropdownMenuItem asChild>
+                <Link href="/explore">
+                  <Search /> Explore flats
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/saved">
+                  <Heart /> Saved flats
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/visits">
+                  <CalendarDays /> My visits
+                </Link>
+              </DropdownMenuItem>
+            </>
           )}
-          <DropdownMenuItem asChild>
-            <Link href="/explore">
-              <Search /> Explore flats
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/saved">
-              <Heart /> Saved flats
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/visits">
-              <CalendarDays /> My visits
-            </Link>
-          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href={isConsole ? "/dashboard/profile" : "/profile"}>
               <User /> Profile

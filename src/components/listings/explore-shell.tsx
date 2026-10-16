@@ -24,7 +24,12 @@ export function ExploreShell({ filters, controls, children }: { filters: SearchF
 
   const apply = (patch: Partial<SearchFilters>) => {
     const next = { ...filters, page: 1, ...patch };
-    start(() => router.push(exploreHref(next), { scroll: false }));
+    const href = exploreHref(next);
+    start(() => {
+      router.push(href, { scroll: false });
+      // Force re-fetch when URL would be the same (e.g. clearing all filters from /explore)
+      router.refresh();
+    });
   };
 
   return (
