@@ -9,6 +9,13 @@ import { cn } from "@/lib/utils";
 
 const BUDGETS = [10000, 15000, 20000, 30000, 50000, 75000];
 
+const CITIES = [
+  "Bengaluru", "Mumbai", "Delhi", "Hyderabad", "Chennai", "Pune",
+  "Kolkata", "Ahmedabad", "Jaipur", "Lucknow", "Indore", "Chandigarh",
+  "Noida", "Gurgaon", "Kochi", "Bhopal", "Nagpur", "Coimbatore",
+  "Mysuru", "Vadodara", "Surat", "Visakhapatnam", "Thiruvananthapuram",
+];
+
 const control =
   "h-12 w-full appearance-none rounded-md border border-input bg-card pr-9 pl-10 text-[0.9375rem] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-ring focus:ring-3 focus:ring-ring/20";
 
@@ -64,7 +71,12 @@ export function HeroSearch() {
         {tab === "rent" ? (
           <form id="hero-panel-rent" role="tabpanel" aria-labelledby="hero-tab-rent" action="/explore" className="grid gap-4 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
             <Field label="Location" icon={MapPin}>
-              <input name="keywords" placeholder="Search by area, society or city" className={control} />
+              <input name="keywords" list="hero-cities" placeholder="Search by area, society or city" className={control} />
+              <datalist id="hero-cities">
+                {CITIES.map((c) => (
+                  <option key={c} value={c} />
+                ))}
+              </datalist>
             </Field>
             <Field label="Property type" icon={LayoutGrid} select>
               <select name="type" defaultValue="" className={cn(control, "cursor-pointer")}>
@@ -103,7 +115,7 @@ export function HeroSearch() {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="xl">
-                <Link href="/login">Owner login</Link>
+                <Link href="/dashboard">Owner login</Link>
               </Button>
             </div>
           </div>
