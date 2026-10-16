@@ -103,7 +103,7 @@ export function HeroSearch() {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="xl">
-                <Link href="/login">Owner login</Link>
+                <Link href="/dashboard">Owner login</Link>
               </Button>
             </div>
           </div>

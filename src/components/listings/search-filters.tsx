@@ -219,7 +219,7 @@ export function ActiveFilters() {
       ))}
       <button
         type="button"
-        onClick={() => apply({ keywords: "", type: "", city: "", min_rent: "", max_rent: "", near: "", lat: "", lng: "", radius: "", sort: "newest" })}
+        onClick={() => apply({ keywords: "", type: "", city: "", min_rent: "", max_rent: "", near: "", lat: "", lng: "", radius: "", sort: "newest", page: 1 })}
         className="text-sm font-medium text-link hover:underline"
       >
         Clear all
