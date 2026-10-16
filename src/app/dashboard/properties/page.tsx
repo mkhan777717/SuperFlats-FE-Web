@@ -46,7 +46,7 @@ export default async function PropertiesPage({ searchParams }: PageProps<"/dashb
               const photo = [...(p.photos ?? [])].sort((a, b) => Number(b.is_primary) - Number(a.is_primary))[0];
               const area = formatArea(p.area_sqft);
               return (
-                <li key={p.id} className="group relative overflow-hidden rounded-sm border bg-card transition hover:border-gold hover:shadow-lift">
+                <li key={p.id} className="group relative overflow-hidden rounded-2xl border bg-card shadow-soft transition-all duration-200 hover:shadow-lift hover:-translate-y-0.5">
                   <div className="relative aspect-[16/9] bg-muted">
                     {photo ? (
                       <Image src={photo.photo_url} alt={p.name} fill sizes="(min-width: 1280px) 30vw, 50vw" className="object-cover" />

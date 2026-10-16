@@ -1,7 +1,7 @@
 // Shapes of the JSON returned by superflats-backend (Sequelize models).
 // DECIMAL columns come back as strings, so money fields are typed as string | number.
 
-export type Role = "client" | "admin" | "agent";
+export type Role = "client" | "admin" | "agent" | "super_admin";
 
 export interface User {
   id: number;

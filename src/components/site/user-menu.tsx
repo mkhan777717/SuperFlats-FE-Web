@@ -16,7 +16,7 @@ import { logout } from "@/app/(auth)/actions";
 import type { User as SfUser } from "@/lib/types";
 
 export function UserMenu({ user }: { user: Pick<SfUser, "name" | "email" | "role" | "profile_image"> }) {
-  const isConsole = user.role === "admin" || user.role === "agent";
+  const isConsole = user.role === "admin" || user.role === "agent" || user.role === "super_admin";
 
   return (
     <DropdownMenu>

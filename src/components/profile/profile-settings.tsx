@@ -23,7 +23,7 @@ function Section({ title, description, children }: { title: string; description:
   );
 }
 
-const ROLE_LABEL: Record<string, string> = { client: "Renter", admin: "Owner / Admin", agent: "Agent" };
+const ROLE_LABEL: Record<string, string> = { client: "Renter", admin: "Owner / Admin", agent: "Agent", super_admin: "Super Admin" };
 
 /** Profile photo, personal details and password, shared by the renter and owner areas. */
 export function ProfileSettings({ user }: { user: SfUser }) {
