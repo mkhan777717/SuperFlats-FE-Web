@@ -30,7 +30,10 @@ export async function SiteHeader() {
         <DesktopNav links={links} />
         <div className="ml-auto flex items-center gap-2">
           {user ? (
-            <UserMenu user={user} />
+            <>
+              <span className="rounded bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">{user.role}</span>
+              <UserMenu user={user} />
+            </>
           ) : (
             <>
               <Button asChild variant="ghost" className="hidden sm:inline-flex">
