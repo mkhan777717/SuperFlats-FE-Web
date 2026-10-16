@@ -18,7 +18,7 @@ export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const signedIn = request.cookies.has(ACCESS_COOKIE);
   const role = request.cookies.get(ROLE_COOKIE)?.value;
-  const home = role === "admin" || role === "agent" ? "/dashboard" : "/explore";
+  const home = role === "admin" || role === "agent" || role === "super_admin" ? "/dashboard" : "/explore";
 
   if (!signedIn && (matches(pathname, RENTER_AREA) || matches(pathname, CONSOLE_AREA))) {
     const login = new URL("/login", request.url);

@@ -19,7 +19,7 @@ export default async function TeamPage({ searchParams }: PageProps<"/dashboard/t
     getCurrentUser(),
     api<EmployeePage>("/employees", { query: { keywords: f.q, limit: PAGE_SIZE, offset: f.offset }, returnTo: BASE }),
   ]);
-  const isAdmin = me?.role === "admin";
+  const isAdmin = me?.role === "admin" || me?.role === "super_admin";
   const current = { q: f.q, page: f.page };
 
   return (
