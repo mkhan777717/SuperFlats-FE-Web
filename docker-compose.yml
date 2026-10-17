@@ -1,0 +1,24 @@
+# Runs the website on the server; nginx publishes it as superflats.in. See DEPLOY.md.
+# Values come from .env next to this file (not committed).
+name: superflats-web
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://superflats.in}
+        NEXT_PUBLIC_SUPPORT_EMAIL: ${NEXT_PUBLIC_SUPPORT_EMAIL:-support@superflats.in}
+        NEXT_PUBLIC_LEGAL_NAME: ${NEXT_PUBLIC_LEGAL_NAME:-Superflats}
+    image: superflats-web:latest
+    container_name: superflats-web
+    restart: always
+    environment:
+      SUPERFLATS_API_URL: ${SUPERFLATS_API_URL:-https://api.superflats.in/api}
+    # Only reachable from the server itself; nginx serves it over HTTPS
+    ports:
+      - "127.0.0.1:3002:3000"
+    mem_limit: 512m
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
