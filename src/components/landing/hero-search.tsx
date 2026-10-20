@@ -34,16 +34,16 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
 }
 
 const control =
-  "h-12 w-full appearance-none rounded-md border border-input bg-card pr-9 pl-10 text-[0.9375rem] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-ring focus:ring-3 focus:ring-ring/20";
+  "h-11 w-full appearance-none rounded-full border border-black/[0.08] bg-white/80 pr-8 pl-10 text-[13.5px] text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] backdrop-blur-xl outline-none transition-all placeholder:text-muted-foreground/70 hover:border-black/20 focus:border-primary focus:bg-white focus:ring-4 focus:ring-black/[0.04]";
 
 function Field({ label, icon: Icon, select, children }: { label: string; icon: typeof MapPin; select?: boolean; children: React.ReactNode }) {
   return (
-    <label className="grid min-w-0 gap-2">
-      <span className="text-[0.7rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{label}</span>
+    <label className="group grid min-w-0 gap-1.5">
+      <span className="text-[12px] font-medium text-muted-foreground">{label}</span>
       <span className="relative flex items-center">
-        <Icon className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground" aria-hidden />
+        <Icon className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground transition-colors group-focus-within:text-foreground" aria-hidden />
         {children}
-        {select && <ChevronDown className="pointer-events-none absolute right-3 size-4 text-muted-foreground" aria-hidden />}
+        {select && <ChevronDown className="pointer-events-none absolute right-3.5 size-3.5 text-muted-foreground transition-transform group-focus-within:rotate-180" aria-hidden />}
       </span>
     </label>
   );
@@ -110,7 +110,7 @@ export function HeroSearch() {
 
   return (
     <div className="w-full max-w-5xl">
-      <div role="tablist" aria-label="Search options" className="flex">
+      <div role="tablist" aria-label="Search options" className="mb-3.5 inline-flex items-center gap-1.5 rounded-full bg-white/90 p-1.5 backdrop-blur-2xl border border-white/90 shadow-[0_4px_20px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)]">
         {tabs.map(({ id, label, icon: Icon }) => {
           const active = tab === id;
           return (
@@ -123,19 +123,22 @@ export function HeroSearch() {
               aria-controls={`hero-panel-${id}`}
               onClick={() => setTab(id)}
               className={cn(
-                "caps flex h-12 items-center gap-2 rounded-t-sm px-7 transition",
-                active ? "bg-primary text-primary-foreground" : "bg-card/90 text-foreground backdrop-blur hover:bg-card",
+                "flex h-9 items-center gap-2 rounded-full px-4.5 text-[13.5px] font-semibold transition-all duration-200 active:scale-95",
+                active
+                  ? "bg-[#1d1d1f] text-white shadow-sm"
+                  : "text-slate-800 hover:text-black hover:bg-black/[0.05]",
               )}
             >
-              <Icon className="size-[18px]" aria-hidden /> {label}
+              <Icon className={cn("size-4", active ? "text-white" : "text-slate-700")} aria-hidden />
+              {label}
             </button>
           );
         })}
       </div>
 
-      <div className="rounded-tr-sm rounded-b-sm border-t-2 border-gold bg-card p-5 shadow-float sm:p-7">
+      <div className="rounded-[28px] border border-white/90 bg-white/75 p-5 backdrop-blur-3xl shadow-[0_24px_64px_-12px_rgba(0,0,0,0.1),0_0_0_1px_rgba(255,255,255,0.85)_inset] sm:p-6">
         {tab === "rent" ? (
-          <form id="hero-panel-rent" role="tabpanel" aria-labelledby="hero-tab-rent" action="/explore" className="grid gap-4 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
+          <form id="hero-panel-rent" role="tabpanel" aria-labelledby="hero-tab-rent" action="/explore" className="grid gap-3 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
             <Field label="Location" icon={locating ? Loader2 : MapPin}>
               <input ref={inputRef} name="keywords" list="hero-cities" placeholder="Search by area, society or city" className={cn(control, locating && "[&+datalist]:hidden")} />
               <datalist id="hero-cities">
@@ -164,23 +167,23 @@ export function HeroSearch() {
                 ))}
               </select>
             </Field>
-            <Button type="submit" variant="gold" size="xl" className="w-full text-base md:w-40">
-              <Search className="size-5" aria-hidden /> Search
+            <Button type="submit" variant="default" size="lg" className="w-full text-[14px] font-medium md:w-36 rounded-full bg-[#1d1d1f] text-white hover:bg-black shadow-sm active:scale-95 transition-all">
+              <Search className="size-4" aria-hidden /> Search
             </Button>
           </form>
         ) : (
-          <div id="hero-panel-owners" role="tabpanel" aria-labelledby="hero-tab-owners" className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div id="hero-panel-owners" role="tabpanel" aria-labelledby="hero-tab-owners" className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-2 py-1">
             <div>
-              <p className="text-lg font-semibold">Have a property to rent out?</p>
-              <p className="mt-1 text-muted-foreground">List your flats, manage viewings, tenants and monthly rent from one dashboard.</p>
+              <p className="text-[17px] font-semibold text-foreground">Have a property to rent out?</p>
+              <p className="mt-1 text-[13.5px] text-muted-foreground">List your flats, manage viewings, tenants and monthly rent from one dashboard.</p>
             </div>
-            <div className="flex shrink-0 flex-wrap gap-3">
-              <Button asChild variant="gold" size="xl">
+            <div className="flex shrink-0 flex-wrap gap-2.5">
+              <Button asChild variant="default" size="lg" className="rounded-full bg-[#1d1d1f] text-white hover:bg-black text-[13.5px] shadow-sm">
                 <Link href="/register?type=owner">
-                  List your property <ArrowRight aria-hidden />
+                  List your property <ArrowRight aria-hidden className="size-3.5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="xl">
+              <Button asChild variant="outline" size="lg" className="rounded-full text-[13.5px]">
                 <Link href="/dashboard">Owner login</Link>
               </Button>
             </div>

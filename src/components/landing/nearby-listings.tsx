@@ -108,9 +108,9 @@ export function NearbyListings({ signedIn, favoriteIds }: { signedIn: boolean; f
     <section className="container-page pt-14" aria-live="polite">
       <div className="flex items-end justify-between gap-6">
         <div>
-          <h2 className="font-display text-3xl font-semibold text-primary sm:text-[2.1rem] dark:text-foreground">Flats near you</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-[-0.025em] text-foreground sm:text-[1.85rem]">Flats near you</h2>
           {state.status === "ready" && (
-            <p className="mt-1 text-muted-foreground">
+            <p className="mt-1 text-[14px] text-muted-foreground">
               {state.total ? `${state.total.toLocaleString("en-IN")} within ${state.radius} km of your location` : `No flats within ${state.radius} km yet`}
             </p>
           )}
@@ -118,29 +118,31 @@ export function NearbyListings({ signedIn, favoriteIds }: { signedIn: boolean; f
         {state.status === "ready" && state.total > 0 && (
           <Link
             href={`/explore?near=you&lat=${state.coords.lat}&lng=${state.coords.lng}&radius=${state.radius}`}
-            className="group flex shrink-0 items-center gap-1.5 text-sm font-medium text-gold hover:underline"
+            className="group inline-flex items-center gap-1 text-[13.5px] font-medium text-link hover:underline"
           >
-            View all <ArrowRight className="size-4 transition group-hover:translate-x-0.5" aria-hidden />
+            View all <ArrowRight className="size-3.5 transition group-hover:translate-x-0.5" aria-hidden />
           </Link>
         )}
       </div>
 
       <div className="mt-6">
         {(state.status === "idle" || state.status === "locating" || state.status === "loading") && (
-          <div className="flex items-center gap-3 rounded-lg border bg-muted/40 px-5 py-6 text-muted-foreground">
-            <Loader2 className="size-5 animate-spin" aria-hidden />
-            {state.status === "loading" ? "Finding flats around you…" : "Waiting for your location…"}
+          <div className="flex items-center gap-3 rounded-[22px] border border-black/[0.06] bg-white px-6 py-6 text-muted-foreground shadow-sm">
+            <Loader2 className="size-4 animate-spin text-foreground" aria-hidden />
+            <span className="text-[14px] font-medium text-foreground">{state.status === "loading" ? "Finding flats around you…" : "Waiting for your location…"}</span>
           </div>
         )}
 
         {state.status === "denied" && (
-          <div className="flex flex-col gap-4 rounded-lg border bg-muted/40 px-5 py-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 rounded-2xl border border-white/80 bg-white/70 px-6 py-6 sm:flex-row sm:items-center sm:justify-between backdrop-blur-xl shadow-sm">
             <p className="flex items-center gap-3 text-muted-foreground">
-              <MapPinOff className="size-5 shrink-0" aria-hidden />
-              Allow location access in your browser to see flats near you.
+              <span className="grid size-9 place-items-center rounded-xl bg-destructive/10 text-destructive">
+                <MapPinOff className="size-4 shrink-0" aria-hidden />
+              </span>
+              <span>Allow location access in your browser to see flats near you.</span>
             </p>
-            <Button variant="outline" onClick={locate} className="shrink-0">
-              <LocateFixed aria-hidden /> Use my location
+            <Button variant="outline" onClick={locate} className="shrink-0 rounded-xl">
+              <LocateFixed className="size-4" aria-hidden /> Use my location
             </Button>
           </div>
         )}
@@ -159,9 +161,9 @@ export function NearbyListings({ signedIn, favoriteIds }: { signedIn: boolean; f
         )}
 
         {state.status === "ready" && state.listings.length === 0 && (
-          <div className="rounded-lg border bg-muted/40 px-5 py-6 text-muted-foreground">
+          <div className="rounded-2xl border border-white/80 bg-white/70 px-6 py-6 text-muted-foreground backdrop-blur-xl shadow-sm">
             We don&apos;t have flats close to you yet. Browse the latest listings below or{" "}
-            <Link href="/explore" className="font-medium text-link hover:underline">
+            <Link href="/explore" className="font-semibold text-link hover:underline">
               search another area
             </Link>
             .
