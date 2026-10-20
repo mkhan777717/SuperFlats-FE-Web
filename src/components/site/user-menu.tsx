@@ -20,17 +20,23 @@ export function UserMenu({ user }: { user: Pick<SfUser, "name" | "email" | "role
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 rounded-full p-0.5 pr-0.5 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 sm:pr-3 sm:hover:bg-muted">
-        <UserAvatar name={user.name} src={user.profile_image} />
-        <span className="hidden max-w-32 truncate text-sm font-medium sm:block">{user.name.split(" ")[0]}</span>
+      <DropdownMenuTrigger className="group flex items-center gap-2 rounded-full p-1 pr-1 outline-none transition-all sm:pr-3 hover:bg-black/[0.04] active:scale-95 border border-transparent hover:border-black/[0.04]">
+        <UserAvatar name={user.name} src={user.profile_image} className="size-8 ring-2 ring-white/80 shadow-xs" />
+        <span className="hidden max-w-32 truncate text-[13.5px] font-medium text-foreground sm:block">{user.name.split(" ")[0]}</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-60">
-        <DropdownMenuLabel className="font-normal">
-          <p className="truncate font-semibold">{user.name}</p>
-          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-        </DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-64 p-2 rounded-[22px] bg-white/80 backdrop-blur-3xl border border-white/90 shadow-[0_24px_50px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.9)_inset]">
+        <div className="flex items-center gap-3 p-2.5 mb-1 rounded-[16px] bg-white/70 border border-white/80 shadow-[inset_0_1px_2px_rgba(255,255,255,0.9)]">
+          <UserAvatar name={user.name} src={user.profile_image} className="size-10 ring-2 ring-white shadow-xs" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[13.5px] font-semibold text-[#1d1d1f] leading-snug">{user.name}</p>
+            <p className="truncate text-[11.5px] text-[#86868b] leading-tight">{user.email}</p>
+            <span className="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wider text-gold-strong bg-gold/15 px-2 py-0.5 rounded-full">
+              {user.role}
+            </span>
+          </div>
+        </div>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        <DropdownMenuGroup className="space-y-0.5">
           {isConsole ? (
             // Owner / Admin / Agent — show console links
             <>
@@ -79,7 +85,7 @@ export function UserMenu({ user }: { user: Pick<SfUser, "name" | "email" | "role
         <DropdownMenuSeparator />
         <form action={logout}>
           <DropdownMenuItem asChild variant="destructive">
-            <button type="submit" className="w-full">
+            <button type="submit" className="w-full cursor-pointer">
               <LogOut /> Sign out
             </button>
           </DropdownMenuItem>

@@ -54,7 +54,7 @@ export function FavoriteButton({ listingId, initial = false, signedIn, className
       aria-pressed={saved}
       aria-label={saved ? "Remove from saved" : "Save this flat"}
       className={cn(
-        "grid size-10 place-items-center rounded-full bg-white text-neutral-900 shadow-soft transition hover:scale-110 active:scale-95",
+        "grid size-9.5 place-items-center rounded-full border border-white/70 bg-white/80 backdrop-blur-md text-neutral-900 shadow-[0_4px_14px_rgba(0,0,0,0.08)] transition-all duration-200 hover:bg-white hover:scale-110 active:scale-90",
         className,
       )}
     >
