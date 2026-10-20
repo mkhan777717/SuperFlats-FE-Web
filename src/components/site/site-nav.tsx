@@ -17,7 +17,7 @@ const isActive = (pathname: string, href: string) =>
 export function DesktopNav({ links }: { links: NavLink[] }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Main" className="hidden h-full items-stretch gap-6 md:flex">
+    <nav aria-label="Main" className="hidden h-full items-center gap-1.5 md:flex">
       {links.map(({ href, label }) => {
         const active = isActive(pathname, href);
         return (
@@ -26,8 +26,10 @@ export function DesktopNav({ links }: { links: NavLink[] }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "caps relative flex items-center transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
-              active ? "text-foreground after:bg-gold" : "text-muted-foreground after:bg-transparent hover:text-foreground",
+              "rounded-full px-3.5 py-1.5 text-[13px] font-medium tracking-tight transition-all duration-200 active:scale-95",
+              active
+                ? "bg-black/[0.06] text-[#1d1d1f] font-semibold"
+                : "text-[#1d1d1f]/75 hover:bg-black/[0.04] hover:text-[#1d1d1f]",
             )}
           >
             {label}

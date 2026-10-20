@@ -25,7 +25,7 @@ export async function SiteHeader() {
 
   return (
     <HeaderFrame>
-      <div className="container-page flex h-[72px] items-stretch gap-10">
+      <div className="container-page flex h-[60px] items-center gap-10">
         <Logo className="self-center" />
         <DesktopNav links={links} />
         <div className="ml-auto flex items-center gap-2">
@@ -33,12 +33,12 @@ export async function SiteHeader() {
             <UserMenu user={user} />
           ) : (
             <>
-              <Button asChild variant="ghost" className="hidden sm:inline-flex">
+              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex text-[13.5px]">
                 <Link href="/login">Log in</Link>
               </Button>
-              <Button asChild variant="gold" className="hidden sm:inline-flex">
+              <Button asChild variant="default" size="sm" className="hidden sm:inline-flex text-[13.5px] px-4 bg-[#1d1d1f] hover:bg-black text-white shadow-sm">
                 <Link href="/register?type=owner">
-                  List your property <ArrowRight aria-hidden />
+                  List your property <ArrowRight aria-hidden className="size-3.5" />
                 </Link>
               </Button>
             </>

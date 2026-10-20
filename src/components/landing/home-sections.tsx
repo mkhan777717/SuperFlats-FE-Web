@@ -12,12 +12,11 @@ export function SectionHeader({ title, href, cta = "View all" }: { title: string
   return (
     <div className="flex items-end justify-between gap-6">
       <div>
-        <h2 className="font-display text-3xl font-medium text-primary sm:text-[2.4rem]">{title}</h2>
-        <span className="gold-rule mt-4" aria-hidden />
+        <h2 className="font-display text-2xl font-semibold tracking-[-0.025em] text-foreground sm:text-[1.85rem]">{title}</h2>
       </div>
       {href && (
-        <Link href={href} className="caps group flex shrink-0 items-center gap-1.5 text-gold-strong hover:underline">
-          {cta} <ArrowRight className="size-4 transition group-hover:translate-x-0.5" aria-hidden />
+        <Link href={href} className="group inline-flex items-center gap-1 text-[13.5px] font-medium text-link hover:underline">
+          {cta} <ArrowRight className="size-3.5 transition group-hover:translate-x-0.5" aria-hidden />
         </Link>
       )}
     </div>
@@ -43,17 +42,17 @@ export function ListingGrid({ listings, favorites, signedIn, priority }: { listi
 /** Shown in place of listings while the backend still requires login to browse. */
 export function SignInToBrowse() {
   return (
-    <div className="flex flex-col items-center rounded-3xl border border-white/80 bg-white/75 px-6 py-14 text-center backdrop-blur-2xl shadow-[0_8px_32px_rgba(11,25,44,0.06),inset_0_1px_1px_rgba(255,255,255,0.85)]">
-      <span className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-md">
-        <LogIn className="size-6" aria-hidden />
+    <div className="flex flex-col items-center rounded-[28px] border border-black/[0.06] bg-white px-6 py-14 text-center shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+      <span className="grid size-12 place-items-center rounded-2xl bg-[#1d1d1f] text-white shadow-sm">
+        <LogIn className="size-5" aria-hidden />
       </span>
-      <h3 className="mt-5 text-2xl font-semibold tracking-tight">Sign in to view available properties</h3>
-      <p className="mt-2 max-w-md text-base text-muted-foreground">Create a free account to browse every listing, save properties and book viewings.</p>
-      <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Button asChild size="lg" variant="gold" className="rounded-xl shadow-md font-semibold">
+      <h3 className="mt-4 text-xl font-semibold tracking-tight text-foreground">Sign in to view available properties</h3>
+      <p className="mt-1.5 max-w-md text-[14px] text-muted-foreground">Create a free account to browse every listing, save properties and book viewings.</p>
+      <div className="mt-6 flex flex-wrap justify-center gap-2.5">
+        <Button asChild size="lg" variant="default" className="rounded-full bg-[#1d1d1f] text-white hover:bg-black text-[13.5px]">
           <Link href="/register">Create free account</Link>
         </Button>
-        <Button asChild size="lg" variant="outline" className="rounded-xl">
+        <Button asChild size="lg" variant="outline" className="rounded-full text-[13.5px]">
           <Link href="/login">Log in</Link>
         </Button>
       </div>
@@ -73,20 +72,20 @@ export function PropertyTypes() {
   return (
     <section className="container-page pt-4 pb-14">
       <SectionHeader title="Explore by property type" href="/explore" cta="View all types" />
-      <Stagger as="ul" stagger={0.06} className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <Stagger as="ul" stagger={0.06} className="mt-6 grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
         {TYPES.map(({ type, label, icon: Icon }) => (
           <StaggerItem as="li" key={type}>
             <Link
               href={`/explore?type=${encodeURIComponent(type)}`}
-              className="group relative flex items-center gap-4 rounded-2xl border border-white/80 bg-white/75 p-4.5 backdrop-blur-xl shadow-[0_4px_20px_-4px_rgba(11,25,44,0.05),inset_0_1px_1px_rgba(255,255,255,0.85)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:bg-white hover:shadow-[0_16px_36px_-6px_rgba(11,25,44,0.1)] active:scale-[0.98]"
+              className="group relative flex flex-col items-center justify-center text-center gap-2.5 rounded-[22px] border border-black/[0.06] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-1 hover:border-black/15 hover:shadow-[0_16px_36px_-6px_rgba(0,0,0,0.08)] active:scale-[0.98]"
             >
-              <div className="grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:from-gold/20 group-hover:border-gold/30 group-hover:text-gold-strong">
-                <Icon className="size-6 stroke-[1.6]" aria-hidden />
+              <div className="grid size-12 place-items-center rounded-2xl bg-black/[0.04] text-foreground transition-all duration-300 group-hover:scale-105 group-hover:bg-[#1d1d1f] group-hover:text-white">
+                <Icon className="size-5.5 stroke-[1.6]" aria-hidden />
               </div>
-              <span className="min-w-0">
-                <span className="block font-semibold text-foreground text-base tracking-tight">{type}</span>
-                <span className="text-xs font-medium text-muted-foreground">{label}</span>
-              </span>
+              <div>
+                <span className="block font-semibold text-foreground text-[15px] tracking-tight">{type}</span>
+                <span className="text-[12px] font-normal text-muted-foreground">{label}</span>
+              </div>
             </Link>
           </StaggerItem>
         ))}
@@ -106,17 +105,16 @@ const POPULAR = [
 export function PopularSearches() {
   return (
     <section className="container-page pb-14">
-      <h2 className="font-display text-3xl font-medium text-primary sm:text-[2.4rem]">Popular searches</h2>
-      <span className="gold-rule mt-4" aria-hidden />
-      <Reveal className="mt-6 flex flex-wrap items-center gap-3">
+      <h2 className="font-display text-2xl font-semibold tracking-[-0.025em] text-foreground sm:text-[1.85rem]">Popular searches</h2>
+      <Reveal className="mt-5 flex flex-wrap items-center gap-2.5">
         {POPULAR.map((p) => (
           <Link
             key={p.href}
             href={p.href}
-            className="group inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/70 px-4 py-2 text-[0.875rem] font-medium text-slate-800 backdrop-blur-md shadow-[0_2px_8px_-2px_rgba(11,25,44,0.05),inset_0_1px_1px_rgba(255,255,255,0.8)] transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40 hover:bg-white hover:shadow-soft active:scale-95"
+            className="group inline-flex items-center gap-2 rounded-full border border-black/[0.06] bg-white px-4 py-2 text-[13.5px] font-medium text-foreground shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-0.5 hover:border-black/20 hover:shadow-sm active:scale-95"
           >
             <span>{p.label}</span>
-            <ArrowRight className="size-3.5 text-gold-strong transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
+            <ArrowRight className="size-3.5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" aria-hidden />
           </Link>
         ))}
       </Reveal>
@@ -133,7 +131,7 @@ const OWNER_FEATURES: { icon: LucideIcon; label: string }[] = [
 export function OwnerBand() {
   return (
     <section id="owners" className="container-page scroll-mt-24 pb-16">
-      <Reveal className="grid items-center gap-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-primary via-slate-900 to-ink p-6 text-primary-foreground shadow-float backdrop-blur-2xl sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_auto] lg:gap-10">
+      <Reveal className="grid items-center gap-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#1d1d1f] via-[#242426] to-[#0a0a0c] p-6 text-white shadow-float backdrop-blur-2xl sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_auto] lg:gap-10">
         <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 shadow-lg">
           <Image src={interior} alt="A furnished living room in a rental flat" fill placeholder="blur" sizes="(min-width: 1024px) 25vw, 90vw" className="object-cover" />
         </div>

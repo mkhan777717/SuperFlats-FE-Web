@@ -34,18 +34,16 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
 }
 
 const control =
-  "h-12 w-full appearance-none rounded-xl border border-slate-200/90 bg-white/70 pr-9 pl-11 text-[0.9375rem] text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] backdrop-blur-md outline-none transition-all duration-200 placeholder:text-muted-foreground hover:border-slate-300 hover:bg-white/90 focus:border-primary/40 focus:bg-white focus:ring-4 focus:ring-primary/10";
+  "h-11 w-full appearance-none rounded-full border border-black/[0.08] bg-white/80 pr-8 pl-10 text-[13.5px] text-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] backdrop-blur-xl outline-none transition-all placeholder:text-muted-foreground/70 hover:border-black/20 focus:border-primary focus:bg-white focus:ring-4 focus:ring-black/[0.04]";
 
 function Field({ label, icon: Icon, select, children }: { label: string; icon: typeof MapPin; select?: boolean; children: React.ReactNode }) {
   return (
     <label className="group grid min-w-0 gap-1.5">
-      <span className="text-[0.68rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase">{label}</span>
+      <span className="text-[12px] font-medium text-muted-foreground">{label}</span>
       <span className="relative flex items-center">
-        <span className="pointer-events-none absolute left-2.5 grid size-7 place-items-center rounded-lg bg-slate-100/70 text-muted-foreground transition-colors group-focus-within:bg-primary/10 group-focus-within:text-primary">
-          <Icon className="size-4" aria-hidden />
-        </span>
+        <Icon className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground transition-colors group-focus-within:text-foreground" aria-hidden />
         {children}
-        {select && <ChevronDown className="pointer-events-none absolute right-3 size-4 text-muted-foreground transition-transform group-focus-within:rotate-180" aria-hidden />}
+        {select && <ChevronDown className="pointer-events-none absolute right-3.5 size-3.5 text-muted-foreground transition-transform group-focus-within:rotate-180" aria-hidden />}
       </span>
     </label>
   );
@@ -112,7 +110,7 @@ export function HeroSearch() {
 
   return (
     <div className="w-full max-w-5xl">
-      <div role="tablist" aria-label="Search options" className="mb-3 inline-flex items-center gap-1.5 rounded-2xl border border-white/60 bg-white/70 p-1.5 backdrop-blur-xl shadow-sm">
+      <div role="tablist" aria-label="Search options" className="mb-3.5 inline-flex items-center gap-1.5 rounded-full bg-white/90 p-1.5 backdrop-blur-2xl border border-white/90 shadow-[0_4px_20px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)]">
         {tabs.map(({ id, label, icon: Icon }) => {
           const active = tab === id;
           return (
@@ -125,22 +123,22 @@ export function HeroSearch() {
               aria-controls={`hero-panel-${id}`}
               onClick={() => setTab(id)}
               className={cn(
-                "caps flex h-10 items-center gap-2 rounded-xl px-5 text-xs font-semibold tracking-wider transition-all duration-200 active:scale-95",
+                "flex h-9 items-center gap-2 rounded-full px-4.5 text-[13.5px] font-semibold transition-all duration-200 active:scale-95",
                 active
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-black/5 hover:text-foreground",
+                  ? "bg-[#1d1d1f] text-white shadow-sm"
+                  : "text-slate-800 hover:text-black hover:bg-black/[0.05]",
               )}
             >
-              <Icon className={cn("size-4 transition-colors", active ? "text-primary-foreground" : "text-muted-foreground")} aria-hidden />
+              <Icon className={cn("size-4", active ? "text-white" : "text-slate-700")} aria-hidden />
               {label}
             </button>
           );
         })}
       </div>
 
-      <div className="rounded-3xl border border-white/80 bg-white/80 p-5 backdrop-blur-2xl shadow-[0_20px_50px_-15px_rgba(11,25,44,0.1),inset_0_1px_2px_rgba(255,255,255,0.9)] sm:p-7">
+      <div className="rounded-[28px] border border-white/90 bg-white/75 p-5 backdrop-blur-3xl shadow-[0_24px_64px_-12px_rgba(0,0,0,0.1),0_0_0_1px_rgba(255,255,255,0.85)_inset] sm:p-6">
         {tab === "rent" ? (
-          <form id="hero-panel-rent" role="tabpanel" aria-labelledby="hero-tab-rent" action="/explore" className="grid gap-4 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
+          <form id="hero-panel-rent" role="tabpanel" aria-labelledby="hero-tab-rent" action="/explore" className="grid gap-3 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-end">
             <Field label="Location" icon={locating ? Loader2 : MapPin}>
               <input ref={inputRef} name="keywords" list="hero-cities" placeholder="Search by area, society or city" className={cn(control, locating && "[&+datalist]:hidden")} />
               <datalist id="hero-cities">
@@ -169,23 +167,23 @@ export function HeroSearch() {
                 ))}
               </select>
             </Field>
-            <Button type="submit" variant="gold" size="xl" className="w-full text-base font-semibold md:w-44 rounded-xl shadow-[0_8px_20px_-4px_rgba(180,125,20,0.35)] hover:shadow-[0_12px_28px_-4px_rgba(180,125,20,0.45)] hover:-translate-y-0.5 active:translate-y-0 transition-all">
-              <Search className="size-5" aria-hidden /> Search
+            <Button type="submit" variant="default" size="lg" className="w-full text-[14px] font-medium md:w-36 rounded-full bg-[#1d1d1f] text-white hover:bg-black shadow-sm active:scale-95 transition-all">
+              <Search className="size-4" aria-hidden /> Search
             </Button>
           </form>
         ) : (
-          <div id="hero-panel-owners" role="tabpanel" aria-labelledby="hero-tab-owners" className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div id="hero-panel-owners" role="tabpanel" aria-labelledby="hero-tab-owners" className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-2 py-1">
             <div>
-              <p className="text-lg font-semibold">Have a property to rent out?</p>
-              <p className="mt-1 text-muted-foreground">List your flats, manage viewings, tenants and monthly rent from one dashboard.</p>
+              <p className="text-[17px] font-semibold text-foreground">Have a property to rent out?</p>
+              <p className="mt-1 text-[13.5px] text-muted-foreground">List your flats, manage viewings, tenants and monthly rent from one dashboard.</p>
             </div>
-            <div className="flex shrink-0 flex-wrap gap-3">
-              <Button asChild variant="gold" size="xl" className="rounded-xl font-semibold shadow-[0_8px_20px_-4px_rgba(180,125,20,0.35)]">
+            <div className="flex shrink-0 flex-wrap gap-2.5">
+              <Button asChild variant="default" size="lg" className="rounded-full bg-[#1d1d1f] text-white hover:bg-black text-[13.5px] shadow-sm">
                 <Link href="/register?type=owner">
-                  List your property <ArrowRight aria-hidden />
+                  List your property <ArrowRight aria-hidden className="size-3.5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="xl" className="rounded-xl">
+              <Button asChild variant="outline" size="lg" className="rounded-full text-[13.5px]">
                 <Link href="/dashboard">Owner login</Link>
               </Button>
             </div>

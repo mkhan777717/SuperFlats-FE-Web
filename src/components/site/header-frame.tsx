@@ -30,10 +30,10 @@ export function HeaderFrame({ children }: { children: ReactNode }) {
     <header
       data-transparent={transparent || undefined}
       className={cn(
-        "sticky top-0 z-40 transition-all duration-300",
+        "sticky top-0 z-40 transition-all duration-200",
         transparent
-          ? "border-b border-white/20 bg-white/25 backdrop-blur-md backdrop-saturate-120 sm:border-transparent sm:bg-transparent sm:backdrop-blur-none"
-          : "border-b border-white/70 bg-white/75 shadow-[0_4px_24px_-4px_rgba(11,25,44,0.05)] backdrop-blur-2xl backdrop-saturate-150 dark:border-white/10 dark:bg-slate-950/70",
+          ? "border-b border-transparent bg-transparent"
+          : "border-b border-black/[0.08] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]",
       )}
     >
       {children}

@@ -108,9 +108,9 @@ export function NearbyListings({ signedIn, favoriteIds }: { signedIn: boolean; f
     <section className="container-page pt-14" aria-live="polite">
       <div className="flex items-end justify-between gap-6">
         <div>
-          <h2 className="font-display text-3xl font-semibold text-primary sm:text-[2.1rem] dark:text-foreground">Flats near you</h2>
+          <h2 className="font-display text-2xl font-semibold tracking-[-0.025em] text-foreground sm:text-[1.85rem]">Flats near you</h2>
           {state.status === "ready" && (
-            <p className="mt-1 text-muted-foreground">
+            <p className="mt-1 text-[14px] text-muted-foreground">
               {state.total ? `${state.total.toLocaleString("en-IN")} within ${state.radius} km of your location` : `No flats within ${state.radius} km yet`}
             </p>
           )}
@@ -118,7 +118,7 @@ export function NearbyListings({ signedIn, favoriteIds }: { signedIn: boolean; f
         {state.status === "ready" && state.total > 0 && (
           <Link
             href={`/explore?near=you&lat=${state.coords.lat}&lng=${state.coords.lng}&radius=${state.radius}`}
-            className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/80 bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold-strong backdrop-blur-md shadow-sm transition hover:bg-white active:scale-95"
+            className="group inline-flex items-center gap-1 text-[13.5px] font-medium text-link hover:underline"
           >
             View all <ArrowRight className="size-3.5 transition group-hover:translate-x-0.5" aria-hidden />
           </Link>
@@ -127,9 +127,9 @@ export function NearbyListings({ signedIn, favoriteIds }: { signedIn: boolean; f
 
       <div className="mt-6">
         {(state.status === "idle" || state.status === "locating" || state.status === "loading") && (
-          <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white/70 px-6 py-6 text-muted-foreground backdrop-blur-xl shadow-sm">
-            <Loader2 className="size-5 animate-spin text-primary" aria-hidden />
-            <span className="font-medium text-foreground/80">{state.status === "loading" ? "Finding flats around you…" : "Waiting for your location…"}</span>
+          <div className="flex items-center gap-3 rounded-[22px] border border-black/[0.06] bg-white px-6 py-6 text-muted-foreground shadow-sm">
+            <Loader2 className="size-4 animate-spin text-foreground" aria-hidden />
+            <span className="text-[14px] font-medium text-foreground">{state.status === "loading" ? "Finding flats around you…" : "Waiting for your location…"}</span>
           </div>
         )}
 
