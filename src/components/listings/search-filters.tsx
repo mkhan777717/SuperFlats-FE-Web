@@ -125,15 +125,15 @@ export function SearchFilters() {
         <label className="relative flex-1">
           <span className="sr-only">Search listings</span>
           <Search className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden />
-          <Input key={filters.keywords} name="keywords" type="search" defaultValue={filters.keywords} placeholder="Search by area, society or city" className="h-12 pl-12 text-base" />
+          <Input key={filters.keywords} name="keywords" type="search" defaultValue={filters.keywords} placeholder="Search by area, society or city" className="h-12 w-full rounded-2xl border border-white/80 bg-white/75 pl-12 text-base backdrop-blur-xl shadow-sm focus:bg-white transition-all" />
         </label>
-        <Button type="submit" size="xl">
+        <Button type="submit" size="xl" variant="gold" className="rounded-2xl px-6 font-semibold shadow-md">
           Search
         </Button>
       </form>
 
       <div className="flex items-center gap-2">
-        <div className="scrollbar-none flex items-center gap-2 overflow-x-auto">
+        <div className="scrollbar-none flex items-center gap-2 overflow-x-auto py-1">
           {["", ...FLAT_TYPES].map((t) => {
             const active = filters.type === t;
             return (
@@ -143,8 +143,10 @@ export function SearchFilters() {
                 onClick={() => apply({ type: t })}
                 aria-pressed={active}
                 className={cn(
-                  "h-9 shrink-0 rounded-md border px-4 text-sm font-medium transition",
-                  active ? "border-primary bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground",
+                  "h-9 shrink-0 rounded-full border px-4 text-xs font-semibold tracking-wide transition-all duration-200 active:scale-95 shadow-sm",
+                  active
+                    ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                    : "border-white/80 bg-white/70 text-slate-700 backdrop-blur-md hover:bg-white hover:border-slate-300 hover:text-foreground",
                 )}
               >
                 {t || "All"}
@@ -152,7 +154,7 @@ export function SearchFilters() {
             );
           })}
         </div>
-        <div role="group" aria-label="View" className="flex shrink-0 rounded-sm border p-0.5">
+        <div role="group" aria-label="View" className="flex shrink-0 items-center rounded-full border border-white/80 bg-white/70 p-1 backdrop-blur-md shadow-sm">
           {(
             [
               { id: "list", label: "List", icon: LayoutGrid },
@@ -165,19 +167,19 @@ export function SearchFilters() {
               onClick={() => apply({ view: id, page: filters.page })}
               aria-pressed={filters.view === id}
               className={cn(
-                "caps flex h-8 items-center gap-1.5 rounded-[3px] px-3 transition",
-                filters.view === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                "caps flex h-7 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-all duration-200 active:scale-95",
+                filters.view === id ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
               )}
             >
-              <Icon className="size-4" aria-hidden /> {label}
+              <Icon className="size-3.5" aria-hidden /> {label}
             </button>
           ))}
         </div>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="shrink-0">
-              <SlidersHorizontal aria-hidden /> Filters
-              {count > 0 && <span className="grid size-5 place-items-center rounded-full bg-foreground text-[11px] text-background">{count}</span>}
+            <Button variant="outline" className="shrink-0 rounded-full border-white/80 bg-white/70 backdrop-blur-md shadow-sm hover:bg-white">
+              <SlidersHorizontal aria-hidden className="size-3.5" /> Filters
+              {count > 0 && <span className="grid size-5 place-items-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">{count}</span>}
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-md">

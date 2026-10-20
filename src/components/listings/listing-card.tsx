@@ -14,18 +14,20 @@ export function ListingCard({ listing, action, priority, className }: { listing:
   const by = listing.company?.name || listing.lister?.name || "Owner";
 
   return (
-    <Tilt className="rounded-sm" max={2}>
+    <Tilt className="rounded-2xl" max={2}>
       <article
         className={cn(
-          "group relative flex h-full flex-col overflow-hidden rounded-sm border bg-card transition-shadow duration-500 hover:shadow-lift",
+          "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/80 bg-white/80 backdrop-blur-xl shadow-[0_4px_24px_-4px_rgba(11,25,44,0.06),inset_0_1px_1px_rgba(255,255,255,0.85)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/30 hover:bg-white hover:shadow-[0_18px_38px_-6px_rgba(11,25,44,0.12)]",
           className,
         )}
       >
         <div className="relative z-[1] overflow-hidden">
-          <ListingPhoto src={coverPhoto(listing)} alt={listing.title} sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" priority={priority} className="aspect-[16/10]" />
-          <span className="absolute top-3 left-3 rounded-sm bg-primary px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.14em] text-primary-foreground uppercase">For rent</span>
+          <ListingPhoto src={coverPhoto(listing)} alt={listing.title} sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" priority={priority} className="aspect-[16/10] transition-transform duration-500 group-hover:scale-105" />
+          <span className="absolute top-3 left-3 rounded-full border border-white/30 bg-primary/85 px-3 py-1 text-[0.65rem] font-semibold tracking-wider text-white uppercase backdrop-blur-md shadow-sm">
+            For rent
+          </span>
           {photos > 0 && (
-            <span className="absolute right-3 bottom-3 inline-flex items-center gap-1 rounded-sm bg-black/65 px-2 py-0.5 text-xs font-medium text-white backdrop-blur">
+            <span className="absolute right-3 bottom-3 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white backdrop-blur-md shadow-sm">
               <Camera className="size-3.5" aria-hidden /> {photos} {photos === 1 ? "photo" : "photos"}
             </span>
           )}
@@ -37,37 +39,49 @@ export function ListingCard({ listing, action, priority, className }: { listing:
             {formatRupees(listing.monthly_rent)}
             <span className="ml-1.5 text-sm font-normal tracking-normal text-muted-foreground">/ month</span>
           </p>
-          <h3 className="mt-2 line-clamp-1 font-semibold">
-            <Link href={`/listings/${listing.id}`} className="after:absolute after:inset-0 focus-visible:outline-none">
+          <h3 className="mt-2 line-clamp-1 font-semibold text-[1.05rem]">
+            <Link href={`/listings/${listing.id}`} className="after:absolute after:inset-0 focus-visible:outline-none hover:text-gold-strong transition-colors">
               {listing.title}
             </Link>
           </h3>
           <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-            <MapPin className="size-3.5 shrink-0" aria-hidden />
+            <MapPin className="size-3.5 shrink-0 text-gold-strong" aria-hidden />
             <span className="line-clamp-1">{listingLocation(listing)}</span>
           </p>
 
-          <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.8125rem] text-foreground/80">
-            <li className="flex items-center gap-1.5">
-              <BedDouble className="size-4 text-muted-foreground" aria-hidden /> {listing.flat?.type}
+          <ul className="mt-3.5 flex flex-wrap items-center gap-2 text-[0.8125rem]">
+            <li className="inline-flex items-center gap-1.5 rounded-lg border border-slate-100 bg-slate-50/80 px-2.5 py-1 font-medium text-slate-700 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
+              <BedDouble className="size-3.5 text-primary" aria-hidden />
+              <span>{listing.flat?.type}</span>
             </li>
             {area && (
-              <li className="flex items-center gap-1.5">
-                <SquareDashed className="size-4 text-muted-foreground" aria-hidden /> {area}
+              <li className="inline-flex items-center gap-1.5 rounded-lg border border-slate-100 bg-slate-50/80 px-2.5 py-1 font-medium text-slate-700 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
+                <SquareDashed className="size-3.5 text-primary" aria-hidden />
+                <span>{area}</span>
               </li>
             )}
-            <li className="flex items-center gap-1.5" title={`${listing.security_type === "lease" ? "Lease" : "Deposit"} ${formatRupees(listing.security_amount)}`}>
-              <ReceiptIndianRupee className="size-4 text-muted-foreground" aria-hidden /> {formatCompactRupees(listing.security_amount)} {listing.security_type === "lease" ? "lease" : "dep"}
+            <li
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-100 bg-slate-50/80 px-2.5 py-1 font-medium text-slate-700 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]"
+              title={`${listing.security_type === "lease" ? "Lease" : "Deposit"} ${formatRupees(listing.security_amount)}`}
+            >
+              <ReceiptIndianRupee className="size-3.5 text-primary" aria-hidden />
+              <span>{formatCompactRupees(listing.security_amount)} {listing.security_type === "lease" ? "lease" : "dep"}</span>
             </li>
           </ul>
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-3 border-t px-4 py-3 text-xs text-muted-foreground">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-100/80 bg-slate-50/40 px-4 py-3 text-xs text-muted-foreground">
           <span className="flex min-w-0 items-center gap-2">
-            <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">{by.charAt(0).toUpperCase()}</span>
+            <span className="grid size-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-[11px] font-bold text-primary-foreground shadow-sm">
+              {by.charAt(0).toUpperCase()}
+            </span>
             <span className="truncate text-sm font-medium text-foreground">{by}</span>
           </span>
-          {listing.created_at && <span className="shrink-0">Listed {timeAgo(listing.created_at)}</span>}
+          {listing.created_at && (
+            <span className="shrink-0 rounded-full border border-slate-200/60 bg-white/80 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+              {timeAgo(listing.created_at)}
+            </span>
+          )}
         </div>
       </article>
     </Tilt>
@@ -76,7 +90,7 @@ export function ListingCard({ listing, action, priority, className }: { listing:
 
 export function ListingCardSkeleton() {
   return (
-    <div className="animate-pulse overflow-hidden rounded-lg border bg-card">
+    <div className="animate-pulse overflow-hidden rounded-2xl border border-white/60 bg-white/70 backdrop-blur-xl">
       <div className="aspect-[16/10] bg-muted" />
       <div className="space-y-3 p-4">
         <div className="h-6 w-1/3 rounded bg-muted" />
