@@ -23,6 +23,15 @@ export interface Photo {
   is_primary: boolean;
 }
 
+export interface Video {
+  id: number;
+  videoable_id?: number;
+  videoable_type?: string;
+  video_url: string;
+  name?: string | null;
+  duration_sec?: number | null;
+}
+
 export interface Property {
   id: number;
   name: string;
@@ -50,6 +59,7 @@ export interface Flat {
   unique_amenities?: string[] | string | null;
   property: Property;
   photos?: Photo[];
+  videos?: Video[];
 }
 
 export interface Listing {
@@ -131,6 +141,7 @@ export interface OwnerProperty extends Property {
   total_flats?: number;
   total_tenants?: number;
   photos?: Photo[];
+  videos?: Video[];
   created_at?: string;
 }
 

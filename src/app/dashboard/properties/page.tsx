@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/common/page-header";
 import { StatusBadge } from "@/components/common/status-badge";
 import { FilterTabs, hrefWith, PAGE_SIZE, readListParams, TableFooter, TableSearch } from "@/components/console/data-table";
 import { AddPropertyButton } from "@/components/console/property-actions";
-import { api } from "@/lib/api";
+import { api, getCurrentUser } from "@/lib/api";
 import { formatArea } from "@/lib/format";
 import type { PropertyPage } from "@/lib/types";
 
@@ -17,15 +17,19 @@ const BASE = "/dashboard/properties";
 
 export default async function PropertiesPage({ searchParams }: PageProps<"/dashboard/properties">) {
   const f = readListParams(await searchParams, ["managed"]);
-  const data = await api<PropertyPage>("/properties", {
-    query: { keywords: f.q, is_managed: f.managed || undefined, limit: PAGE_SIZE, offset: f.offset, sortBy: "created_at", sortOrder: "DESC" },
-    returnTo: BASE,
-  });
+  const [user, data] = await Promise.all([
+    getCurrentUser(),
+    api<PropertyPage>("/properties", {
+      query: { keywords: f.q, is_managed: f.managed || undefined, limit: PAGE_SIZE, offset: f.offset, sortBy: "created_at", sortOrder: "DESC" },
+      returnTo: BASE,
+    }),
+  ]);
+  const isAdmin = user?.role === "admin" || user?.role === "super_admin";
   const current = { q: f.q, managed: f.managed, page: f.page };
 
   return (
     <div className="grid gap-8">
-      <PageHeader eyebrow="Portfolio" title="Properties" description="Buildings in your company and how many flats and tenants each has." actions={<AddPropertyButton />} />
+      <PageHeader eyebrow="Portfolio" title="Properties" description="Buildings in your company and how many flats and tenants each has." actions={<AddPropertyButton isAdmin={isAdmin} />} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <FilterTabs
@@ -89,7 +93,7 @@ export default async function PropertiesPage({ searchParams }: PageProps<"/dashb
           <TableFooter total={data.totalItems} page={f.page} totalPages={data.totalPages} href={(page) => hrefWith(BASE, current, { page })} />
         </>
       ) : (
-        <EmptyState icon={Building2} title={f.q ? "No properties match your search" : "No properties yet"} action={!f.q && <AddPropertyButton />}>
+        <EmptyState icon={Building2} title={f.q ? "No properties match your search" : "No properties yet"} action={!f.q && <AddPropertyButton isAdmin={isAdmin} />}>
           {f.q ? "Try a different name or address." : "Add your first property to start listing flats."}
         </EmptyState>
       )}

@@ -7,6 +7,7 @@ import { Status, StatusBadge } from "@/components/common/status-badge";
 import { Table, TableEmpty, Td } from "@/components/console/data-table";
 import { PhotoManager } from "@/components/console/photo-manager";
 import { AddFlatButton, FlatRowActions, PropertyActions } from "@/components/console/property-actions";
+import { VideoManager } from "@/components/console/video-manager";
 import { ApiError, api, getCurrentUser } from "@/lib/api";
 import { FLAT_TYPES } from "@/lib/config";
 import { formatArea, formatRupees, toStringArray } from "@/lib/format";
@@ -80,6 +81,17 @@ export default async function PropertyPage({ params }: PageProps<"/dashboard/pro
           deleteBase={`/properties/${property.id}/photos`}
         />
       </section>
+
+      {isAdmin && (
+        <section className="grid gap-5">
+          <div>
+            <h2 className="font-display text-2xl font-medium text-primary">Videos</h2>
+            <span className="gold-rule mt-3" aria-hidden />
+          </div>
+          {/* TODO(backend): pass uploadPath={`/properties/upload-video/${property.id}`} and deleteBase={`/properties/${property.id}/videos`} once backend video endpoints are ready */}
+          <VideoManager videos={property.videos ?? []} canDelete={isAdmin} />
+        </section>
+      )}
 
       <section className="grid gap-5">
         <div className="flex flex-wrap items-end justify-between gap-4">

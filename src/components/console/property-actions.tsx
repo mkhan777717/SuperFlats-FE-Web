@@ -22,7 +22,7 @@ import { FlatForm } from "./flat-form";
 import { FormSheet } from "./form-bits";
 import { PropertyForm } from "./property-form";
 
-export function AddPropertyButton() {
+export function AddPropertyButton({ isAdmin = false }: { isAdmin?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -30,7 +30,7 @@ export function AddPropertyButton() {
         <Plus aria-hidden /> Add property
       </Button>
       <FormSheet open={open} onOpenChange={setOpen} title="Add property" description="Building details, address and how many units it has." wide>
-        <PropertyForm onDone={() => setOpen(false)} />
+        <PropertyForm onDone={() => setOpen(false)} canUploadVideo={isAdmin} />
       </FormSheet>
     </>
   );
@@ -78,7 +78,7 @@ export function PropertyActions({ property }: { property: OwnerProperty }) {
         </AlertDialogContent>
       </AlertDialog>
       <FormSheet open={open} onOpenChange={setOpen} title="Edit property" wide>
-        <PropertyForm property={property} onDone={() => setOpen(false)} />
+        <PropertyForm property={property} onDone={() => setOpen(false)} canUploadVideo />
       </FormSheet>
     </>
   );
@@ -92,7 +92,7 @@ export function AddFlatButton({ property, isAdmin }: { property: OwnerProperty; 
         <Plus aria-hidden /> Add flat
       </Button>
       <FormSheet open={open} onOpenChange={setOpen} title="Add flat" description={property.name}>
-        <FlatForm property={property} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} />
+        <FlatForm property={property} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} canUploadVideo={isAdmin} />
       </FormSheet>
     </>
   );
@@ -141,7 +141,7 @@ export function FlatRowActions({ property, flat, isAdmin }: { property: OwnerPro
         </AlertDialog>
       )}
       <FormSheet open={open} onOpenChange={setOpen} title={`Flat ${flat.unit_number}`} description={property.name}>
-        <FlatForm property={property} flat={flat} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} />
+        <FlatForm property={property} flat={flat} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} canUploadVideo={isAdmin} />
       </FormSheet>
     </div>
   );
