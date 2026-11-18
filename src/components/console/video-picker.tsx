@@ -5,7 +5,7 @@ import { Video as VideoIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 
-const MAX_MB = 100;
+const MAX_MB = 5;
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
@@ -17,7 +17,7 @@ function formatFileSize(bytes: number) {
  * Files stay in parent state with local previews; once the backend video endpoint is ready,
  * pass them to `uploadQueuedVideos` after creating the record.
  */
-export function VideoPicker({ files, onChange, max = 3 }: { files: File[]; onChange: (files: File[]) => void; max?: number }) {
+export function VideoPicker({ files, onChange }: { files: File[]; onChange: (files: File[]) => void }) {
   const input = useRef<HTMLInputElement>(null);
   const previews = useMemo(() => files.map((f) => ({ file: f, url: URL.createObjectURL(f) })), [files]);
   useEffect(() => () => previews.forEach((p) => URL.revokeObjectURL(p.url)), [previews]);
@@ -29,9 +29,7 @@ export function VideoPicker({ files, onChange, max = 3 }: { files: File[]; onCha
       else if (f.size > MAX_MB * 1024 * 1024) toast.error(`${f.name} is larger than ${MAX_MB} MB.`);
       else picked.push(f);
     }
-    const room = max - files.length;
-    if (picked.length > room) toast.warning(`Only ${max} video${max === 1 ? "" : "s"} allowed.`);
-    onChange([...files, ...picked.slice(0, Math.max(0, room))]);
+    if (picked.length) onChange([...files, ...picked]);
     if (input.current) input.current.value = "";
   };
 
@@ -58,17 +56,15 @@ export function VideoPicker({ files, onChange, max = 3 }: { files: File[]; onCha
             </div>
           </li>
         ))}
-        {files.length < max && (
-          <li>
-            <button
-              type="button"
-              onClick={() => input.current?.click()}
-              className="flex aspect-video w-full flex-col items-center justify-center gap-1.5 rounded-sm border-2 border-dashed text-xs text-muted-foreground transition hover:border-gold hover:text-foreground"
-            >
-              <VideoIcon className="size-5" aria-hidden /> Add videos
-            </button>
-          </li>
-        )}
+        <li>
+          <button
+            type="button"
+            onClick={() => input.current?.click()}
+            className="flex aspect-video w-full flex-col items-center justify-center gap-1.5 rounded-sm border-2 border-dashed text-xs text-muted-foreground transition hover:border-gold hover:text-foreground"
+          >
+            <VideoIcon className="size-5" aria-hidden /> Add videos
+          </button>
+        </li>
       </ul>
       <input
         ref={input}
@@ -78,9 +74,7 @@ export function VideoPicker({ files, onChange, max = 3 }: { files: File[]; onCha
         className="sr-only"
         onChange={(e) => e.target.files?.length && add(e.target.files)}
       />
-      <p className="text-xs text-muted-foreground">
-        Up to {max} videos (MP4, WebM or MOV, up to {MAX_MB} MB each).
-      </p>
+      <p className="text-xs text-muted-foreground">MP4, WebM or MOV. Max limit {MAX_MB} MB.</p>
     </div>
   );
 }

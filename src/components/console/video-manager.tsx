@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { clientApi } from "@/lib/client-api";
 import type { Video } from "@/lib/types";
 
-const MAX_MB = 100;
+const MAX_MB = 5;
 
 type LocalVideo = {
   id: string;
@@ -31,7 +31,6 @@ export function VideoManager({
   videos = [],
   uploadPath,
   deleteBase,
-  max = 3,
   canDelete = true,
 }: {
   videos?: Video[];
@@ -39,7 +38,6 @@ export function VideoManager({
   uploadPath?: string;
   /** Backend delete base once ready, e.g. `/properties/12/videos` */
   deleteBase?: string;
-  max?: number;
   canDelete?: boolean;
 }) {
   const router = useRouter();
@@ -58,14 +56,10 @@ export function VideoManager({
   }, []);
 
   const total = videos.length + localVideos.length;
-  const left = max - total;
 
   const upload = async (files: FileList) => {
-    const list = [...files].slice(0, Math.max(0, left));
-    if (files.length > list.length) toast.warning(`Only ${left} more video${left === 1 ? "" : "s"} allowed.`);
-
     const valid: File[] = [];
-    for (const file of list) {
+    for (const file of [...files]) {
       if (!file.type.startsWith("video/")) {
         toast.error(`${file.name} is not a video.`);
         continue;
@@ -198,19 +192,17 @@ export function VideoManager({
           </li>
         ))}
 
-        {left > 0 && (
-          <li>
-            <button
-              type="button"
-              onClick={() => input.current?.click()}
-              disabled={!!uploading}
-              className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-sm border-2 border-dashed text-sm text-muted-foreground transition hover:border-gold hover:text-foreground disabled:opacity-60"
-            >
-              <VideoIcon className="size-6" aria-hidden />
-              {uploading ?? "Add videos"}
-            </button>
-          </li>
-        )}
+        <li>
+          <button
+            type="button"
+            onClick={() => input.current?.click()}
+            disabled={!!uploading}
+            className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-sm border-2 border-dashed text-sm text-muted-foreground transition hover:border-gold hover:text-foreground disabled:opacity-60"
+          >
+            <VideoIcon className="size-6" aria-hidden />
+            {uploading ?? "Add videos"}
+          </button>
+        </li>
       </ul>
 
       <input
@@ -222,9 +214,7 @@ export function VideoManager({
         onChange={(e) => e.target.files?.length && upload(e.target.files)}
       />
 
-      <p className="text-xs text-muted-foreground">
-        {total} of {max} videos. MP4, WebM or MOV up to {MAX_MB} MB each.
-      </p>
+      <p className="text-xs text-muted-foreground">MP4, WebM or MOV. Max limit {MAX_MB} MB.</p>
 
       {total === 0 && (
         <Button type="button" variant="outline" className="w-fit" onClick={() => input.current?.click()} loading={!!uploading}>
