@@ -22,7 +22,7 @@ export function FlatForm({
   flat,
   onDone,
   canDeletePhotos,
-  canUploadVideo = false,
+  canUploadVideo = true,
 }: {
   property: OwnerProperty;
   flat?: Flat;

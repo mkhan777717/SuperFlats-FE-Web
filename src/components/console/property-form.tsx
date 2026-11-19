@@ -26,7 +26,7 @@ type Errors = Partial<Record<"name" | "address" | "city" | "state" | "zipcode" |
 const STATE_NAMES = Object.keys(STATES as Record<string, string[]>).sort();
 
 /** Create or edit a property. Mirrors the Admin app's property form and the backend's validation. */
-export function PropertyForm({ property, onDone, canUploadVideo = false }: { property?: OwnerProperty; onDone?: () => void; canUploadVideo?: boolean }) {
+export function PropertyForm({ property, onDone, canUploadVideo = true }: { property?: OwnerProperty; onDone?: () => void; canUploadVideo?: boolean }) {
   const router = useRouter();
   const editing = !!property;
   const [state, setState] = useState(property?.state ?? "");

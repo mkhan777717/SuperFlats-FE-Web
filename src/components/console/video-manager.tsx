@@ -23,7 +23,7 @@ function formatFileSize(bytes: number) {
 }
 
 /**
- * Upload and remove property/flat videos (Owner / Admin only — hidden from agents).
+ * Upload and remove property/flat videos (Owner, Admin, and Agent).
  * When `uploadPath` is omitted, selected videos are kept as playable local previews
  * until the backend video endpoints are wired up.
  */
@@ -174,16 +174,14 @@ export function VideoManager({
               <span className="absolute top-2 left-2 inline-flex items-center rounded-sm bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground uppercase">
                 Preview
               </span>
-              {canDelete && (
-                <button
-                  type="button"
-                  onClick={() => removeLocal(v.id)}
-                  className="absolute top-2 right-2 grid size-8 place-items-center rounded-sm bg-white/90 text-destructive opacity-100 shadow-soft transition hover:bg-white sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
-                  aria-label={`Remove ${v.name}`}
-                >
-                  <Trash2 className="size-4" />
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => removeLocal(v.id)}
+                className="absolute top-2 right-2 grid size-8 place-items-center rounded-sm bg-white/90 text-destructive opacity-100 shadow-soft transition hover:bg-white sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                aria-label={`Remove ${v.name}`}
+              >
+                <Trash2 className="size-4" />
+              </button>
             </div>
             <div className="flex items-center justify-between gap-2 bg-card px-3 py-1.5 text-xs">
               <span className="truncate font-medium text-foreground">{v.name}</span>

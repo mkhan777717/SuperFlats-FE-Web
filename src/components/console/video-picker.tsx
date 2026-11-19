@@ -13,7 +13,7 @@ function formatFileSize(bytes: number) {
 }
 
 /**
- * Pick videos before the record exists (Owner / Admin only).
+ * Pick videos before the record exists (Owner, Admin, and Agent).
  * Files stay in parent state with local previews; once the backend video endpoint is ready,
  * pass them to `uploadQueuedVideos` after creating the record.
  */

@@ -22,7 +22,7 @@ import { FlatForm } from "./flat-form";
 import { FormSheet } from "./form-bits";
 import { PropertyForm } from "./property-form";
 
-export function AddPropertyButton({ isAdmin = false }: { isAdmin?: boolean }) {
+export function AddPropertyButton({ isAdmin = false, canUploadVideo = true }: { isAdmin?: boolean; canUploadVideo?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -30,7 +30,7 @@ export function AddPropertyButton({ isAdmin = false }: { isAdmin?: boolean }) {
         <Plus aria-hidden /> Add property
       </Button>
       <FormSheet open={open} onOpenChange={setOpen} title="Add property" description="Building details, address and how many units it has." wide>
-        <PropertyForm onDone={() => setOpen(false)} canUploadVideo={isAdmin} />
+        <PropertyForm onDone={() => setOpen(false)} canUploadVideo={canUploadVideo} />
       </FormSheet>
     </>
   );
@@ -84,7 +84,7 @@ export function PropertyActions({ property }: { property: OwnerProperty }) {
   );
 }
 
-export function AddFlatButton({ property, isAdmin }: { property: OwnerProperty; isAdmin: boolean }) {
+export function AddFlatButton({ property, isAdmin, canUploadVideo = true }: { property: OwnerProperty; isAdmin: boolean; canUploadVideo?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -92,13 +92,13 @@ export function AddFlatButton({ property, isAdmin }: { property: OwnerProperty; 
         <Plus aria-hidden /> Add flat
       </Button>
       <FormSheet open={open} onOpenChange={setOpen} title="Add flat" description={property.name}>
-        <FlatForm property={property} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} canUploadVideo={isAdmin} />
+        <FlatForm property={property} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} canUploadVideo={canUploadVideo} />
       </FormSheet>
     </>
   );
 }
 
-export function FlatRowActions({ property, flat, isAdmin }: { property: OwnerProperty; flat: Flat; isAdmin: boolean }) {
+export function FlatRowActions({ property, flat, isAdmin, canUploadVideo = true }: { property: OwnerProperty; flat: Flat; isAdmin: boolean; canUploadVideo?: boolean }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -141,7 +141,7 @@ export function FlatRowActions({ property, flat, isAdmin }: { property: OwnerPro
         </AlertDialog>
       )}
       <FormSheet open={open} onOpenChange={setOpen} title={`Flat ${flat.unit_number}`} description={property.name}>
-        <FlatForm property={property} flat={flat} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} canUploadVideo={isAdmin} />
+        <FlatForm property={property} flat={flat} onDone={() => setOpen(false)} canDeletePhotos={isAdmin} canUploadVideo={canUploadVideo} />
       </FormSheet>
     </div>
   );
