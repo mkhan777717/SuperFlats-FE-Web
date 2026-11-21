@@ -2,6 +2,9 @@ import type { NextRequest } from "next/server";
 import { API_URL } from "@/lib/config";
 import { getAccessToken, getRefreshToken, setSession } from "@/lib/session";
 
+/** Bodies above this size are streamed to the backend rather than buffered (photos stay below it). */
+const STREAM_THRESHOLD = 20 * 1024 * 1024;
+
 /**
  * Backend-for-frontend proxy: browser code calls `/api/sf/<backend path>` and this handler
  * forwards it to the Superflats API with the token from the httpOnly cookie.
@@ -14,8 +17,15 @@ async function forward(request: NextRequest, ctx: RouteContext<"/api/sf/[...path
   }
 
   const target = `${API_URL}/${path.map(encodeURIComponent).join("/")}${request.nextUrl.search}`;
-  const body = request.method === "GET" || request.method === "HEAD" ? undefined : await request.arrayBuffer();
+  const hasBody = request.method !== "GET" && request.method !== "HEAD";
   const contentType = request.headers.get("content-type");
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+
+  // Large uploads (videos, up to 500 MB) are streamed straight to the backend instead of being
+  // buffered in memory. A stream can only be sent once, so they skip the 401 retry below;
+  // the video uploader refreshes the session with a small request first.
+  const stream = hasBody && (contentLength > STREAM_THRESHOLD || !request.headers.has("content-length"));
+  const body = !hasBody ? undefined : stream ? request.body : await request.arrayBuffer();
 
   const send = (token: string | null) =>
     fetch(target, {
@@ -25,14 +35,17 @@ async function forward(request: NextRequest, ctx: RouteContext<"/api/sf/[...path
       headers: {
         Accept: "application/json",
         ...(contentType ? { "Content-Type": contentType } : {}),
+        ...(stream && contentLength ? { "Content-Length": String(contentLength) } : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-    });
+      // Required by Node's fetch when the body is a stream.
+      ...(stream ? { duplex: "half" } : {}),
+    } as RequestInit);
 
   let res = await send(await getAccessToken());
 
   // Rotate tokens once on 401 and retry.
-  if (res.status === 401) {
+  if (res.status === 401 && !stream) {
     const refreshToken = await getRefreshToken();
     if (refreshToken) {
       const refreshed = await fetch(`${API_URL}/auth/refresh`, {

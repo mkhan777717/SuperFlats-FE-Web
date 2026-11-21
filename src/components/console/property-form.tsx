@@ -12,6 +12,7 @@ import { AMENITY_SUGGESTIONS, FormError, FormSection, SelectField, SwitchField, 
 import { LocationPicker, type Coords } from "./location-picker";
 import { PhotoPicker, uploadQueued } from "./photo-picker";
 import { VideoPicker } from "./video-picker";
+import { uploadVideosWithToast } from "./video-toast";
 
 const UNIT_FIELDS = [
   { key: "count_1rk", label: "1RK" },
@@ -90,8 +91,7 @@ export function PropertyForm({ property, onDone, canUploadVideo = true }: { prop
         if (ok < newPhotos.length) toast.warning(`Property created. ${ok} of ${newPhotos.length} photos uploaded; add the rest on the property page.`);
         else toast.success(newPhotos.length ? `Property created with ${ok} photo${ok === 1 ? "" : "s"}. Add flats next.` : "Property created. Add photos and flats next.");
         if (canUploadVideo && newVideos.length) {
-          // TODO(backend): upload queued videos via uploadQueuedVideos(newVideos, (form) => clientApi(`/properties/upload-video/${res.property.id}`, { method: "POST", body: form }))
-          toast.info(`${newVideos.length} video${newVideos.length === 1 ? "" : "s"} selected — video upload will sync once backend API is connected.`);
+          await uploadVideosWithToast({ type: "Property", id: res.property.id }, newVideos, "add the rest on the property page");
         }
         onDone?.();
         router.push(`/dashboard/properties/${res.property.id}`);

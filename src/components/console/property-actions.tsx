@@ -22,7 +22,7 @@ import { FlatForm } from "./flat-form";
 import { FormSheet } from "./form-bits";
 import { PropertyForm } from "./property-form";
 
-export function AddPropertyButton({ isAdmin = false, canUploadVideo = true }: { isAdmin?: boolean; canUploadVideo?: boolean }) {
+export function AddPropertyButton({ canUploadVideo = true }: { canUploadVideo?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <>

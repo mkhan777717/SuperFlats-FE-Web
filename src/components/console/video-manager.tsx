@@ -1,126 +1,105 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { Trash2, Video as VideoIcon } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AlertCircle, Loader2, Trash2, Video as VideoIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { clientApi } from "@/lib/client-api";
-import type { Video } from "@/lib/types";
+import type { Video, VideoOwner } from "@/lib/types";
+import { MAX_VIDEO_MB, MAX_VIDEO_MINUTES, MAX_VIDEOS, checkVideoFile, uploadVideo, videosPath } from "@/lib/videos";
 
-const MAX_MB = 5;
+const POLL_MS = 3000;
 
-type LocalVideo = {
-  id: string;
-  url: string;
-  name: string;
-  size: number;
-};
-
-function formatFileSize(bytes: number) {
-  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+function formatDuration(sec: number | null) {
+  if (sec == null) return null;
+  const m = Math.floor(sec / 60);
+  const s = String(sec % 60).padStart(2, "0");
+  return `${m}:${s}`;
 }
 
 /**
- * Upload and remove property/flat videos (Owner, Admin, and Agent).
- * When `uploadPath` is omitted, selected videos are kept as playable local previews
- * until the backend video endpoints are wired up.
+ * Upload, watch and remove the videos of a property or flat (Owner, Admin, and Agent).
+ * Loads its own list from `GET /properties/:id/videos` or `GET /flats/:id/videos`.
+ * The backend compresses each upload to MP4 in the background, so while any video is
+ * "processing" the list is refreshed every few seconds until it becomes "ready" or "failed".
  */
-export function VideoManager({
-  videos = [],
-  uploadPath,
-  deleteBase,
-  canDelete = true,
-}: {
-  videos?: Video[];
-  /** Backend upload endpoint once ready, e.g. `/properties/upload-video/12` */
-  uploadPath?: string;
-  /** Backend delete base once ready, e.g. `/properties/12/videos` */
-  deleteBase?: string;
-  canDelete?: boolean;
-}) {
-  const router = useRouter();
+export function VideoManager({ owner, canDelete = true }: { owner: VideoOwner; canDelete?: boolean }) {
   const input = useRef<HTMLInputElement>(null);
-  const urlsRef = useRef<Set<string>>(new Set());
-  const [localVideos, setLocalVideos] = useState<LocalVideo[]>([]);
-  const [uploading, setUploading] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | number | null>(null);
+  const [videos, setVideos] = useState<Video[] | null>(null);
+  const [loadError, setLoadError] = useState<string>();
+  const [upload, setUpload] = useState<{ label: string; percent: number } | null>(null);
+  const [deleting, setDeleting] = useState<number | null>(null);
+  const { type, id } = owner;
 
+  // Bumped after an upload/delete or on "Retry" to fetch the list again.
+  const [refreshKey, setRefreshKey] = useState(0);
+  const load = useCallback(() => setRefreshKey((k) => k + 1), []);
+  const processing = videos?.some((v) => v.status === "processing") ?? false;
+
+  // Fetch the list, and keep polling while anything is being compressed.
   useEffect(() => {
-    const urls = urlsRef.current;
+    let active = true;
+    const fetchList = () =>
+      clientApi<{ videos: Video[] }>(videosPath({ type, id })).then(
+        (res) => {
+          if (!active) return;
+          setVideos(res.videos);
+          setLoadError(undefined);
+        },
+        (e) => active && setLoadError(e instanceof Error ? e.message : "Couldn't load videos"),
+      );
+    fetchList();
+    const timer = processing ? setInterval(fetchList, POLL_MS) : undefined;
     return () => {
-      urls.forEach((u) => URL.revokeObjectURL(u));
-      urls.clear();
+      active = false;
+      clearInterval(timer);
     };
-  }, []);
+  }, [type, id, processing, refreshKey]);
 
-  const total = videos.length + localVideos.length;
+  // Failed uploads don't count towards the backend's limit.
+  const active = videos?.filter((v) => v.status !== "failed").length ?? 0;
+  const left = MAX_VIDEOS - active;
 
-  const upload = async (files: FileList) => {
+  const pick = async (files: FileList) => {
     const valid: File[] = [];
     for (const file of [...files]) {
-      if (!file.type.startsWith("video/")) {
-        toast.error(`${file.name} is not a video.`);
-        continue;
-      }
-      if (file.size > MAX_MB * 1024 * 1024) {
-        toast.error(`${file.name} is larger than ${MAX_MB} MB.`);
-        continue;
-      }
-      valid.push(file);
+      const error = checkVideoFile(file);
+      if (error) toast.error(error);
+      else valid.push(file);
     }
-
-    if (!valid.length) {
-      if (input.current) input.current.value = "";
-      return;
+    if (valid.length > left) {
+      toast.error(`You can add ${left} more video${left === 1 ? "" : "s"} (max ${MAX_VIDEOS}).`);
+      valid.splice(left);
     }
-
-    // UI-only preview mode until backend video endpoints are connected.
-    if (!uploadPath) {
-      const added: LocalVideo[] = valid.map((file) => {
-        const url = URL.createObjectURL(file);
-        urlsRef.current.add(url);
-        return {
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          url,
-          name: file.name,
-          size: file.size,
-        };
-      });
-      setLocalVideos((prev) => [...prev, ...added]);
-      if (input.current) input.current.value = "";
-      toast.success(`${added.length} video${added.length === 1 ? "" : "s"} added (local preview — backend upload pending)`);
-      return;
-    }
+    if (input.current) input.current.value = "";
+    if (!valid.length) return;
 
     let done = 0;
     for (const [i, file] of valid.entries()) {
-      setUploading(`Uploading ${i + 1} of ${valid.length}…`);
+      const label = valid.length > 1 ? `Uploading ${i + 1} of ${valid.length}: ${file.name}` : `Uploading ${file.name}`;
+      setUpload({ label, percent: 0 });
       try {
-        const body = new FormData();
-        body.append("video", file);
-        await clientApi(uploadPath, { method: "POST", body });
+        await uploadVideo(owner, file, (percent) => setUpload({ label, percent }));
         done++;
       } catch (e) {
         toast.error(e instanceof Error ? e.message : `Couldn't upload ${file.name}`);
       }
     }
-    setUploading(null);
-    if (input.current) input.current.value = "";
+    setUpload(null);
     if (done) {
-      toast.success(`${done} video${done === 1 ? "" : "s"} uploaded`);
-      router.refresh();
+      toast.success(`${done} video${done === 1 ? "" : "s"} uploaded. Compressing now, this can take a minute.`);
+      load();
     }
   };
 
-  const removeRemote = async (id: number) => {
-    if (!deleteBase) return;
-    setDeleting(id);
+  const remove = async (video: Video) => {
+    setDeleting(video.id);
     try {
-      await clientApi(`${deleteBase}/${id}`, { method: "DELETE" });
+      await clientApi(`/videos/${video.id}`, { method: "DELETE" });
       toast.success("Video removed");
-      router.refresh();
+      setVideos((prev) => prev?.filter((v) => v.id !== video.id) ?? null);
+      load(); // picks up the new primary video, if it changed
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Couldn't remove the video");
     } finally {
@@ -128,97 +107,100 @@ export function VideoManager({
     }
   };
 
-  const removeLocal = (id: string) => {
-    setLocalVideos((prev) => {
-      const target = prev.find((v) => v.id === id);
-      if (target) {
-        URL.revokeObjectURL(target.url);
-        urlsRef.current.delete(target.url);
-      }
-      return prev.filter((v) => v.id !== id);
-    });
-    toast.success("Video removed");
-  };
+  if (videos === null) {
+    return loadError ? (
+      <div className="flex items-center gap-3 text-sm text-muted-foreground">
+        <AlertCircle className="size-4 text-destructive" aria-hidden /> {loadError}
+        <Button type="button" variant="outline" size="sm" onClick={load}>
+          Retry
+        </Button>
+      </div>
+    ) : (
+      <p className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Loader2 className="size-4 animate-spin" aria-hidden /> Loading videos…
+      </p>
+    );
+  }
 
   return (
     <div className="grid gap-4">
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {videos.map((v) => (
-          <li key={`remote-${v.id}`} className="group overflow-hidden rounded-sm border bg-muted">
+          <li key={v.id} className="group overflow-hidden rounded-sm border bg-muted">
             <div className="relative aspect-video bg-black">
-              <video src={v.video_url} controls preload="metadata" className="size-full object-cover" />
-              {canDelete && deleteBase && (
+              {v.status === "ready" && v.video_url ? (
+                <video src={v.video_url} poster={v.thumbnail_url ?? undefined} controls playsInline preload="metadata" className="size-full object-contain" />
+              ) : v.status === "processing" ? (
+                <div className="flex size-full flex-col items-center justify-center gap-2 text-white/80" role="status">
+                  <Loader2 className="size-6 animate-spin" aria-hidden />
+                  <span className="text-xs">Compressing to MP4…</span>
+                </div>
+              ) : (
+                <div className="flex size-full flex-col items-center justify-center gap-2 px-4 text-center text-white/80" role="alert" title={v.error_message ?? undefined}>
+                  <AlertCircle className="size-6 text-red-400" aria-hidden />
+                  <span className="text-xs">Processing failed. Remove it and upload again.</span>
+                </div>
+              )}
+              {v.is_primary && v.status === "ready" && (
+                <span className="absolute top-2 left-2 inline-flex items-center rounded-sm bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground uppercase">
+                  Main
+                </span>
+              )}
+              {(canDelete || v.status === "failed") && (
                 <button
                   type="button"
-                  onClick={() => removeRemote(v.id)}
+                  onClick={() => remove(v)}
                   disabled={deleting === v.id}
                   className="absolute top-2 right-2 grid size-8 place-items-center rounded-sm bg-white/90 text-destructive opacity-100 shadow-soft transition hover:bg-white disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
-                  aria-label="Remove video"
+                  aria-label={`Remove ${v.title ?? v.original_filename ?? "video"}`}
                 >
-                  <Trash2 className="size-4" />
+                  {deleting === v.id ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
                 </button>
               )}
             </div>
-            {v.name && (
-              <div className="truncate bg-card px-3 py-1.5 text-xs font-medium text-foreground">
-                {v.name}
-              </div>
-            )}
-          </li>
-        ))}
-
-        {localVideos.map((v) => (
-          <li key={`local-${v.id}`} className="group overflow-hidden rounded-sm border bg-muted">
-            <div className="relative aspect-video bg-black">
-              <video src={v.url} controls preload="metadata" className="size-full object-cover" />
-              <span className="absolute top-2 left-2 inline-flex items-center rounded-sm bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground uppercase">
-                Preview
-              </span>
-              <button
-                type="button"
-                onClick={() => removeLocal(v.id)}
-                className="absolute top-2 right-2 grid size-8 place-items-center rounded-sm bg-white/90 text-destructive opacity-100 shadow-soft transition hover:bg-white sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
-                aria-label={`Remove ${v.name}`}
-              >
-                <Trash2 className="size-4" />
-              </button>
-            </div>
             <div className="flex items-center justify-between gap-2 bg-card px-3 py-1.5 text-xs">
-              <span className="truncate font-medium text-foreground">{v.name}</span>
-              <span className="shrink-0 text-muted-foreground">{formatFileSize(v.size)}</span>
+              <span className="truncate font-medium text-foreground">{v.title ?? v.original_filename ?? "Video"}</span>
+              {formatDuration(v.duration_sec) && <span className="shrink-0 text-muted-foreground">{formatDuration(v.duration_sec)}</span>}
             </div>
           </li>
         ))}
 
-        <li>
-          <button
-            type="button"
-            onClick={() => input.current?.click()}
-            disabled={!!uploading}
-            className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-sm border-2 border-dashed text-sm text-muted-foreground transition hover:border-gold hover:text-foreground disabled:opacity-60"
-          >
-            <VideoIcon className="size-6" aria-hidden />
-            {uploading ?? "Add videos"}
-          </button>
-        </li>
+        {left > 0 && (
+          <li>
+            <button
+              type="button"
+              onClick={() => input.current?.click()}
+              disabled={!!upload}
+              className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-sm border-2 border-dashed px-4 text-sm text-muted-foreground transition hover:border-gold hover:text-foreground disabled:opacity-60"
+            >
+              {upload ? (
+                <>
+                  <span className="w-full truncate text-center text-xs">{upload.label}</span>
+                  <Progress value={upload.percent} className="w-full" aria-label="Upload progress" />
+                  <span className="text-xs">{upload.percent < 100 ? `${upload.percent}%` : "Finishing upload…"}</span>
+                </>
+              ) : (
+                <>
+                  <VideoIcon className="size-6" aria-hidden /> Add videos
+                </>
+              )}
+            </button>
+          </li>
+        )}
       </ul>
 
       <input
         ref={input}
         type="file"
-        accept="video/mp4,video/webm,video/quicktime,video/*"
+        accept="video/*,.mkv,.avi,.3gp,.wmv,.flv,.mts,.m2ts"
         multiple
         className="sr-only"
-        onChange={(e) => e.target.files?.length && upload(e.target.files)}
+        onChange={(e) => e.target.files?.length && pick(e.target.files)}
       />
 
-      <p className="text-xs text-muted-foreground">MP4, WebM or MOV. Max limit {MAX_MB} MB.</p>
-
-      {total === 0 && (
-        <Button type="button" variant="outline" className="w-fit" onClick={() => input.current?.click()} loading={!!uploading}>
-          <VideoIcon aria-hidden /> Upload videos
-        </Button>
-      )}
+      <p className="text-xs text-muted-foreground">
+        Any video format, up to {MAX_VIDEO_MB} MB and {MAX_VIDEO_MINUTES} minutes each, max {MAX_VIDEOS} videos. Videos are compressed to MP4 after upload.
+      </p>
     </div>
   );
 }

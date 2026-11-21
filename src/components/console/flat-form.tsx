@@ -14,6 +14,7 @@ import { PhotoManager } from "./photo-manager";
 import { PhotoPicker, uploadQueued } from "./photo-picker";
 import { VideoManager } from "./video-manager";
 import { VideoPicker } from "./video-picker";
+import { uploadVideosWithToast } from "./video-toast";
 
 type Errors = Partial<Record<"title" | "unit_number" | "type" | "area_sqft", string>>;
 
@@ -84,8 +85,7 @@ export function FlatForm({
           toast.success("Flat added");
         }
         if (canUploadVideo && newVideos.length) {
-          // TODO(backend): upload queued videos via uploadQueuedVideos(newVideos, (form) => clientApi(`/flats/${res.flat.id}/videos`, { method: "POST", body: form }))
-          toast.info(`${newVideos.length} video${newVideos.length === 1 ? "" : "s"} selected — video upload will sync once backend API is connected.`);
+          await uploadVideosWithToast({ type: "Flat", id: res.flat.id }, newVideos, "edit the flat");
         }
       }
       router.refresh();
@@ -149,8 +149,7 @@ export function FlatForm({
       )}
       {editing && canUploadVideo && (
         <FormSection title="Videos">
-          {/* TODO(backend): pass uploadPath={`/flats/${flat.id}/videos`} and deleteBase={`/flats/${flat.id}/videos`} once backend video endpoints are ready */}
-          <VideoManager videos={flat.videos ?? []} canDelete={canDeletePhotos} />
+          <VideoManager owner={{ type: "Flat", id: flat.id }} canDelete={canDeletePhotos} />
         </FormSection>
       )}
     </div>
