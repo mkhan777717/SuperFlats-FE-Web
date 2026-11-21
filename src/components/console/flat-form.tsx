@@ -12,19 +12,41 @@ import type { Flat, OwnerProperty } from "@/lib/types";
 import { FLAT_AMENITY_SUGGESTIONS, FormError, FormSection, SelectField, TagInput, TextAreaField, TextField } from "./form-bits";
 import { PhotoManager } from "./photo-manager";
 import { PhotoPicker, uploadQueued } from "./photo-picker";
+import { VideoManager } from "./video-manager";
+import { VideoPicker } from "./video-picker";
+import { uploadVideosWithToast } from "./video-toast";
 
 type Errors = Partial<Record<"title" | "unit_number" | "type" | "area_sqft", string>>;
 
-export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property: OwnerProperty; flat?: Flat; onDone: () => void; canDeletePhotos: boolean }) {
+export function FlatForm({
+  property,
+  flat,
+  onDone,
+  canDeletePhotos,
+  canUploadVideo = true,
+}: {
+  property: OwnerProperty;
+  flat?: Flat;
+  onDone: () => void;
+  canDeletePhotos: boolean;
+  canUploadVideo?: boolean;
+}) {
   const router = useRouter();
   const editing = !!flat;
   const [amenities, setAmenities] = useState<string[]>(toStringArray(flat?.unique_amenities));
   const [errors, setErrors] = useState<Errors>({});
   const [formError, setFormError] = useState<string>();
   const [saving, setSaving] = useState(false);
-  // New flats: photos chosen in the form, uploaded right after the flat is created.
+  // New flats: photos/videos chosen in the form, uploaded right after the flat is created.
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
+  const [newVideos, setNewVideos] = useState<File[]>([]);
   const available = FLAT_TYPES.filter((t) => unitsLeft(property, t) > 0 || t === flat?.type);
+  const mediaSummary = [
+    newPhotos.length ? `${newPhotos.length} photo${newPhotos.length === 1 ? "" : "s"}` : "",
+    canUploadVideo && newVideos.length ? `${newVideos.length} video${newVideos.length === 1 ? "" : "s"}` : "",
+  ]
+    .filter(Boolean)
+    .join(" & ");
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,6 +84,9 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
         } else {
           toast.success("Flat added");
         }
+        if (canUploadVideo && newVideos.length) {
+          await uploadVideosWithToast({ type: "Flat", id: res.flat.id }, newVideos, "edit the flat");
+        }
       }
       router.refresh();
       onDone();
@@ -98,6 +123,7 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
           <TextAreaField label="Description" name="description" defaultValue={flat?.description ?? ""} rows={3} placeholder="Layout, floor, view, furnishing" />
           <TagInput label="Flat amenities" value={amenities} onChange={setAmenities} placeholder="Type and press Enter" suggestions={FLAT_AMENITY_SUGGESTIONS} />
           {!editing && <PhotoPicker files={newPhotos} onChange={setNewPhotos} />}
+          {!editing && canUploadVideo && <VideoPicker files={newVideos} onChange={setNewVideos} />}
         </FormSection>
         {!editing && !available.length && (
           <FormError>
@@ -111,7 +137,7 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
             Cancel
           </Button>
           <Button type="submit" loading={saving} disabled={!editing && !available.length}>
-            {editing ? "Save changes" : newPhotos.length ? `Add flat with ${newPhotos.length} photo${newPhotos.length === 1 ? "" : "s"}` : "Add flat"}
+            {editing ? "Save changes" : mediaSummary ? `Add flat with ${mediaSummary}` : "Add flat"}
           </Button>
         </div>
       </form>
@@ -119,6 +145,11 @@ export function FlatForm({ property, flat, onDone, canDeletePhotos }: { property
       {editing && (
         <FormSection title="Photos">
           <PhotoManager photos={flat.photos ?? []} uploadPath={`/flats/${flat.id}/photos`} deleteBase={`/flats/${flat.id}/photos`} canDelete={canDeletePhotos} />
+        </FormSection>
+      )}
+      {editing && canUploadVideo && (
+        <FormSection title="Videos">
+          <VideoManager owner={{ type: "Flat", id: flat.id }} canDelete={canDeletePhotos} />
         </FormSection>
       )}
     </div>

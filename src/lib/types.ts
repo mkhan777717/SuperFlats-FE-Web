@@ -23,6 +23,31 @@ export interface Photo {
   is_primary: boolean;
 }
 
+/** Who a video belongs to; videos are polymorphic like photos. */
+export type VideoOwner = { type: "Property" | "Flat"; id: number };
+
+/** Uploads are compressed to MP4 in the background: processing → ready | failed. */
+export type VideoStatus = "processing" | "ready" | "failed";
+
+export interface Video {
+  id: number;
+  videoable_id: number;
+  videoable_type: VideoOwner["type"];
+  title: string | null;
+  status: VideoStatus;
+  /** Set once status is "ready". */
+  video_url: string | null;
+  thumbnail_url: string | null;
+  duration_sec: number | null;
+  size_bytes: number | null;
+  is_primary: boolean;
+  original_filename: string | null;
+  /** Why processing failed, when status is "failed". */
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Property {
   id: number;
   name: string;

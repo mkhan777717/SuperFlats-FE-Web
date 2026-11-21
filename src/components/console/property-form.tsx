@@ -11,6 +11,8 @@ import type { OwnerProperty } from "@/lib/types";
 import { AMENITY_SUGGESTIONS, FormError, FormSection, SelectField, SwitchField, TagInput, TextAreaField, TextField } from "./form-bits";
 import { LocationPicker, type Coords } from "./location-picker";
 import { PhotoPicker, uploadQueued } from "./photo-picker";
+import { VideoPicker } from "./video-picker";
+import { uploadVideosWithToast } from "./video-toast";
 
 const UNIT_FIELDS = [
   { key: "count_1rk", label: "1RK" },
@@ -25,7 +27,7 @@ type Errors = Partial<Record<"name" | "address" | "city" | "state" | "zipcode" |
 const STATE_NAMES = Object.keys(STATES as Record<string, string[]>).sort();
 
 /** Create or edit a property. Mirrors the Admin app's property form and the backend's validation. */
-export function PropertyForm({ property, onDone }: { property?: OwnerProperty; onDone?: () => void }) {
+export function PropertyForm({ property, onDone, canUploadVideo = true }: { property?: OwnerProperty; onDone?: () => void; canUploadVideo?: boolean }) {
   const router = useRouter();
   const editing = !!property;
   const [state, setState] = useState(property?.state ?? "");
@@ -37,6 +39,7 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
   const [formError, setFormError] = useState<string>();
   const [saving, setSaving] = useState(false);
   const [newPhotos, setNewPhotos] = useState<File[]>([]);
+  const [newVideos, setNewVideos] = useState<File[]>([]);
   const cities = (STATES as Record<string, string[]>)[state] ?? [];
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
@@ -87,6 +90,9 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
           : 0;
         if (ok < newPhotos.length) toast.warning(`Property created. ${ok} of ${newPhotos.length} photos uploaded; add the rest on the property page.`);
         else toast.success(newPhotos.length ? `Property created with ${ok} photo${ok === 1 ? "" : "s"}. Add flats next.` : "Property created. Add photos and flats next.");
+        if (canUploadVideo && newVideos.length) {
+          await uploadVideosWithToast({ type: "Property", id: res.property.id }, newVideos, "add the rest on the property page");
+        }
         onDone?.();
         router.push(`/dashboard/properties/${res.property.id}`);
       }
@@ -147,8 +153,9 @@ export function PropertyForm({ property, onDone }: { property?: OwnerProperty; o
       </FormSection>
 
       {!editing && (
-        <FormSection title="Photos">
+        <FormSection title={canUploadVideo ? "Photos & videos" : "Photos"}>
           <PhotoPicker files={newPhotos} onChange={setNewPhotos} />
+          {canUploadVideo && <VideoPicker files={newVideos} onChange={setNewVideos} />}
         </FormSection>
       )}
 
